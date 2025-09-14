@@ -16,6 +16,8 @@ public:
 	int get_oz() const;
 	void set_oz(int);
 
+	bool operator == (const Point3D&) const noexcept;
+
 	float distance_to(const Point3D&) const;
 };
 

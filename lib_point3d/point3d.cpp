@@ -29,6 +29,10 @@ void Point3D::set_oz(int oz) {
     _oz = oz;
 }
 
+bool Point3D::operator==(const Point3D& other) const noexcept {
+    return this->_ox == other._ox && this->_oy == other._oy && this->_oy == other._oy;
+}
+
 float Point3D::distance_to(const Point3D& other) const {
     float res = std::sqrt(std::pow(_ox - other._ox, 2) + std::pow(_oy - other._oy, 2) + std::pow(_oz - other._oz, 2));
     return res;
