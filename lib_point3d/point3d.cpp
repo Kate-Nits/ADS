@@ -7,11 +7,12 @@
 #include "../lib_point3d/point3d.h"
 
 Point3D::Point3D() : Point(), _oz(0) {}
-Point3D::Point3D(int ox, int oy, int oz) {
-    _ox = ox;
-    _oy = oy;
-    _oz = oz;
+Point3D::Point3D(int value_ox, int value_oy, int value_oz) {
+    _ox = value_ox;
+    _oy = value_oy;
+    _oz = value_oz;
 }
+
 Point3D::Point3D(const Point3D& other) {
     if (&other == NULL) {
         throw std::logic_error("Error!!!");
@@ -28,7 +29,7 @@ void Point3D::set_oz(int oz) {
     _oz = oz;
 }
 
-double Point3D::distance_to(const Point3D& other) const {
-    double res = std::sqrt(std::pow(_ox - other._ox, 2) + std::pow(_oy - other._oy, 2) + std::pow(_oz - other._oz, 2));
+float Point3D::distance_to(const Point3D& other) const {
+    float res = std::sqrt(std::pow(_ox - other._ox, 2) + std::pow(_oy - other._oy, 2) + std::pow(_oz - other._oz, 2));
     return res;
 }

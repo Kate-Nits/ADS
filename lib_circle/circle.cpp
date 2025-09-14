@@ -2,19 +2,12 @@
 
 #include <stdexcept>
 #include <iostream>
-//#include "../lib_point/point.h"
+////#include "../lib_point/point.h"
 #include "../lib_circle/circle.h"
 
-Circle::Circle() {
-    Point a;
-    int rad = 0;
-    _center = a;
-    _radius = rad;
-}
-Circle::Circle(Point dot, int rad) {
-    _center = dot;
-    _radius = rad;
-}
+
+Circle::Circle() : _center(Point()), _radius(1) {};
+Circle::Circle(Point value_dot, int value_rad) : _center(value_dot), _radius(value_rad) {};
 
 Circle::Circle(const Circle& other) {
     if (&other == NULL) {

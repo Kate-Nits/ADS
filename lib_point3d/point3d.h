@@ -16,7 +16,7 @@ public:
 	int get_oz() const;
 	void set_oz(int);
 
-	double distance_to(const Point3D&) const;
+	float distance_to(const Point3D&) const;
 };
 
 #endif // LIB_POINT3D_POINT3D_H

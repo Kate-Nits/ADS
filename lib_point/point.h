@@ -17,7 +17,7 @@ public:
 	void set_ox(int ox);
 	void set_oy(int oy);
 
-	double distance_to(const Point&) const; //расстояние между текущей точкой и другой точкой
+	float distance_to(const Point&) const; //расстояние между текущей точкой и другой точкой
 };
 
 #endif // LIB_POINT_POINT_H

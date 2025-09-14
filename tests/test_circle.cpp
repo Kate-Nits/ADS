@@ -3,8 +3,11 @@
 #include <gtest/gtest.h>
 #include "../lib_circle/circle.h"
 
+//#define EXAMPLE
+
 #define EPSILON 0.000001
 
+#ifdef EXAMPLE
 TEST(TestEasyExampleLib, can_div) {
 	// Arrange
 	int x = 10;
@@ -13,3 +16,5 @@ TEST(TestEasyExampleLib, can_div) {
 	// Act & Assert
 	ASSERT_NO_THROW(division(x, y));
 }
+#endif // EXAMPLE
+
