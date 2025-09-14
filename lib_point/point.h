@@ -17,6 +17,8 @@ public:
 	void set_ox(int ox);
 	void set_oy(int oy);
 
+	bool operator == (const Point&) const noexcept;
+
 	float distance_to(const Point&) const; //расстояние между текущей точкой и другой точкой
 };
 
