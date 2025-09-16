@@ -22,7 +22,7 @@ TEST(TestCircleLib, default_constructor) {
     EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
 }
 
-TEST(TestCircleLib, parameterized_constructor) {
+TEST(TestCircleLib, parameterized_constructor_with_normal_radius) {
     // Arrange
     Point a(5, 27);
     Circle C(a, 6);
@@ -36,6 +36,12 @@ TEST(TestCircleLib, parameterized_constructor) {
     // Assert
     int expected_result = TRUE;
     EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
+}
+TEST(TestCircleLib, parameterized_constructor_with_radius_less_than_zero) {
+    // Arrange
+    Point a(-3, 15);
+    // Act & Assert
+    EXPECT_THROW({ Circle C(a, -8); }, std::logic_error);
 }
 
 TEST(TestCircleLib, copy_constructor_without_throw) {

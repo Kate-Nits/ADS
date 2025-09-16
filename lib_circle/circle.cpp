@@ -7,7 +7,13 @@
 
 
 Circle::Circle() : _center(Point()), _radius(1) {};
-Circle::Circle(Point value_dot, int value_rad) : _center(value_dot), _radius(value_rad) {};
+Circle::Circle(Point value_dot, int value_rad) {
+    if (value_rad < 0) {
+        throw std::logic_error("Error!!! The radius can't be less than zero");
+    }
+    _center = value_dot;
+    _radius = value_rad;
+}
 
 Circle::Circle(const Circle& other) {
     if (&other == NULL) {

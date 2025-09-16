@@ -22,7 +22,7 @@ TEST(TestSphereLib, default_constructor) {
     EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
 }
 
-TEST(TestSphereLib, parameterized_constructor) {
+TEST(TestSphereLib, parameterized_constructor_with_normal_radius) {
     // Arrange
     Point3D a(5, 27, 14);
     Sphere C(a, 6);
@@ -36,6 +36,12 @@ TEST(TestSphereLib, parameterized_constructor) {
     // Assert
     int expected_result = TRUE;
     EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
+}
+TEST(TestSphereLib, parameterized_constructor_with_radius_less_than_zero) {
+    // Arrange
+    Point3D a(7, 6, 14);
+    // Act & Assert
+    EXPECT_THROW({ Sphere C(a, -1); }, std::logic_error);
 }
 
 TEST(TestSphereLib, copy_constructor_without_throw) {

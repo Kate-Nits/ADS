@@ -4,9 +4,12 @@
 #include "../lib_sphere/sphere.h"
 
 Sphere::Sphere() : Circle(), _center3D(Point3D()) {}
-Sphere::Sphere(Point3D center, int radius) {
+Sphere::Sphere(Point3D center, int value_radius) {
+	if (value_radius < 0) {
+		throw std::logic_error("Error!!! The radius can't be less than zero");
+	}
 	_center3D = center;
-	_radius = radius;
+	_radius = value_radius;
 }
 Sphere::Sphere(const Sphere& other) {
 	if (&other == NULL) {
