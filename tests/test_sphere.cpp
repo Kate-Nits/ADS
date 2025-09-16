@@ -38,7 +38,7 @@ TEST(TestSphereLib, parameterized_constructor) {
     EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
 }
 
-TEST(TestSphereLib, copy_constructor) {
+TEST(TestSphereLib, copy_constructor_without_throw) {
     // Arrange
     Sphere A(Point3D(-4, 10, 54), 7);
     Sphere B(A);
@@ -52,4 +52,11 @@ TEST(TestSphereLib, copy_constructor) {
     // Assert
     int expected_result = TRUE;
     EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
+}
+
+TEST(TestSphereLib, copy_constructor_with_throw) {
+    // Arrange
+    Sphere* null_pointer = nullptr;
+    // Act & Assert
+    EXPECT_THROW({ Sphere & bad_reference = *null_pointer; Sphere a(bad_reference); }, std::logic_error);
 }

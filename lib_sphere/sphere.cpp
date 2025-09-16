@@ -2,7 +2,6 @@
 
 #include <stdexcept>
 #include "../lib_sphere/sphere.h"
-/////////// нужно ли подключать остальные библиотеки???
 
 Sphere::Sphere() : Circle(), _center3D(Point3D()) {}
 Sphere::Sphere(Point3D center, int radius) {
@@ -10,6 +9,9 @@ Sphere::Sphere(Point3D center, int radius) {
 	_radius = radius;
 }
 Sphere::Sphere(const Sphere& other) {
+	if (&other == NULL) {
+		throw std::logic_error("Error!!!");
+	}
 	_center3D = other._center3D;
 	_radius = other._radius;
 }

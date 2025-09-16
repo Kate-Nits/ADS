@@ -38,7 +38,7 @@ TEST(TestCircleLib, parameterized_constructor) {
     EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
 }
 
-TEST(TestCircleLib, copy_constructor) {
+TEST(TestCircleLib, copy_constructor_without_throw) {
     // Arrange
     Circle A(Point(-4, 10), 7);
     Circle B(A);
@@ -52,6 +52,13 @@ TEST(TestCircleLib, copy_constructor) {
     // Assert
     int expected_result = TRUE;
     EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
+}
+
+TEST(TestCircleLib, copy_constructor_with_throw) {
+    // Arrange
+    Circle* null_pointer = nullptr;
+    // Act & Assert
+    EXPECT_THROW({ Circle & bad_reference = *null_pointer; Circle a(bad_reference); }, std::logic_error);
 }
 
 

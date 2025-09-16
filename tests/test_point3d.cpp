@@ -37,7 +37,7 @@ TEST(TestPoint3dLib, parameterized_constructor) {
     EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
 }
 
-TEST(TestPoint3dLib, copy_constructor) {
+TEST(TestPoint3dLib, copy_constructor_without_throw) {
     // Arrange
     Point3D a(-3, 72, 15);
     Point3D b(a);
@@ -51,6 +51,13 @@ TEST(TestPoint3dLib, copy_constructor) {
     // Assert
     int expected_result = TRUE;
     EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
+}
+
+TEST(TestPoint3dLib, copy_constructor_with_throw) {
+    // Arrange
+    Point3D* null_pointer = nullptr;
+    // Act & Assert
+    EXPECT_THROW({ Point3D & bad_reference = *null_pointer; Point3D a(bad_reference); }, std::logic_error);
 }
 
 TEST(TestPoint3dLib, can_distance_to) {
