@@ -13,7 +13,7 @@ TEST(TestSphereLib, default_constructor) {
     Point3D b;
     // Act
     int actual_result = FALSE;
-    if (A.get_center3D() == b && A.get_radius() == 1) {
+    if (A.get_center() == b && A.get_radius() == 1) {
         actual_result = TRUE;
     }
 
@@ -29,7 +29,7 @@ TEST(TestSphereLib, parameterized_constructor_with_normal_radius) {
 
     // Act
     int actual_result = FALSE;
-    if (C.get_center3D() == a && C.get_radius() == 6) {
+    if (C.get_center() == a && C.get_radius() == 6) {
         actual_result = TRUE;
     }
 
@@ -51,7 +51,7 @@ TEST(TestSphereLib, copy_constructor_without_throw) {
 
     // Act
     int actual_result = FALSE;
-    if (B.get_center3D() == A.get_center3D() && B.get_radius() == A.get_radius()) {
+    if (B.get_center() == A.get_center() && B.get_radius() == A.get_radius()) {
         actual_result = TRUE;
     }
 

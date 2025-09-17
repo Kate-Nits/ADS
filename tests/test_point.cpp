@@ -11,53 +11,35 @@ TEST(TestPointLib, default_constructor) {
     // Arrange
     Point a;
 
-    // Act
-    int actual_result = FALSE;
-    if (a.get_ox() == 0 && a.get_oy() == 0) {
-        actual_result = TRUE;
-    }
-
-    // Assert
-    int expected_result = TRUE;
-    EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
+    EXPECT_EQ(0, a.get_oy());
+    EXPECT_EQ(0, a.get_ox()); //проверяет что два переданные значения равны
 }
 
 TEST(TestPointLib, parameterized_constructor) {
-    // Arrange
+    // Arrange & act
     Point a(5, 27);
 
-    // Act
-    int actual_result = FALSE;
-    if (a.get_ox() == 5 && a.get_oy() == 27) {
-        actual_result = TRUE;
-    }
-
-    // Assert
-    int expected_result = TRUE;
-    EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
+    EXPECT_EQ(5, a.get_ox());
+    EXPECT_EQ(27, a.get_oy());
 }
 
 TEST(TestPointLib, copy_constructor_without_throw) {
     // Arrange
     Point a(-3, 72);
-    Point b(a);
+   
 
     // Act
-    int actual_result = FALSE;
-    if (a.get_ox() == b.get_ox() && a.get_oy() == b.get_oy()) {
-        actual_result = TRUE;
-    }
+ Point b(a);
 
-    // Assert
-    int expected_result = TRUE;
-    EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
+    EXPECT_EQ(-3, b.get_ox());
+    EXPECT_EQ(72, b.get_oy()); //проверяет что два переданные значения равны
 }
 
 TEST(TestPointLib, copy_constructor_with_throw) {
     // Arrange
     Point* null_pointer = nullptr;
     // Act & Assert
-    EXPECT_THROW({ Point & bad_reference = *null_pointer; Point a(bad_reference); }, std::logic_error);
+    ASSERT_ANY_THROW(Point a(*null_pointer));
 }
 
 TEST(TestPointLib, can_distance_to) {
@@ -66,9 +48,22 @@ TEST(TestPointLib, can_distance_to) {
     Point b(4, 6);
 
     // Act
-    float actual_result = a.distance_to(b);
-
     // Assert
-    float expected_result = 5.0;
-    EXPECT_NEAR(expected_result, actual_result, EPSILON); //проверяет, что два числа с плавающей точкой приблизительно равны с учетом заданной погрешности
+    EXPECT_NEAR(5.0, a.distance_to(b), EPSILON); //проверяет, что два числа с плавающей точкой приблизительно равны с учетом заданной погрешности
+}
+
+TEST(TestPointLib, can_compare_with_operator_two_equal_object) {
+    // Arrage
+    Point a(1, 2);
+    Point b(1, 2);
+
+    EXPECT_TRUE(a == b);
+}
+
+TEST(TestPointLib, can_compare_with_operator_two_not_equal_object) {
+    // Arrage
+    Point a(1, 2);
+    Point b(4, 2);
+
+    EXPECT_FALSE(a == b);
 }

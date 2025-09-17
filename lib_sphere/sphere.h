@@ -8,15 +8,19 @@
 #include "../lib_point3d/point3d.h"
 #include "../lib_circle/circle.h"
 
-class Sphere : public Circle {
+class Sphere {
 	Point3D _center3D;
+	int _radius;
 public:
 	Sphere();
 	Sphere(Point3D, int);
 	Sphere(const Sphere&);
 
-	Point3D get_center3D() const;
-	void set_center3D(Point3D);
+	Point3D get_center() const;
+	void set_center(Point3D);
+
+	int get_radius() const;
+	void set_radius(int);
 };
 
 #endif // LIB_SPHERE_SPHERE_H

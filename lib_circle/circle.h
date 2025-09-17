@@ -8,7 +8,6 @@
 
 class Circle {
 	Point _center;
-protected:
 	int _radius;
 public:
 	Circle();
