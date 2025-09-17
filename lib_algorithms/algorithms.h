@@ -1,13 +1,22 @@
 // Copyright 2025 Ekaterina Ushnitskaya
 
+
 #ifndef LIB_ALGORITHMS_H
 #define  LIB_ALGORITHMS_H
 
 #include "../lib_circle/circle.h"
 #include "../lib_sphere/sphere.h"
 
+#define START_MENU_MATRIX_SIZE 3
+
 enum Location { intersecting, do_not_intersecting, tangent, inside, coinside };
 //tangent - касающиеся, intersecting - пересекающиеся, inside - один в другом, coinside - совпадают
+
+
+// функции для консоли
+void set_color(int text_color, int bg_color);
+void print_result_position(const std::string& description, Location result);
+void start_menu_for_matrix();
 
 template <class T>
 Location check_position(const T& circle1, const T& circle2) {
@@ -40,6 +49,9 @@ Location check_position(const T& circle1, const T& circle2) {
     }
 }
 
+void matrix_application();
+void check_user_input(int user_choice, int true_number);
+bool input_user_choice(int& user_choice, int true_number);
 
 
 #endif //  LIB_ALGORITHMS_H
