@@ -6,6 +6,8 @@
 
 #include "../lib_circle/circle.h"
 #include "../lib_sphere/sphere.h"
+#include "../lib_matrix/matrix.h"
+#include "../lib_triangle_matrix/triangle_matrix.h"
 
 #define START_MENU_MATRIX_SIZE 3
 
@@ -16,7 +18,8 @@ enum Location { intersecting, do_not_intersecting, tangent, inside, coinside };
 // функции для консоли
 void set_color(int text_color, int bg_color);
 void print_result_position(const std::string& description, Location result);
-void start_menu_for_matrix();
+void in_development();
+
 
 template <class T>
 Location check_position(const T& circle1, const T& circle2) {
@@ -49,9 +52,18 @@ Location check_position(const T& circle1, const T& circle2) {
     }
 }
 
+void start_menu_for_matrix();
 void matrix_application();
 void check_user_input(int user_choice, int true_number);
 bool input_user_choice(int& user_choice, int true_number);
+void what_matrices(int& what_the_first_matrix, int& what_the_second_matrix, int& isExit);
+void print_menu_matrix_calculator();
+void what_matrix_sizes(size_t& link_sizeN, size_t& link_sizeM);
+void start_matrix_calculator(int& link_user_choice);
+//void print_res(const TMatrix <TMatrix <int> > & matrix, size_t size_M, size_t size_N);
+//void print_res(const TriangleMatrix<TriangleMatrix<int>>& matrix, size_t size_M, size_t size_N);
+void do_user_want_to_save(int& want_to_save);
+
 
 
 #endif //  LIB_ALGORITHMS_H
