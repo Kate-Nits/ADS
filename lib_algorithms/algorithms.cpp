@@ -16,6 +16,11 @@
 #define WHAT_MATRIX_MENU 3
 #define YES 1
 #define NO 0
+#define MAX_COUNT_OF_SAVED_MATRICES 3
+#define EXIT_DELETED_SAVED_MATRICES_MENU 4
+#define MATRIX1 1
+#define MATRIX2 2
+#define MATRIX3 3
 
 #define MATRIX_CALCULATOR 1
 #define VIEWING_SAVED_MATRICES 2
@@ -30,6 +35,7 @@
 //#define REALISED_SUBTRACT
 //#define REALISED_MULTIPLY
 //#define REALISED_OPERATOR[]
+//#define REALISED_CLASSES
 
 #define STANDART 1
 #define TRIANGLE 2
@@ -66,7 +72,7 @@ void start_menu_for_matrix() {
     std::cout << "==================================================" << std::endl;
     std::cout << "  1. Matrix calculator " << std::endl;
     std::cout << "  2. Viewing saved matrices " << std::endl;
-    std::cout << "  2. Exit " << std::endl;
+    std::cout << "  3. Exit " << std::endl;
     std::cout << "==================================================" << std::endl;
     //std::cout << "==================================================" << std::endl;
     //std::cout << "" << std::endl;
@@ -138,21 +144,12 @@ void what_matrix_sizes(size_t& sizeN, size_t& sizeM) {
     std::cout << "Enter the number of columns (parametr N): ";
     std::cin >> sizeN;
 }
-void print_res(const TMatrix<TMatrix<int>>& matrix, size_t size_M, size_t size_N) {
-#ifndef REALISED_OPERATOR[]
-    in_development();
-#else
-    for (size_t i = 0; i < size_M; i++) {
-        for (size_t j = 0; j < size_N; j++) {
-            std::cout << matrix[i][j] << "   ";
-        }
-        std::cout << std::endl;
-    }
-#endif // REALISED_OPERATOR[] 
-}
 void print_res(const TMatrix<int>& matrix, size_t size_M, size_t size_N) {
+
 #ifndef REALISED_OPERATOR[]
+
     in_development();
+
 #else
     for (size_t i = 0; i < size_M; i++) {
         for (size_t j = 0; j < size_N; j++) {
@@ -180,11 +177,9 @@ void do_user_want_to_save(int& want_to_save) {
         std::cin >> want_to_save;
     }
 }
-void start_matrix_calculator(int& link_user_choice) {
+void start_matrix_calculator(int& link_user_choice, int& link_want_to_save, TMatrix<int> res) {
     int isExit = NO;
     int& link_isExit = isExit;
-    int want_to_save = NO;
-    int& linkwant_to_save = want_to_save;
     int what_the_first_matrix = 0;
     int what_the_second_matrix = 0;
     int& link_what_the_first_matrix = what_the_first_matrix;
@@ -238,15 +233,19 @@ void start_matrix_calculator(int& link_user_choice) {
                 size_resM = sizeM2;
             }
             if (what_the_first_matrix == STANDART && what_the_second_matrix == STANDART) {
-                TMatrix<TMatrix<int>> matrix1;
-                TMatrix<TMatrix<int>> matrix2;
-                TMatrix<TMatrix<int>> res;
+                TMatrix<int> matrix1;
+                TMatrix<int> matrix2;
+                TMatrix<int> intermediate_res;
                 
             }
             else if (what_the_first_matrix == TRIANGLE && what_the_second_matrix == TRIANGLE) {
-                TriangleMatrix<TriangleMatrix<int>> matrix1;
-                TriangleMatrix<TriangleMatrix<int>> matrix2;
-                TriangleMatrix<TriangleMatrix<int>> res;
+#ifdef REALISED_CLASSES
+                TriangleMatrix<int> matrix1;
+                TriangleMatrix<int> matrix2;
+                TriangleMatrix<int> intermediate_res;
+#else
+                //in_development();
+#endif // REALISED_CLASSES
             }
         }
         system("cls");
@@ -255,9 +254,10 @@ void start_matrix_calculator(int& link_user_choice) {
 #ifndef REALISED_ADD
             in_development();
 #else
-            res = matrix1.add_matrices(matrix2);
+            intermediate_res = matrix1.add_matrices(matrix2);
+            res = intermediate_res;
             print_res(res, size_resM, size_resN);
-            void do_user_want_to_save(link_want_to_save);
+            do_user_want_to_save(link_want_to_save);
 #endif //REALISED_ADD
             break;
 
@@ -265,8 +265,10 @@ void start_matrix_calculator(int& link_user_choice) {
 #ifndef REALISED_SUBTRACT
             in_development();
 #else
-            res = matrix1.subtract_matrices(matrix2);
+            intermediate_res = matrix1.subtract_matrices(matrix2);
+            res = intermediate_res;
             print_res(res, size_resM, size_resN);
+            do_user_want_to_save(link_want_to_save);
 #endif //REALISED_SUBTRACT
             break;
 
@@ -274,8 +276,10 @@ void start_matrix_calculator(int& link_user_choice) {
 #ifndef REALISED_MULTIPLY
             in_development();
 #else
-            res = matrix1.multiply_matrices(matrix2);
+            intermediate_res = matrix1.multiply_matrices(matrix2);
+            res = intermediate_res;
             print_res(res, size_resM, size_resN);
+            do_user_want_to_save(link_want_to_save);
 #endif //REALISED_MULTIPLY
             break;
 
@@ -285,20 +289,139 @@ void start_matrix_calculator(int& link_user_choice) {
         }
     }
 }
+void deleted_saved_matrix(int& link_user_choice_for_deleted, int& isThereMatrix1, int& isThereMatrix2, int& isThereMatrix3) {
+    std::cout << "==================================================" << std::endl;
+    std::cout << "  You can store a limited number of matrices" << std::endl;
+    std::cout << "  Which one would you like to delete?" << std::endl;
+    std::cout << "      1. matrix1" << std::endl;
+    std::cout << "      2. matrix2" << std::endl;
+    std::cout << "      3. matrix3" << std::endl;;
+    std::cout << "      4. exit" << std::endl;
+
+    while (!input_user_choice(link_user_choice_for_deleted, EXIT_DELETED_SAVED_MATRICES_MENU));
+    switch (link_user_choice_for_deleted) {
+    case MATRIX1:
+        isThereMatrix1 = NO;
+        break;
+
+    case MATRIX2:
+        isThereMatrix2 = NO;
+        break;
+
+    case MATRIX3:
+        isThereMatrix3 = NO;
+        break;
+    case EXIT_DELETED_SAVED_MATRICES_MENU:
+        break;
+    }
+}
+void viewing_saved_matrices(int count_of_saved_matrices,
+    TMatrix<int> matrix1, TMatrix<int> matrix2, TMatrix<int> matrix3) {
+    std::cout << "==================================================" << std::endl;
+    std::cout << "  Which matrix would you like to look at?" << std::endl;
+    if (count_of_saved_matrices > 0) {
+        if (count_of_saved_matrices == MAX_COUNT_OF_SAVED_MATRICES) {
+            std::cout << "  1. matrix1" << std::endl;
+            std::cout << "  2. matrix2" << std::endl;
+            std::cout << "  3. matrix3" << std::endl;
+        }
+        else if (count_of_saved_matrices == MAX_COUNT_OF_SAVED_MATRICES - 1) {
+            std::cout << "  1. matrix1" << std::endl;
+            std::cout << "  2. matrix2" << std::endl;
+        }
+        else if (count_of_saved_matrices == MAX_COUNT_OF_SAVED_MATRICES - 2) {
+            std::cout << "  1. matrix1" << std::endl;
+        }
+        int user_choice;
+        int& link_user_choice = user_choice;
+        while (!input_user_choice(link_user_choice, START_MENU_FOR_MATRIX_SIZE));
+        if (user_choice == MATRIX1) {
+            matrix1.print();
+        }
+        else if (user_choice == MATRIX2) {
+            matrix2.print();
+        }
+        else if (user_choice == MATRIX3) {
+            matrix3.print();
+        }
+    }
+    else if (count_of_saved_matrices == 0) {
+        std::cout << "  You don't have any saved matrices" << std::endl;
+    }
+    std::cout << "==================================================" << std::endl;
+    std::cout << "  Press Enter to exit " << std::endl;
+    getchar();
+    getchar();
+    system("cls");
+}
 void matrix_application() {
     int user_choice;
     int& link_user_choice = user_choice;
     int isExit = NO;
+
+    int want_to_save = NO;
+    int& link_want_to_save = want_to_save;
+    int count_of_saved_matrices = 0;
+
+    TMatrix<int> res;
+    TMatrix<int> matrix1;
+    TMatrix<int> matrix2;
+    TMatrix<int> matrix3;
+    int isThereMatrix1 = NO;
+    int isThereMatrix2 = NO;
+    int isThereMatrix3 = NO;
+    int& link_isThereMatrix1 = isThereMatrix1;
+    int& link_isThereMatrix2 = isThereMatrix2;
+    int& link_isThereMatrix3 = isThereMatrix3;
+
     while (!isExit) {
         start_menu_for_matrix();
         while (!input_user_choice(link_user_choice, START_MENU_FOR_MATRIX_SIZE));
         system("cls");
         switch (user_choice) {
         case MATRIX_CALCULATOR:
-            start_matrix_calculator(link_user_choice);
+            start_matrix_calculator(link_user_choice, link_want_to_save, res);
+            if (want_to_save == YES) {
+                int user_choice_for_deleted;
+                int& link_user_choice_for_deleted = user_choice_for_deleted;
+                while ((count_of_saved_matrices + 1) > MAX_COUNT_OF_SAVED_MATRICES) {
+                    deleted_saved_matrix(link_user_choice_for_deleted, link_isThereMatrix1, link_isThereMatrix2, link_isThereMatrix3);
+                    if (user_choice_for_deleted == EXIT_DELETED_SAVED_MATRICES_MENU) {
+                        break;
+                    }
+                    else {
+                        count_of_saved_matrices--;
+                    }
+                }
+                if (isThereMatrix1 == NO) {
+                    std::cout << "==================================================" << std::endl;
+                    std::cout << "  The result will be written to the matrix1" << std::endl;
+                    isThereMatrix1 = YES;
+                    count_of_saved_matrices++;
+                    matrix1 = res;
+                } 
+                else if (isThereMatrix2 == NO) {
+                    std::cout << "==================================================" << std::endl;
+                    std::cout << "  The result will be written to the matrix2" << std::endl;
+                    isThereMatrix2 = YES;
+                    count_of_saved_matrices++;
+                    matrix2 = res;
+                }
+                else if (isThereMatrix3 == NO) {
+                    std::cout << "==================================================" << std::endl;
+                    std::cout << "  The result will be written to the matrix3" << std::endl;
+                    isThereMatrix3 = YES;
+                    count_of_saved_matrices++;
+                    matrix3 = res;
+                }
+                std::cout << "  Press Enter to exit " << std::endl;
+                getchar();
+                getchar();
+                system("cls");
+            }
             break;
         case VIEWING_SAVED_MATRICES:
-
+            viewing_saved_matrices(count_of_saved_matrices, matrix1, matrix2, matrix3);
             break;
         case EXIT_MAIN_MENU:
             isExit = YES;
@@ -306,5 +429,6 @@ void matrix_application() {
         }
     }
 }
+
 
 
