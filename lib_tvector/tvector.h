@@ -1,4 +1,4 @@
-// Copyright 2025 Ekaterina Ushnitskaya
+п»ї// Copyright 2025 Ekaterina Ushnitskaya
 
 #ifndef LIB_TVECTOR_TVECTOR_H
 #define LIB_TVECTOR_TVECTOR_H
@@ -21,8 +21,8 @@ public:
 	static const size_t RESERVE_MEMORY = 15;
 	static const size_t MAX_PERCENT_DELETED = 15;
 
-	TVector() : _data(nullptr), _states(nullptr), _size(0), _capacity(0), _deleted(0) {} //конструктор по умолчанию
-	TVector(size_t size) { //конструктор вектора заданного размера
+	TVector() : _data(nullptr), _states(nullptr), _size(0), _capacity(0), _deleted(0) {} //ГЄГ®Г­Г±ГІГ°ГіГЄГІГ®Г° ГЇГ® ГіГ¬Г®Г«Г·Г Г­ГЁГѕ
+	TVector(size_t size) { //РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РІРµРєС‚РѕСЂР° Р·Р°РґР°РЅРЅРѕРіРѕ СЂР°Р·РјРµСЂР°
 		_size = size;
 		_capacity = size + RESERVE_MEMORY;
 		_deleted = 0;
@@ -32,8 +32,7 @@ public:
 			_states[i] = i < _size ? State::busy : State::empty;
 		}
 	}
-	TVector(T* data, size_t size) { //конструктор созданный на основе переаного массива данных 
-		//если передаем массив мы же можем сами размер посчитать, может не нужно у пользователя просить размер???????????????????
+	TVector(T* data, size_t size) { //РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ СЃРѕР·РґР°РЅРЅС‹Р№ РЅР° РѕСЃРЅРѕРІРµ РїРµСЂРµР°РЅРѕРіРѕ РјР°СЃСЃРёРІР° РґР°РЅРЅС‹С…
 		_size = size;
 		_capacity = size + RESERVE_MEMORY;
 		_deleted = 0;
@@ -45,7 +44,7 @@ public:
 			_states = new State[_capacity];
 		}
 		catch (const std::bad_alloc&) {
-			delete[] _data; //тк мы же уже под _data выделили
+			delete[] _data; //С‚Рє РјС‹ Р¶Рµ СѓР¶Рµ РїРѕРґ _data РІС‹РґРµР»РёР»Рё
 			throw;
 		}
 		for (size_t i = 0; i < _capacity; ++i) {
@@ -57,9 +56,8 @@ public:
 				_states[i] = State::empty;
 			}
 		}
-
 	}
-	TVector(const TVector<T>& other) { // конструктор копирования
+	TVector(const TVector<T>& other) { // РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєРѕРїРёСЂРѕРІР°РЅРёСЏ
 		_size = other._size;
 		_capacity = other._capacity;
 		_deleted = other._deleted;
@@ -68,7 +66,7 @@ public:
 		try {
 			_data = new T[_capacity];
 		}
-		catch (const std::bad_alloc&) { //Ловит ошибку нехватки памяти
+		catch (const std::bad_alloc&) { //Р›РѕРІРёС‚ РѕС€РёР±РєСѓ РЅРµС…РІР°С‚РєРё РїР°РјСЏС‚Рё
 			throw;
 			std::cout << std::endl;
 		}
@@ -94,13 +92,10 @@ public:
 	}
 
 	inline T& operator[](size_t index) {
-		//check_index(index); //////////////////////было
-		size_t real_index = check_index(index);
-		return _data[real_index];
+		return _data[index];
 	}
 	inline const T& operator[](size_t index) const {
-		size_t real_index = check_index(index);
-		return _data[real_index];
+		return _data[index];
 	}
 
 	inline T& at(size_t index) {
@@ -116,7 +111,7 @@ public:
 		return _data;
 	}
 
-	inline const T data(size_t i) const { //оставить может надо было оставить реальность а не то что должен видеть пользователь???
+	inline const T& data(size_t i) const {
 		size_t real_index = check_index(i);
 		return _data[real_index];
 	}
@@ -124,11 +119,10 @@ public:
 	inline const State* states() const noexcept {
 		return _states;
 	}
-	inline const State state(size_t i) const {//что именно нужно смотреть пользовательскую или программисткую часть?
-		size_t real_index = check_index(i); //Не полетит ли проверка после моего исправления ???????????????
-		return _states[real_index];
-	}
 
+	inline const State state(size_t i) const {
+		return _states[i];
+	}
 
 	inline const size_t size() const noexcept {//get
 		return _size;
@@ -144,44 +138,40 @@ public:
 		reserve(new_capacity);
 	}
 
-
-
-	inline T* begin() noexcept { // возвращает _data указатель на начало
+	inline T* begin() noexcept { // РІРѕР·РІСЂР°С‰Р°РµС‚ _data СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РЅР°С‡Р°Р»Рѕ
 		return _data;
 	}
 	inline T* end() noexcept {
 		return _data + _size;
 	}
 
-
 	inline const size_t deleted() const noexcept {
 		return _deleted;
 	}
 
-	inline T& front() { //Доступ к первому элементу, который не deleted и не empty
+	inline T& front() { //Р”РѕСЃС‚СѓРї Рє РїРµСЂРІРѕРјСѓ СЌР»РµРјРµРЅС‚Сѓ, РєРѕС‚РѕСЂС‹Р№ РЅРµ deleted Рё РЅРµ empty
 		for (size_t i = 0; i < _size; ++i)
 			if (_states[i] == busy)
 				return _data[i];
 		throw std::out_of_range("No busy elements in vector");
 	}
 
-	inline T& back() { //Доступ к последнему элементу, который не deleted и не empty
+	inline T& back() { //Р”РѕСЃС‚СѓРї Рє РїРѕСЃР»РµРґРЅРµРјСѓ СЌР»РµРјРµРЅС‚Сѓ, РєРѕС‚РѕСЂС‹Р№ РЅРµ deleted Рё РЅРµ empty
 		for (size_t i = _size; i-- > 0; )
 			if (_states[i] == busy)
 				return _data[i];
 		throw std::out_of_range("No busy elements in vector");
 	}
 
+	inline bool is_empty() const noexcept { return _size == 0 || (_size - _deleted == 0); } //ГґГіГ­ГЄГ¶ГЁГї ГЇГ°Г®ГўГҐГ°ГЄГЁ Г­Г  ГЇГіГ±ГІГ®ГІГі
 
-	inline bool is_empty() const noexcept { return _size == 0 || (_size - _deleted == 0); } //функция проверки на пустоту
-
-	//функции вставки
+	//С„СѓРЅРєС†РёРё РІСЃС‚Р°РІРєРё
 	void push_front(const T& value) noexcept {
 		if (is_full()) {
 			reserve(_capacity + RESERVE_MEMORY);
 		}
 
-		for (size_t i = _size; i > 0; --i) { // Сдвигаем всё вправо
+		for (size_t i = _size; i > 0; --i) { // РЎРґРІРёРіР°РµРј РІСЃС‘ РІРїСЂР°РІРѕ
 			_data[i] = _data[i - 1];
 			_states[i] = _states[i - 1];
 		}
@@ -205,7 +195,7 @@ public:
 			reserve(_capacity + RESERVE_MEMORY);
 		}
 		size_t real_index = check_index(index);
-		for (size_t i = _size; i > real_index; --i) { // Сдвигаем вправо
+		for (size_t i = _size; i > real_index; --i) { // РЎРґРІРёРіР°РµРј РІРїСЂР°РІРѕ
 			_data[i] = _data[i - 1];
 			_states[i] = _states[i - 1];
 		}
@@ -214,7 +204,7 @@ public:
 		++_size;
 	}
 
-	//функции удаления
+	//С„СѓРЅРєС†РёРё СѓРґР°Р»РµРЅРёСЏ
 	void pop_front() {
 		if (_data != nullptr && _states != nullptr) {
 			for (size_t i = 0; i < _size; ++i) {
@@ -243,7 +233,7 @@ public:
 					--_size;
 					return;
 				}
-				if (i <= 0) break; // иначе уйдём в переполнение
+				if (i <= 0) break; // РёРЅР°С‡Рµ СѓР№РґС‘Рј РІ РїРµСЂРµРїРѕР»РЅРµРЅРёРµ
 			}
 		}
 		throw std::underflow_error("Vector is empty");
@@ -257,20 +247,7 @@ public:
 		}
 	}
 
-	//замена значения
-	/*void emplace(size_t index, T&& value) { //со сдвигом
-		check_index(index);
-		if (is_full()) {
-			reserve(_capacity + RESERVE_MEMORY);
-		}
-		for (size_t i = _size; i > index; --i) {
-			_data[i] = _data[i - 1];
-			_states[i] = _states[i - 1];
-		}
-		_data[index] = value;
-		_states[index] = State::busy;
-		++_size;
-	}*/
+	//Р·Р°РјРµРЅР° Р·РЅР°С‡РµРЅРёСЏ
 	void emplace(size_t index, T&& value) {
 		size_t real_index = check_index(index);
 		_data[real_index] = value;
@@ -298,8 +275,8 @@ public:
 		return *this;
 	}
 
-	TVector<T>& operator=(const TVector<T>& other) noexcept {
-		if (this != &other) { //проверка на самоприсваивание
+	TVector<T>& operator=(const TVector<T>& other) {
+		if (this != &other) { //РїСЂРѕРІРµСЂРєР° РЅР° СЃР°РјРѕРїСЂРёСЃРІР°РёРІР°РЅРёРµ
 			delete[] _data;
 			delete[] _states;
 
@@ -358,19 +335,18 @@ public:
 		return false;
 	}
 
-
-	void reserve(size_t new_capacity) { //увеличивает _capacity
+	void reserve(size_t new_capacity) { // СѓРІРµР»РёС‡РёРІР°РµС‚ _capacity
 		if (new_capacity <= _capacity) return;
 
 		T* new_data = new T[new_capacity];
 		State* new_states = new State[new_capacity];
 
-		for (size_t i = 0; i < _size; ++i) { // Копируем существующие элементы
+		for (size_t i = 0; i < _size; ++i) { // РљРѕРїРёСЂСѓРµРј СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹
 			new_data[i] = _data[i];
 			new_states[i] = _states[i];
 		}
 
-		for (size_t i = _size; i < new_capacity; ++i) { // Помечаем оставшиеся ячейки как пустые
+		for (size_t i = _size; i < new_capacity; ++i) { // РџРѕРјРµС‡Р°РµРј РѕСЃС‚Р°РІС€РёРµСЃСЏ СЏС‡РµР№РєРё РєР°Рє РїСѓСЃС‚С‹Рµ
 			new_states[i] = State::empty;
 		}
 
@@ -398,17 +374,14 @@ public:
 		}
 
 		for (size_t i = _size; i < new_size; ++i) {
-			new (_data + i) T(); //размещает результат в уже выделенной памяти по адресу _data + i
+			new (_data + i) T(); // СЂР°Р·РјРµС‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ РІ СѓР¶Рµ РІС‹РґРµР»РµРЅРЅРѕР№ РїР°РјСЏС‚Рё РїРѕ Р°РґСЂРµСЃСѓ _data + i
 			_states[i] = busy;
 		}
 		_size = new_size;
 	}
 
 	void resize(size_t new_size, const T& value) {
-		if (new_size == _size) {
-			return;
-		}
-
+		if (new_size == _size) { return; }
 		if (new_size < _size) {
 			for (size_t i = new_size; i < _size; ++i) {
 				if (_states[i] == deleted)
@@ -419,28 +392,23 @@ public:
 			_size = new_size;
 			return;
 		}
-
 		if (new_size > _capacity) {
 			reserve(new_size + RESERVE_MEMORY);
 		}
-
 		for (size_t i = _size; i < new_size; ++i) {
-			new (_data + i) T(value); //размещает результат в уже выделенной памяти по адресу _data + i
+			new (_data + i) T(value); // СЂР°Р·РјРµС‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ РІ СѓР¶Рµ РІС‹РґРµР»РµРЅРЅРѕР№ РїР°РјСЏС‚Рё РїРѕ Р°РґСЂРµСЃСѓ _data + i
 			_states[i] = busy;
 		}
 		_size = new_size;
 	}
 
-	void shrink_to_fit() { //уменьшение размера, удаляя неиспользуемую память
+	void shrink_to_fit() { // СѓРјРµРЅСЊС€РµРЅРёРµ СЂР°Р·РјРµСЂР°, СѓРґР°Р»СЏСЏ РЅРµРёСЃРїРѕР»СЊР·СѓРµРјСѓСЋ РїР°РјСЏС‚СЊ
 		size_t busy_count = 0;
-
-		for (size_t i = 0; i < _size; ++i) { // Считаем busy элементы
+		for (size_t i = 0; i < _size; ++i) { // РЎС‡РёС‚Р°РµРј busy СЌР»РµРјРµРЅС‚С‹
 			if (_states[i] == busy)
 				++busy_count;
 		}
-
-		if (busy_count == _size && _capacity == _size)
-			return;
+		if (busy_count == _size && _capacity == _size) { return; }
 
 		size_t new_capacity = busy_count + RESERVE_MEMORY;
 		T* new_data = new T[new_capacity];
@@ -478,50 +446,33 @@ public:
 		}
 		std::cout << "]";
 	}
+
 	template <class U>
 	friend std::ostream& operator<<(std::ostream& out, const TVector<U>& vec);
 
-
 	template <typename U>
 	friend void swap(U& a, U& b);
+
 	template <typename U>
 	friend void shuffle(TVector<U>& vec);
+
 	template <typename U>
 	friend void quick_sort(TVector<U>& vec);
+
 	template <typename U>
 	friend size_t find_first(const TVector<U>& vec, const U& value);
+
 	template <typename U>
 	friend size_t find_last(const TVector<U>& vec, const U& value);
+
 	template <typename U>
 	friend size_t* find_all(const TVector<U>& vec, const U& value);
+
 	template <typename U>
 	friend void quick_sort_realisation(TVector<U>& vec, int left, int right);
 
 private:
 
-	/*void check_index(size_t index) const { //версия до 6.09 (после правок Марины Андреевны
-		if (index >= _size) {
-			throw std::out_of_range("Index out of bounds: index >= size");
-		}
-		if (_states[index] != State::busy) {
-			throw std::out_of_range("Accessing element that is not active (deleted or empty)");
-		}
-	}*/
-	/*void check_index(size_t index) const {
-		if (index >= _size) {
-			throw std::out_of_range("Index out of bounds: index >= size");
-		}
-		size_t count = 0;
-		for (size_t i = 0; i < _size; i++) {
-			if (_states[i] == State::busy) {
-				if (count == index) {
-					return;
-				}
-				count++;
-			}
-		}
-		throw std::out_of_range("There no element with this index");
-	}*/
 	size_t check_index(size_t index) const {
 		if (index >= _size) {
 			throw std::out_of_range("Index out of bounds: index >= size");
@@ -537,12 +488,11 @@ private:
 		}
 		throw std::out_of_range("There no element with this index");
 	}
-	inline bool is_full() const noexcept { //функция проверки на заполненость
+	inline bool is_full() const noexcept { // С„СѓРЅРєС†РёСЏ РїСЂРѕРІРµСЂРєРё РЅР° Р·Р°РїРѕР»РЅРµРЅРѕСЃС‚СЊ
 		return _size >= _capacity;
 	}
 	template <class>
 	friend class TVectorTester;
-
 };
 
 template <typename T>
@@ -568,33 +518,6 @@ void shuffle(TVector<T>& vec) {
 		swap(vec._data[i], vec._data[j]);
 	}
 }
-
-/*
-template <typename T>
-int partition(TVector<T>& vec, int left, int right) {
-	T p = vec._data[right];
-	int i = left - 1;
-
-	for (int j = left; j < right; ++j) {
-		if (vec._states[j] == busy && vec._data[j] <= p) {
-			++i;
-			swap(vec._data[i], vec._data[j]);
-		}
-	}
-	swap(vec._data[i + 1], vec._data[right]);
-	return i + 1;
-}
-
-template <class T>
-void quick_sort_realisation(TVector<T>& vec, int left, int right) {
-	if (left < right) {
-		int p = partition(vec, left, right);
-		quick_sort_realisation(vec, left, p - 1);
-		quick_sort_realisation(vec, p + 1, right);
-	}
-}
-*/
-
 
 template <class T>
 void quick_sort_realisation(TVector<T>& vec, int left, int right) {
@@ -642,8 +565,7 @@ size_t find_last(const TVector<T>& vec, const T& value) {
 template <class T>
 size_t* find_all(const TVector<T>& vec, const T& value) {
 	size_t result_size = 0;
-
-	for (size_t i = 0; i < vec.size(); ++i) { // Считаем количество подходящих элементов
+	for (size_t i = 0; i < vec.size(); ++i) { // РЎС‡РёС‚Р°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РїРѕРґС…РѕРґСЏС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ
 		if (vec.state(i) == State::busy && vec.data(i) == value) {
 			++result_size;
 		}
