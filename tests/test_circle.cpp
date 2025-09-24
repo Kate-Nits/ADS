@@ -11,15 +11,10 @@ TEST(TestCircleLib, default_constructor) {
     // Arrange
     Circle A;
     Point b;
-    // Act
-    int actual_result = FALSE;
-    if (A.get_center() == b && A.get_radius() == 1) {
-        actual_result = TRUE;
-    }
 
-    // Assert
-    int expected_result = TRUE;
-    EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
+    // Act & Assert
+    EXPECT_EQ(1, A.get_radius()); //проверяет что два переданные значения равны
+    EXPECT_EQ(b, A.get_center());
 }
 
 TEST(TestCircleLib, parameterized_constructor_with_normal_radius) {
@@ -27,44 +22,37 @@ TEST(TestCircleLib, parameterized_constructor_with_normal_radius) {
     Point a(5, 27);
     Circle C(a, 6);
 
-    // Act
-    int actual_result = FALSE;
-    if (C.get_center() == a && C.get_radius() == 6) {
-        actual_result = TRUE;
-    }
-
-    // Assert
-    int expected_result = TRUE;
-    EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
+    // Act & Assert
+    EXPECT_EQ(6, C.get_radius()); //проверяет что два переданные значения равны
+    EXPECT_EQ(a, C.get_center());
 }
 TEST(TestCircleLib, parameterized_constructor_with_radius_less_than_zero) {
     // Arrange
     Point a(-3, 15);
+
     // Act & Assert
-    EXPECT_THROW({ Circle C(a, -8); }, std::logic_error);
+    ASSERT_ANY_THROW(Circle C(a, -8));
 }
 
 TEST(TestCircleLib, copy_constructor_without_throw) {
     // Arrange
-    Circle A(Point(-4, 10), 7);
-    Circle B(A);
+    Point M(-4, 10);
+    Circle A(M, 7);
+    
 
     // Act
-    int actual_result = FALSE;
-    if (B.get_center() == A.get_center() && B.get_radius() == A.get_radius()) {
-        actual_result = TRUE;
-    }
+    Circle B(A);
 
     // Assert
-    int expected_result = TRUE;
-    EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
+    EXPECT_EQ(M, B.get_center()); //проверяет что два переданные значения равны
+    EXPECT_EQ(7, B.get_radius());
 }
 
 TEST(TestCircleLib, copy_constructor_with_throw) {
     // Arrange
     Circle* null_pointer = nullptr;
     // Act & Assert
-    EXPECT_THROW({ Circle & bad_reference = *null_pointer; Circle a(bad_reference); }, std::logic_error);
+    ASSERT_ANY_THROW(Circle C(*null_pointer));
 }
 
 

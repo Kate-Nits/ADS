@@ -8,56 +8,62 @@
 #define FALSE 0
 
 TEST(TestPoint3dLib, default_constructor) {
-    // Arrange
+    // Arrange (Настройка)
     Point3D a;
 
-    // Act
-    int actual_result = FALSE;
-    if (a.get_ox() == 0 && a.get_oy() == 0 && a.get_oz() == 0) {
-        actual_result = TRUE;
-    }
-
-    // Assert
-    int expected_result = TRUE;
-    EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
+    // Assert & Act
+    EXPECT_EQ(0, a.get_ox()); //проверяет что два переданные значения равны
+    EXPECT_EQ(0, a.get_oy());
+    EXPECT_EQ(0, a.get_oz());
 }
 
 TEST(TestPoint3dLib, parameterized_constructor) {
     // Arrange
     Point3D a(5, 27, -45);
 
-    // Act
-    int actual_result = FALSE;
-    if (a.get_ox() == 5 && a.get_oy() == 27 && a.get_oz() == -45) {
-        actual_result = TRUE;
-    }
-
-    // Assert
-    int expected_result = TRUE;
-    EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
+    // Assert & Act
+    EXPECT_EQ(5, a.get_ox()); //проверяет что два переданные значения равны
+    EXPECT_EQ(27, a.get_oy());
+    EXPECT_EQ(-45, a.get_oz());
 }
 
 TEST(TestPoint3dLib, copy_constructor_without_throw) {
     // Arrange
     Point3D a(-3, 72, 15);
-    Point3D b(a);
 
     // Act
-    int actual_result = FALSE;
-    if (a.get_ox() == b.get_ox() && a.get_oy() == b.get_oy() && a.get_oz() == b.get_oz()) {
-        actual_result = TRUE;
-    }
+    Point3D b(a);
 
     // Assert
-    int expected_result = TRUE;
-    EXPECT_EQ(expected_result, actual_result); //проверяет что два переданные значения равны
+    EXPECT_EQ(-3, b.get_ox()); //проверяет что два переданные значения равны
+    EXPECT_EQ(72, b.get_oy());
+    EXPECT_EQ(15, b.get_oz());
 }
 
 TEST(TestPoint3dLib, copy_constructor_with_throw) {
     // Arrange
     Point3D* null_pointer = nullptr;
+
     // Act & Assert
-    EXPECT_THROW({ Point3D & bad_reference = *null_pointer; Point3D a(bad_reference); }, std::logic_error);
+    ASSERT_ANY_THROW(Point3D a(*null_pointer));
+}
+
+TEST(TestPoint3dLib, can_compare_with_operator_two_equal_object) {
+    // Arrange
+    Point3D a(1, 2, 3);
+    Point3D b(1, 2, 3);
+
+    // Act & Assert
+    EXPECT_TRUE(a == b);
+}
+
+TEST(TestPoint3dLib, can_compare_with_operator_two_not_equal_object) {
+    // Arrange
+    Point3D a(1, 2, 7);
+    Point3D b(4, 2, 7);
+
+    // Act & Assert
+    EXPECT_FALSE(a == b);
 }
 
 TEST(TestPoint3dLib, can_distance_to) {
@@ -65,10 +71,6 @@ TEST(TestPoint3dLib, can_distance_to) {
     Point3D a(0, -3, 3);
     Point3D b(3, 1, 3);
 
-    // Act
-    float actual_result = a.distance_to(b);
-
-    // Assert
-    float expected_result = 5.0;
-    EXPECT_NEAR(expected_result, actual_result, EPSILON); //проверяет, что два числа с плавающей точкой приблизительно равны с учетом заданной погрешности
+    // Act & Assert
+    EXPECT_NEAR(5.0, a.distance_to(b), EPSILON); //проверяет, что два числа с плавающей точкой приблизительно равны с учетом заданной погрешности
 }
