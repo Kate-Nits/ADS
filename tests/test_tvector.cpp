@@ -144,7 +144,7 @@ TEST(TestTVectorLib, test_state_state_empty) {
     EXPECT_EQ(State::empty, vec.state(size+1));
 }
 
-TEST(TestTVectorLib, test_front_without_deleted_and_empty_elements) {
+TEST(TestTVectorLib, test_front_without_deleted_elements) {
     // Arrange
     size_t size = 3;
     int arr[8] = { 112, 234, 345 };
@@ -165,4 +165,27 @@ TEST(TestTVectorLib, test_front_with_deleted_element) {
 
     // Assert
     EXPECT_EQ(234, vec.front());
+}
+
+TEST(TestTVectorLib, test_back_without_deleted_elements) {
+    // Arrange
+    size_t size = 3;
+    int arr[8] = { 112, 234, 345 };
+    TVector<int> vec(arr, size);
+
+    // Act & Assert
+    EXPECT_EQ(345, vec.back());
+}
+
+TEST(TestTVectorLib, test_back_with_deleted_element) {
+    // Arrange
+    size_t size = 3;
+    int arr[8] = { 112, 234, 345 };
+    TVector<int> vec(arr, size);
+
+    // Act
+    vec.pop_back();
+
+    // Assert
+    EXPECT_EQ(234, vec.back());
 }
