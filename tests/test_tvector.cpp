@@ -82,9 +82,31 @@ TEST(TestTVectorLib, copy_constructor) {
     EXPECT_EQ(vec1.size(), vec2.size());
     EXPECT_EQ(vec1.capacity(), vec2.capacity());
     EXPECT_EQ(vec1.deleted(), vec2.deleted());
-
     for (size_t i = 0; i < vec1.size(); i++) {
         EXPECT_EQ(vec1.data(i), vec2.data(i));
         EXPECT_EQ(vec1.state(i), vec2.state(i));
     }
+}
+
+TEST(TestTVectorLib, test_at_checking_without_difficulties) {
+    // Arrange
+    size_t size = 8;
+    int arr[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+    TVector<int> vec(arr, size);
+
+    // Act & Assert
+    EXPECT_EQ(4, vec.at(4));
+}
+
+TEST(TestTVectorLib, test_at_checking_with_pop_front) {
+    // Arrange
+    size_t size = 8;
+    int arr[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+    TVector<int> vec(arr, size);
+
+    // Act
+    vec.pop_front();
+
+    // Assert
+    EXPECT_EQ(1, vec.at(0));
 }
