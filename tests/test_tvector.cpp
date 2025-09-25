@@ -243,6 +243,25 @@ TEST(TestTVectorLib, test_push_front) {
     EXPECT_EQ(3, vec[3]);
 }
 
+TEST(TestTVectorLib, test_push_back) {
+    // Arrange
+    TVector<int> vec(3);
+    vec[0] = 1;
+    vec[1] = 2;
+    vec[2] = 3;
+    const State* states_vec = vec.states();
+
+    // Act
+    vec.push_back(42);
+
+    // Assert
+    EXPECT_EQ(4, vec.size());
+    EXPECT_EQ(3 + vec.RESERVE_MEMORY, vec.capacity());
+    EXPECT_TRUE(states_vec[3] == State::busy);
+    EXPECT_EQ(1, vec[0]);
+    EXPECT_EQ(42, vec[3]);
+}
+
 TEST(TestTVectorLib, test_assign) {
     // Arrange
     size_t size = 3;
