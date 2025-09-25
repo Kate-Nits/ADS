@@ -262,6 +262,43 @@ TEST(TestTVectorLib, test_push_back) {
     EXPECT_EQ(42, vec[3]);
 }
 
+TEST(TestTVectorLib, test_insert_without_deleted_elements) {
+    // Arrange
+    TVector<int> vec(3);
+    vec[0] = 1;
+    vec[1] = 2;
+    vec[2] = 3;
+
+    // Act
+    vec.insert(1, 66);
+
+    // Assert
+    EXPECT_EQ(4, vec.size());
+    EXPECT_EQ(1, vec[0]);
+    EXPECT_EQ(66, vec[1]);
+    EXPECT_EQ(2, vec[2]);
+    EXPECT_EQ(3, vec[3]);
+}
+
+TEST(TestTVectorLib, test_insert_with_deleted_elements) {
+    // Arrange
+    size_t size = 5;
+    int arr[5] = { 1, 6, 4, 5, 7 };
+    TVector<int> vec(arr, size);
+
+    // Act
+    vec.erase(1);
+    vec.insert(1, 667);
+
+    // Assert
+    EXPECT_EQ(5, vec.size());
+    EXPECT_EQ(1, vec.at(0));
+    EXPECT_EQ(667, vec.at(1));
+    EXPECT_EQ(4, vec.at(2));
+    EXPECT_EQ(5, vec.at(3));
+    EXPECT_EQ(7, vec.at(4));
+}
+
 TEST(TestTVectorLib, test_assign) {
     // Arrange
     size_t size = 3;
