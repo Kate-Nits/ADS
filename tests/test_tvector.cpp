@@ -244,6 +244,21 @@ TEST(TestTVectorLib, test_operator_equal) {
     EXPECT_EQ(369, vec2[2]);
 }
 
+TEST(TestTVectorLib, test_clear) {
+    // Arrange
+    size_t size = 5;
+    TVector<int> vec(size);
+    const State* vec_states = vec.states();
+    
+    // Act
+    vec.clear();
+
+    // Assert
+    for (size_t i = 0; i < size; ++i) { EXPECT_EQ(State::empty, vec_states[i]); }
+    EXPECT_EQ(0, vec.size());
+    EXPECT_EQ(0, vec.deleted());
+}
+
 TEST(TestTVectorLib, can_compare_with_operator_two_equal_object) {
     // Arrange
     size_t size = 2;
