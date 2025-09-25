@@ -225,3 +225,59 @@ TEST(TestTVectorLib, test_assign) {
     EXPECT_EQ(2, vec2[1]);
     EXPECT_EQ(3, vec2[2]);
 }
+
+TEST(TestTVectorLib, can_compare_with_operator_two_equal_object) {
+    // Arrange
+    size_t size = 2;
+    TVector<int> vec1(size);
+    vec1[0] = 5;
+    vec1[1] = 6;
+    TVector<int> vec2(size);
+    vec2[0] = 5;
+    vec2[1] = 6;
+
+    // Act & Assert
+    EXPECT_TRUE(vec1 == vec2);
+}
+
+TEST(TestTVectorLib, can_compare_with_operator_two_not_equal_object) {
+    // Arrange
+    size_t size = 2;
+    TVector<int> vec1(size);
+    vec1[0] = 5;
+    vec1[1] = 6;
+    TVector<int> vec2(size);
+    vec2[0] = 5;
+    vec2[1] = 7;
+
+    // Act & Assert
+    EXPECT_FALSE(vec1 == vec2);
+}
+
+TEST(TestTVectorLib, can_compare_with_operator_that_says_that_two_objects_are_not_equal_return_true) {
+    // Arrange
+    size_t size = 2;
+    TVector<int> vec1(size);
+    vec1[0] = 5;
+    vec1[1] = 6;
+    TVector<int> vec2(size);
+    vec2[0] = 3;
+    vec2[1] = -4;
+
+    // Act & Assert
+    EXPECT_TRUE(vec1 != vec2);
+}
+
+TEST(TestTVectorLib, can_compare_with_operator_that_says_that_two_objects_are_not_equal_return_fale) {
+    // Arrange
+    size_t size = 2;
+    TVector<int> vec1(size);
+    vec1[0] = 5;
+    vec1[1] = 6;
+    TVector<int> vec2(size);
+    vec2[0] = 5;
+    vec2[1] = 6;
+
+    // Act & Assert
+    EXPECT_FALSE(vec1 != vec2);
+}

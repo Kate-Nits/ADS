@@ -384,7 +384,7 @@ public:
 		if (new_size == _size) { return; }
 		if (new_size < _size) {
 			for (size_t i = new_size; i < _size; ++i) {
-				if (_states[i] == deleted)
+				if (_states[i] == State::deleted)
 					--_deleted;
 				_states[i] = empty;
 				_data[i].~T();
