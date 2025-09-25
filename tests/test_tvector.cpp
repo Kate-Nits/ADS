@@ -224,6 +224,25 @@ TEST(TestTVectorLib, test_is_empty_not_empty_vec) {
     EXPECT_FALSE(vec.is_empty());
 }
 
+TEST(TestTVectorLib, test_push_front) {
+    // Arrange
+    TVector<int> vec(3);
+    vec[0] = 1;
+    vec[1] = 2;
+    vec[2] = 3;
+    const State* states_vec = vec.states();
+
+    // Act
+    vec.push_front(777);
+
+    // Assert
+    EXPECT_EQ(4, vec.size());
+    EXPECT_EQ(3 + vec.RESERVE_MEMORY, vec.capacity());
+    EXPECT_TRUE(states_vec[3] == State::busy);
+    EXPECT_EQ(777, vec[0]);
+    EXPECT_EQ(3, vec[3]);
+}
+
 TEST(TestTVectorLib, test_assign) {
     // Arrange
     size_t size = 3;
@@ -362,10 +381,10 @@ TEST(TestTVectorLib, test_resize) {
     vec[0] = 10;
     vec[1] = 20;
     vec[2] = 30;
+    const State* states = vec.states();
 
     // Act
     vec.resize(5);
-    const State* states = vec.states();
 
     // Assert
     EXPECT_EQ(5, vec.size());
