@@ -144,6 +144,24 @@ TEST(TestTVectorLib, test_state_state_empty) {
     EXPECT_EQ(State::empty, vec.state(size+1));
 }
 
+TEST(TestTVectorLib, test_begin_and_end) {
+    // Arrange
+    size_t size = 3;
+    int arr[8] = { 11, 22, 37 };
+    TVector<int> vec(arr, size);
+    int sum = 0;
+
+    // Act
+    int* begin = vec.begin();
+    int* end = vec.end();
+    for (int* p = begin; p < end; ++p) {
+        sum += *p;
+    }
+
+    // Assert
+    EXPECT_EQ(11+22+37, sum);
+}
+
 TEST(TestTVectorLib, test_front_without_deleted_elements) {
     // Arrange
     size_t size = 3;
