@@ -208,6 +208,22 @@ TEST(TestTVectorLib, test_back_with_deleted_element) {
     EXPECT_EQ(234, vec.back());
 }
 
+TEST(TestTVectorLib, test_is_empty_real_empty_vec) {
+    // Arrange
+    TVector<int> vec;
+
+    // Act & Assert
+    EXPECT_TRUE(vec.is_empty());
+}
+
+TEST(TestTVectorLib, test_is_empty_not_empty_vec) {
+    // Arrange
+    TVector<int> vec(3);
+
+    // Act & Assert
+    EXPECT_FALSE(vec.is_empty());
+}
+
 TEST(TestTVectorLib, test_assign) {
     // Arrange
     size_t size = 3;
@@ -352,10 +368,11 @@ TEST(TestTVectorLib, test_resize) {
     const State* states = vec.states();
 
     // Assert
-    EXPECT_TRUE(5, vec.size());
-    EXPECT_TRUE(10, vec[0]);
-    EXPECT_TRUE(20, vec[1]);
-    EXPECT_TRUE(30, vec[2]);
-    EXPECT_TRUE(busy, states[3]);
-    EXPECT_TRUE(busy, states[4]);
+    EXPECT_EQ(5, vec.size());
+    EXPECT_EQ(10, vec[0]);
+    EXPECT_EQ(20, vec[1]);
+    EXPECT_EQ(30, vec[2]);
+    EXPECT_EQ(busy, states[3]);
+    EXPECT_EQ(busy, states[4]);
 }
+
