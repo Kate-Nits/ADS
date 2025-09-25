@@ -110,3 +110,36 @@ TEST(TestTVectorLib, test_at_checking_with_pop_front) {
     // Assert
     EXPECT_EQ(1, vec.at(0));
 }
+
+TEST(TestTVectorLib, test_state_state_deleted) {
+    // Arrange
+    size_t size = 8;
+    int arr[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+    TVector<int> vec(arr, size);
+
+    // Act
+    vec.pop_front();
+
+    // Assert
+    EXPECT_EQ(State::deleted, vec.state(0));
+}
+
+TEST(TestTVectorLib, test_state_state_busy) {
+    // Arrange
+    size_t size = 8;
+    int arr[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+    TVector<int> vec(arr, size);
+
+    // Act & Assert
+    EXPECT_EQ(State::busy, vec.state(4));
+}
+
+TEST(TestTVectorLib, test_state_state_empty) {
+    // Arrange
+    size_t size = 8;
+    int arr[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+    TVector<int> vec(arr, size);
+
+    // Act & Assert
+    EXPECT_EQ(State::empty, vec.state(size+1));
+}
