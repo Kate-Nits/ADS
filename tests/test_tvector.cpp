@@ -314,3 +314,48 @@ TEST(TestTVectorLib, can_compare_with_operator_that_says_that_two_objects_are_no
     // Act & Assert
     EXPECT_FALSE(vec1 != vec2);
 }
+
+TEST(TestTVectorLib, test_reserve_new_capacity_more_than_old_capacity) {
+    // Arrange
+    TVector<int> vec(3);
+    size_t old_capacity = vec.capacity();
+    size_t new_capacity = old_capacity + 10;
+
+    // Act
+    vec.reserve(new_capacity);
+
+    // Assert
+    EXPECT_TRUE(vec.capacity() >= new_capacity);
+}
+
+TEST(TestTVectorLib, test_reserve_no_change_if_new_capacity_less_than_old_capacity) {
+    // Arrange
+    TVector<int> vec(4);
+    size_t old_capacity = vec.capacity();
+
+    // Act
+    vec.reserve(old_capacity - 1);
+
+    // Assert
+    EXPECT_TRUE(vec.capacity() == old_capacity);
+}
+
+TEST(TestTVectorLib, test_resize) {
+    // Arrange
+    TVector<int> vec(3);
+    vec[0] = 10;
+    vec[1] = 20;
+    vec[2] = 30;
+
+    // Act
+    vec.resize(5);
+    const State* states = vec.states();
+
+    // Assert
+    EXPECT_TRUE(5, vec.size());
+    EXPECT_TRUE(10, vec[0]);
+    EXPECT_TRUE(20, vec[1]);
+    EXPECT_TRUE(30, vec[2]);
+    EXPECT_TRUE(busy, states[3]);
+    EXPECT_TRUE(busy, states[4]);
+}
