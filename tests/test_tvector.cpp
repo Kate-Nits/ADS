@@ -226,6 +226,24 @@ TEST(TestTVectorLib, test_assign) {
     EXPECT_EQ(3, vec2[2]);
 }
 
+TEST(TestTVectorLib, test_operator_equal) {
+    // Arrange
+    size_t size = 3;
+    TVector<int> vec1(size);
+    vec1[0] = 100;
+    vec1[1] = 200;
+    vec1[2] = 369;
+
+    // Act
+    TVector<int> vec2;
+    vec2 = vec1;
+
+    // Assert
+    EXPECT_EQ(100, vec2[0]);
+    EXPECT_EQ(200, vec2[1]);
+    EXPECT_EQ(369, vec2[2]);
+}
+
 TEST(TestTVectorLib, can_compare_with_operator_two_equal_object) {
     // Arrange
     size_t size = 2;
