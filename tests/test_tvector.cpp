@@ -207,3 +207,21 @@ TEST(TestTVectorLib, test_back_with_deleted_element) {
     // Assert
     EXPECT_EQ(234, vec.back());
 }
+
+TEST(TestTVectorLib, test_assign) {
+    // Arrange
+    size_t size = 3;
+    TVector<int> vec1(size);
+    vec1[0] = 1;
+    vec1[1] = 2;
+    vec1[2] = 3;
+
+    // Act
+    TVector<int> vec2;
+    vec2.assign(vec1);
+
+    // Assert
+    EXPECT_EQ(1, vec2[0]);
+    EXPECT_EQ(2, vec2[1]);
+    EXPECT_EQ(3, vec2[2]);
+}
