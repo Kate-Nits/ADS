@@ -326,6 +326,18 @@ TEST(TestTVectorLib, test_pop_back) {
     EXPECT_TRUE(states_vec[2] == State::empty && vec.size() == 2);
 }
 
+TEST(TestTVectorLib, test_erase) {
+    // Arrange
+    TVector<int> vec(9);
+    const State* states_vec = vec.states();
+
+    // Act
+    vec.erase(1);
+
+    // Assert
+    EXPECT_TRUE(states_vec[1] == State::deleted);
+}
+
 TEST(TestTVectorLib, test_assign) {
     // Arrange
     size_t size = 3;
