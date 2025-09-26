@@ -313,7 +313,7 @@ TEST(TestTVectorLib, test_pop_front) {
     EXPECT_TRUE(states_vec[0] == State::deleted && vec.size() == 7 && vec.deleted() == 1);
 }
 
-TEST(TestTVectorLib, test_pop_back) {
+TEST(TestTVectorLib, test_pop_back_checking_without_difficulties) {
     // Arrange
     TVector<int> vec(3);
     vec[2] = 99;
@@ -324,6 +324,14 @@ TEST(TestTVectorLib, test_pop_back) {
 
     // Assert
     EXPECT_TRUE(states_vec[2] == State::empty && vec.size() == 2);
+}
+
+TEST(TestTVectorLib, test_pop_back_size_equal_0) {
+    // Arrange
+    TVector <int> vec;
+
+    // Act & Assert
+    ASSERT_ANY_THROW(vec.pop_back());
 }
 
 TEST(TestTVectorLib, test_erase) {
