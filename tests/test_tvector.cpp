@@ -537,3 +537,23 @@ TEST(TestTVectorLib, test_quick_sort) {
     // Assert
     EXPECT_TRUE(sort_vec == not_sort_vec);
 }
+
+TEST(TestTVectorLib, test_find_first) {
+    // Arrange
+    size_t size = 5;
+    int arr[5] = { 7, 3, 5, 3, 9 };
+    TVector<int> vec(arr, size);
+
+    // Act & Assert
+    EXPECT_EQ(1, find_first(vec, 3));
+}
+
+TEST(TestTVectorLib, test_find_last) {
+    // Arrange
+    size_t size = 5;
+    int arr[5] = { 7, 3, 5, 3, 9 };
+    TVector<int> vec(arr, size);
+
+    // Act & Assert
+    EXPECT_EQ(3, find_last(vec, 3));
+}
