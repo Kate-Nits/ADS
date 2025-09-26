@@ -403,7 +403,7 @@ TEST(TestTVectorLib, test_pop_back_size_equal_0) {
     ASSERT_ANY_THROW(vec.pop_back());
 }
 
-TEST(TestTVectorLib, test_erase) {
+TEST(TestTVectorLib, test_erase_checking_without_difficulties) {
     // Arrange
     TVector<int> vec(9);
     const State* states_vec = vec.states();
@@ -413,6 +413,18 @@ TEST(TestTVectorLib, test_erase) {
 
     // Assert
     EXPECT_TRUE(states_vec[1] == State::deleted);
+}
+
+TEST(TestTVectorLib, test_erase_with_shrink_to_fit) {
+    // Arrange
+    TVector<int> vec(20);
+
+    // Act
+    for (int i = 0; i < 4; ++i) { vec.erase(i); }
+
+    // Assert
+    EXPECT_EQ(0, vec.deleted());
+    EXPECT_EQ(16, vec.size());
 }
 
 TEST(TestTVectorLib, test_emplace) {
