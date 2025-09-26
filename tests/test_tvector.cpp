@@ -258,7 +258,7 @@ TEST(TestTVectorLib, test_push_front_with_reserve) {
     EXPECT_TRUE(vec[0] == 0 && vec_capacity <= vec.capacity());
 }
 
-TEST(TestTVectorLib, test_push_back) {
+TEST(TestTVectorLib, test_push_back_checking_without_difficulties) {
     // Arrange
     TVector<int> vec(3);
     vec[0] = 1;
@@ -275,6 +275,21 @@ TEST(TestTVectorLib, test_push_back) {
     EXPECT_TRUE(states_vec[3] == State::busy);
     EXPECT_EQ(1, vec[0]);
     EXPECT_EQ(42, vec[3]);
+}
+
+TEST(TestTVectorLib, test_push_back_with_reserve) {
+    // Arrange
+    TVector<int> vec(1);
+    size_t vec_capacity1 = vec.capacity();
+    for (size_t i = 0; i < vec_capacity1; ++i) { // Заполнили до capacity
+        vec.push_back(1);
+    }
+
+    // Act
+    vec.push_back(0); // должно вызвать reserve()
+
+    // Assert
+    EXPECT_TRUE(vec[vec.size() - 1] == 0 && vec_capacity1 <= vec.capacity());
 }
 
 TEST(TestTVectorLib, test_insert_without_deleted_elements) {
