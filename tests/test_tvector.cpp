@@ -355,7 +355,7 @@ TEST(TestTVectorLib, test_insert_out_of_range) {
     ASSERT_ANY_THROW(vec.insert(5, 999));
 }
 
-TEST(TestTVectorLib, test_pop_front) {
+TEST(TestTVectorLib, test_pop_front_checking_without_difficulties) {
     // Arrange
     size_t size = 7;
     int arr[7] = { 10, 20, 30, 10, 20, 30, 10 };
@@ -367,6 +367,19 @@ TEST(TestTVectorLib, test_pop_front) {
 
     // Assert
     EXPECT_TRUE(states_vec[0] == State::deleted && vec.size() == 7 && vec.deleted() == 1);
+}
+
+TEST(TestTVectorLib, test_pop_front_with_shrink_to_fit) {
+    // Arrange
+    TVector<int> vec(6);
+    for (size_t i = 0; i < 1; ++i) {
+        vec.erase(i); // deleted 1
+    }
+    // Act
+    vec.pop_front();
+
+    // Assert
+    EXPECT_EQ(0, vec.deleted());
 }
 
 TEST(TestTVectorLib, test_pop_back_checking_without_difficulties) {
