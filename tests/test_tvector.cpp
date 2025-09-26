@@ -509,3 +509,16 @@ TEST(TestTVectorLib, test_resize) {
     EXPECT_EQ(busy, states[4]);
 }
 
+TEST(TestTVectorLib, test_shuffle) {
+    // Arrange
+    size_t size = 5;
+    TVector<int> vec(size);
+    for (int i = 0; i < size; ++i) { vec[i] = i; }
+    TVector<int> old_vec(vec);
+
+    // Act
+    shuffle(vec);
+
+    // Assert
+    EXPECT_TRUE(old_vec != vec);
+}
