@@ -329,6 +329,32 @@ TEST(TestTVectorLib, test_insert_with_deleted_elements) {
     EXPECT_EQ(7, vec.at(4));
 }
 
+TEST(TestTVectorLib, test_insert_with_reserve) {
+    // Arrange
+    TVector<int> vec(3);
+    size_t vec_capacity = vec.capacity();
+    for (size_t i = 0; i < vec_capacity; ++i) { // Заполнилa до capacity
+        vec.insert(1, 5);
+    }
+
+    // Act
+    vec.insert(1, 5);
+
+    // Assert
+    EXPECT_TRUE(vec[1] == 5 && vec_capacity <= vec.capacity());
+}
+
+TEST(TestTVectorLib, test_insert_out_of_range) {
+    // Arrange
+    TVector<int> vec(2);
+
+    // Act
+    vec.insert(1, 66);
+
+    // Assert
+    ASSERT_ANY_THROW(vec.insert(5, 999));
+}
+
 TEST(TestTVectorLib, test_pop_front) {
     // Arrange
     size_t size = 7;
