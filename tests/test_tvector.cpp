@@ -338,6 +338,17 @@ TEST(TestTVectorLib, test_erase) {
     EXPECT_TRUE(states_vec[1] == State::deleted);
 }
 
+TEST(TestTVectorLib, test_emplace) {
+    // Arrange
+    TVector<std::string> vec(3);
+
+    // Act
+    vec.emplace(0, std::string("hello"));
+
+    // Assert
+    EXPECT_EQ("hello", vec[0]);
+}
+
 TEST(TestTVectorLib, test_assign) {
     // Arrange
     size_t size = 3;
