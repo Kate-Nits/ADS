@@ -299,6 +299,20 @@ TEST(TestTVectorLib, test_insert_with_deleted_elements) {
     EXPECT_EQ(7, vec.at(4));
 }
 
+TEST(TestTVectorLib, test_pop_front) {
+    // Arrange
+    size_t size = 7;
+    int arr[7] = { 10, 20, 30, 10, 20, 30, 10 };
+    TVector<int> vec(arr, size);
+    const State* states_vec = vec.states();
+
+    // Act
+    vec.pop_front();
+
+    // Assert
+    EXPECT_TRUE(states_vec[0] == State::deleted && vec.size() == 7 && vec.deleted() == 1);
+}
+
 TEST(TestTVectorLib, test_assign) {
     // Arrange
     size_t size = 3;
