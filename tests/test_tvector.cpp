@@ -522,3 +522,18 @@ TEST(TestTVectorLib, test_shuffle) {
     // Assert
     EXPECT_TRUE(old_vec != vec);
 }
+
+TEST(TestTVectorLib, test_quick_sort) {
+    // Arrange
+    size_t size = 5;
+    int arr_not_sort[5] = { 5, 3, 4, 1, 2 };
+    int arr_sort[5] = { 1, 2, 3, 4, 5 };
+    TVector<int> not_sort_vec(arr_not_sort, size);
+    TVector<int> sort_vec(arr_sort, size);
+
+    // Act
+    quick_sort(not_sort_vec);
+
+    // Assert
+    EXPECT_TRUE(sort_vec == not_sort_vec);
+}
