@@ -557,3 +557,17 @@ TEST(TestTVectorLib, test_find_last) {
     // Act & Assert
     EXPECT_EQ(3, find_last(vec, 3));
 }
+
+TEST(TestTVectorLib, test_find_all) {
+    // Arrange
+    size_t size = 6;
+    int arr[6] = { 1, 2, 3, 2, 5, 2 };
+    TVector<int> vec(arr, size);
+
+    // Act
+    size_t* result = find_all(vec, 2);
+
+    // Assert
+    EXPECT_TRUE(result[0] == 1 && result[1] == 3 && result[2] == 5);
+    delete[] result; //ñïğîñè ÍÓÆÍÎ ëè ÓÄÀËßÒÜ????
+}
