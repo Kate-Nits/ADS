@@ -839,6 +839,15 @@ TEST(TestMathVectorLib, test_operator_add_for_double_and_int) {
     EXPECT_NEAR(12.1, res[2], EPSILON);
 }
 
+TEST(TestMathVectorLib, test_operator_add_for_different_size_vectors_which_have_different_types) {
+    // Arrange
+    MathVector<int> vec1{ 1, 5 };
+    MathVector<double> vec2{ 2.7, 5.2, 9.5 };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(vec1 + vec2);
+}
+
 TEST(TestMathVectorLib, test_operator_sub_for_int) {
     // Arrange
     MathVector<int> vec1{ 3, 5, -12 };
@@ -887,6 +896,15 @@ TEST(TestMathVectorLib, test_operator_sub_for_double_and_int) {
     EXPECT_NEAR(-12.1, res[2], EPSILON);
 }
 
+TEST(TestMathVectorLib, test_operator_sub_for_different_size_vectors_which_have_different_types) {
+    // Arrange
+    MathVector<int> vec1{ 1, 5 };
+    MathVector<double> vec2{ 2.7, 5.2, 9.5 };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(vec1 - vec2);
+}
+
 TEST(TestMathVectorLib, test_operator_mult_for_scalar) {
     // Arrange
     MathVector<int> vec{ 1, 2, 6 };
@@ -913,6 +931,46 @@ TEST(TestMathVectorLib, test_operator_mult_which_vectors_have_sizes_not_equal) {
     // Arrange
     MathVector<int> vec1{ 1, 2, 6 };
     MathVector<int> vec2{ 3, 1, 5, 8 };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(vec1 * vec2);
+}
+
+TEST(TestMathVectorLib, test_operator_mult_for_scalar_with_different_types) {
+    // Arrange
+    MathVector<int> vec{ 1, 2, 6 };
+
+    // Act
+    auto result = vec * 2.3;
+
+    // Assert
+    EXPECT_NEAR(2.3, result[0], EPSILON);
+    EXPECT_NEAR(4.6, result[1], EPSILON);
+    EXPECT_NEAR(13.8, result[2], EPSILON);
+}
+
+TEST(TestMathVectorLib, test_operator_mult_dot_product_with_different_types) {
+    // Arrange
+    MathVector<int> vec1{ 1, 2, 6 };
+    MathVector<double> vec2{ 3.0, 1.1, 5.3 };
+
+    // Act & Assert
+    EXPECT_NEAR(37.0, vec1 * vec2, EPSILON);
+}
+
+TEST(TestMathVectorLib, test_operator_mult__with_different_types_which_vectors_have_sizes_not_equal) {
+    // Arrange
+    MathVector<int> vec1{ 1, 2, 6 };
+    MathVector<double> vec2{ 3, 1, 5, 8 };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(vec1 * vec2);
+}
+
+TEST(TestMathVectorLib, test_operator_mult_for_different_size_vectors_which_have_different_types) {
+    // Arrange
+    MathVector<int> vec1{ 1, 5 };
+    MathVector<double> vec2{ 2.7, 5.2, 9.5 };
 
     // Act & Assert
     ASSERT_ANY_THROW(vec1 * vec2);

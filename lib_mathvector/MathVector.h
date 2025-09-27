@@ -64,7 +64,7 @@ public:
         }
         MathVector<R> result(this->_size);
         for (size_t i = 0; i < this->_size; ++i) {
-            result[i] = static_cast<R>(this->_data[i]) + static_cast<R>(other[i]);
+            result[i] = static_cast<R>((*this)[i]) + static_cast<R>(other[i]);
         }
         return result;
     }
@@ -74,7 +74,7 @@ public:
         }
         MathVector<T> result(this->_size);
         for (size_t i = 0; i < this->_size; ++i) {
-            result._data[i] = this->_data[i] - other._data[i];
+            result[i] = this->_data[i] - other._data[i];
             result._states[i] = State::busy;
         }
         return result;
@@ -98,14 +98,34 @@ public:
         }
         return result;
     }
-
+    template <typename U>
+    MathVector<std::common_type_t<T, U>> operator*(const U& scalar) const {
+        using R = std::common_type_t<T, U>;
+        MathVector<R> result(this->_size);
+        for (size_t i = 0; i < this->_size; ++i) {
+            result[i] = static_cast<R>((*this)[i]) * static_cast<R>(scalar);
+        }
+        return result;
+    }
     T operator*(const MathVector& other_vec) const {
         if (this->_size != other_vec._size) {
             throw std::invalid_argument("Vectors should have same size for dot product");
         }
         T result = 0;
         for (size_t i = 0; i < this->_size; ++i) {
-            result += this->_data[i] * other_vec._data[i];
+            result += this->data(i) * other_vec.data(i);
+        }
+        return result;
+    }
+    template <typename U>
+    std::common_type_t<T, U> operator*(const MathVector<U>& other) const {
+        using R = std::common_type_t<T, U>;
+        if (this->_size != other.size()) {
+            throw std::invalid_argument("Vectors should have same size for dot product");
+        }
+        R result = 0;
+        for (size_t i = 0; i < this->_size; ++i) {
+            result += static_cast<R>((*this)[i]) * static_cast<R>(other[i]);
         }
         return result;
     }
