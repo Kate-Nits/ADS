@@ -491,8 +491,6 @@ private:
 	inline bool is_full() const noexcept { // функция проверки на заполненость
 		return _size >= _capacity;
 	}
-	template <class>
-	friend class TVectorTester;
 };
 
 template <typename T>

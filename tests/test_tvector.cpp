@@ -111,6 +111,18 @@ TEST(TestTVectorLib, test_at_checking_with_pop_front) {
     EXPECT_EQ(1, vec.at(0));
 }
 
+TEST(TestTVectorLib, test_data_with_index) {
+    // Arrange
+    int arr[3] = { 11, 22, 33 };
+    TVector<int> vec(arr, 3);
+
+    // Act & Assert
+    EXPECT_EQ(11, vec.data(0));
+    EXPECT_EQ(22, vec.data(1));
+    EXPECT_EQ(33, vec.data(2));
+    ASSERT_ANY_THROW(vec.data(10)); // выход за границы
+}
+
 TEST(TestTVectorLib, test_state_state_deleted) {
     // Arrange
     size_t size = 8;
@@ -144,6 +156,45 @@ TEST(TestTVectorLib, test_state_state_empty) {
     EXPECT_EQ(State::empty, vec.state(size+1));
 }
 
+TEST(TestTVectorLib, test_size_setter_increase) { //увеличение
+    // Arrange
+    TVector<int> vec(2);
+
+    // Act
+    vec.size(5);
+
+    // Assert
+    EXPECT_EQ(5, vec.size());
+    for (size_t i = 2; i < 5; i++) {
+        EXPECT_EQ(State::busy, vec.state(i));
+    }
+}
+
+TEST(TestTVectorLib, test_size_setter_decrease) {
+    // Arrange
+    TVector<int> vec(5);
+    vec[0] = 99;
+
+    // Act
+    vec.size(2);
+
+    // Assert
+    EXPECT_EQ(2, vec.size());
+    EXPECT_EQ(99, vec[0]); // проверка, что данные остались
+}
+
+TEST(TestTVectorLib, test_capacity_setter) {
+    // Arrange
+    TVector<int> vec(2);
+    size_t old_capacity = vec.capacity();
+
+    // Act
+    vec.capacity(old_capacity + 20);
+
+    // Assert
+    EXPECT_TRUE(vec.capacity() >= old_capacity + 20);
+}
+
 TEST(TestTVectorLib, test_begin_and_end) {
     // Arrange
     size_t size = 3;
@@ -160,6 +211,18 @@ TEST(TestTVectorLib, test_begin_and_end) {
 
     // Assert
     EXPECT_EQ(11+22+37, sum);
+}
+
+TEST(TestTVectorLib, test_deleted_counter) {
+    // Arrange
+    TVector<int> vec(35);
+
+    // Act
+    vec.erase(1);
+    vec.erase(2);
+
+    // Assert
+    EXPECT_EQ(2, vec.deleted());
 }
 
 TEST(TestTVectorLib, test_front_without_deleted_elements) {
@@ -517,6 +580,15 @@ TEST(TestTVectorLib, can_compare_with_operator_two_not_equal_object) {
     EXPECT_FALSE(vec1 == vec2);
 }
 
+TEST(TestTVectorLib, test_operator_equal_for_empty_vectors) {
+    // Arrange
+    TVector<int> vec1;
+    TVector<int> vec2;
+
+    // Act & Assert
+    EXPECT_TRUE(vec1 == vec2);
+}
+
 TEST(TestTVectorLib, can_compare_with_operator_that_says_that_two_objects_are_not_equal_return_true) {
     // Arrange
     size_t size = 2;
@@ -588,6 +660,23 @@ TEST(TestTVectorLib, test_resize) {
     EXPECT_EQ(30, vec[2]);
     EXPECT_EQ(busy, states[3]);
     EXPECT_EQ(busy, states[4]);
+}
+
+TEST(TestTVectorLib, test_shrink_to_fit) {
+    // Arrange
+    size_t size = 5;
+    int arr[5] = { 10, 20, 30, 40, 50 };
+    TVector<int> vec(arr, size);
+    size_t old_capacity = vec.capacity();
+
+    // Act
+    vec.erase(1);
+    vec.erase(3);
+    vec.shrink_to_fit();
+
+    // Assert
+    EXPECT_TRUE(vec.capacity() < old_capacity);
+    EXPECT_EQ(3, vec.size());
 }
 
 TEST(TestTVectorLib, test_shuffle) {
