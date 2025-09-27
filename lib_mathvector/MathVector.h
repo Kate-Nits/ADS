@@ -3,9 +3,7 @@
 #ifndef LIB_MATHVECTOR_MATHVECTOR_H
 #define LIB_MATHVECTOR_MATHVECTOR_H
 
-#include <cmath>
-#include <iostream>
-#include <stdexcept>
+#include <initializer_list> // нужно для конструктора от {}
 
 #include "../lib_tvector/tvector.h"
 #include "../lib_algorithms/algorithms.h"
@@ -13,11 +11,23 @@
 template <class T>
 class MathVector : public TVector<T> {
 public:
-    MathVector() noexcept : TVector<T>() {}
-    MathVector(size_t size) : TVector<T>(size) {}
-    MathVector(const MathVector<T>& other) = default;
-    MathVector(MathVector<T>&& other) noexcept = default;
-    ~MathVector() = default;
+    using TVector<T>::TVector; //наследую все конструкторы от TVector
+    MathVector(const std::initializer_list<T> list) {
+        this->_size = list.size;
+        this->_capacity = this->size + TVector<T>::RESERVE_MEMORY;
+        this->_deleted = 0;
+        this->_data = new T[this->_capacity];
+
+        size_t i = 0;
+        for (const auto& value : list) { //auto автоматически определяет тип из list
+            this->_data[i] = value;
+            this->_states[i] = State::busy;
+            ++i;
+        }
+        for (; i < this->_capacity; ++i) {
+            this->_states[i] = State::empty;
+        }
+    }
 
     MathVector<T>& operator=(const MathVector<T>& other) noexcept {
         this->assign(other);

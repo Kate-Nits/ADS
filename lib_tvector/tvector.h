@@ -10,7 +10,7 @@
 enum State { empty, busy, deleted };
 template <class T>
 class TVector {
-
+protected:
 	T* _data;
 	State* _states;
 	size_t _size;
