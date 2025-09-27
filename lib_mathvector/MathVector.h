@@ -61,7 +61,7 @@ public:
         return result;
     }
 
-   T operator*(const MathVector& other_vec) const {
+    T operator*(const MathVector& other_vec) const {
         if (this->_size != other_vec._size) {
             throw std::invalid_argument("Vectors should have same size for dot product");
         }
@@ -73,26 +73,37 @@ public:
     }
 
     MathVector<T>& operator+=(const MathVector<T>& other) {
-        in_development();
+        if (this->_size != other._size) {
+            throw std::invalid_argument("Vectors should have same size for addition");
+        }
+        for (size_t i = 0; i < this->_size; ++i) {
+            this->_data[i] = this->_data[i] + other._data[i];
+        }
         return *this;
     }
     MathVector<T>& operator-=(const MathVector<T>& other) {
-        in_development();
+        if (this->_size != other._size) {
+            throw std::invalid_argument("Vectors should have same size for subtraction");
+        }
+        for (size_t i = 0; i < this->_size; ++i) {
+            this->_data[i] = this->_data[i] - other._data[i];
+        }
         return *this;
     }
     MathVector<T>& operator*=(const T& scalar) {
-        in_development();
+        for (size_t i = 0; i < this->_size; ++i) {
+            this->_data[i] = this->_data[i] * scalar;
+        }
         return *this;
     }
-    T dot(const MathVector<T>& other) const { // Скалярное произведение
-        in_development();
-        return T();
-    }
-    double norm() const { // длинна вектора
-        in_development();
-        return double;
+
+    double length() const { // длинна вектора
+        T sum = 0;
+        for (size_t i = 0; i < this->_size; i++) {
+            sum += this->_data[i] * this->_data[i];
+        }
+        return std::sqrt((double)sum);
     }
 };
-
 
 #endif // LIB_MATHVECTOR_MATHVECTOR_H

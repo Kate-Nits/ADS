@@ -876,3 +876,94 @@ TEST(TestMathVectorLib, test_operator_mult_which_vectors_have_sizes_not_equal) {
     // Act & Assert
     ASSERT_ANY_THROW(vec1 * vec2);
 }
+
+TEST(TestMathVectorLib, test_operator_add_equal_for_int) {
+    // Arrange
+    MathVector<int> vec1{ 1, 5, 3 };
+    MathVector<int> vec2{ 2, 5, 9 };
+    //Act
+    vec1 += vec2;
+
+    // Assert
+    EXPECT_EQ(3, vec1[0]);
+    EXPECT_EQ(10, vec1[1]);
+    EXPECT_EQ(12, vec1[2]);
+}
+
+TEST(TestMathVectorLib, test_operator_add_equal_for_double) {
+    // Arrange
+    MathVector<double> vec1{ 1.3, 5.7, 3.1 };
+    MathVector<double> vec2{ 2.7, 5.2, 9.5 };
+    //Act
+    vec1 += vec2;
+
+    // Assert
+    EXPECT_NEAR(4.0, vec1[0], EPSILON);
+    EXPECT_NEAR(10.9, vec1[1], EPSILON);
+    EXPECT_NEAR(12.6, vec1[2], EPSILON);
+}
+
+TEST(TestMathVectorLib, test_operator_add_equal_for_different_size_vectors) {
+    // Arrange
+    MathVector<double> vec1{ 1.3, 5.7, 9.5 };
+    MathVector<double> vec2{ 2.7, 5.2 };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(vec1 += vec2);
+}
+
+TEST(TestMathVectorLib, test_operator_sub_equal_for_int) {
+    // Arrange
+    MathVector<int> vec1{ 3, 5, -12 };
+    MathVector<int> vec2{ 1, 6, 3 };
+    //Act
+   vec1 -= vec2;
+
+    // Assert
+    EXPECT_EQ(2, vec1[0]);
+    EXPECT_EQ(-1, vec1[1]);
+    EXPECT_EQ(-15, vec1[2]);
+}
+
+TEST(TestMathVectorLib, test_operator_sub_equal_for_double) {
+    // Arrange
+    MathVector<double> vec1{ 2.7, 5.7, -3.1 };
+    MathVector<double> vec2{ 1.3, 5.2, 9.5 };
+    //Act
+    vec1 -= vec2;
+
+    // Assert
+    EXPECT_NEAR(1.4, vec1[0], EPSILON);
+    EXPECT_NEAR(0.5, vec1[1], EPSILON);
+    EXPECT_NEAR(-12.6, vec1[2], EPSILON);
+}
+
+TEST(TestMathVectorLib, test_operator_sub_equal_for_different_size_vectors) {
+    // Arrange
+    MathVector<double> vec1{ 1.3, 5.7 };
+    MathVector<double> vec2{ 2.7, 5.2, 9.5 };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(vec1 -= vec2);
+}
+
+TEST(TestMathVectorLib, test_operator_mult_equal_for_scalar) {
+    // Arrange
+    MathVector<int> vec{ 1, 2, 6 };
+
+    // Act
+    vec *= 3;
+
+    // Assert
+    EXPECT_EQ(3, vec[0]);
+    EXPECT_EQ(6, vec[1]);
+    EXPECT_EQ(18, vec[2]);
+}
+
+TEST(TestMathVectorLib, test_length_of_the_vector) {
+    // Arrange
+    MathVector<int> vec{ 3, 4 };
+
+    // Act & Assert
+    EXPECT_EQ(5.0, vec.length());
+}
