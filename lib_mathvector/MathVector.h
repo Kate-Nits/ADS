@@ -29,7 +29,7 @@ public:
             this->_states[i] = empty;
         }
     }
-
+    // Может добавить конструктор преобразования типа из int в double?
     MathVector<T> operator+(const MathVector<T>& other) const {
         if (this->_size != other._size) {
             throw std::invalid_argument("Vectors should have same size for addition");
@@ -42,13 +42,34 @@ public:
         return result;
     }
     MathVector<T> operator-(const MathVector<T>& other) const {
-        in_development();
-        return MathVector<T>();
+        if (this->_size != other._size) {
+            throw std::invalid_argument("Vectors should have same size for subtraction");
+        }
+        MathVector<T> result(this->_size);
+        for (size_t i = 0; i < this->_size; ++i) {
+            result._data[i] = this->_data[i] - other._data[i];
+            result._states[i] = State::busy;
+        }
+        return result;
     }
 
     MathVector<T> operator*(const T& scalar) const {
-        in_development();
-        return MathVector<T>();
+        MathVector<T> result(this->_size);
+        for (size_t i = 0; i < this->_size; ++i) {
+            result._data[i] = this->_data[i] * scalar;
+        }
+        return result;
+    }
+
+   T operator*(const MathVector& other_vec) const {
+        if (this->_size != other_vec._size) {
+            throw std::invalid_argument("Vectors should have same size for dot product");
+        }
+        T result = 0;
+        for (size_t i = 0; i < this->_size; ++i) {
+            result += this->_data[i] * other_vec._data[i];
+        }
+        return result;
     }
 
     MathVector<T>& operator+=(const MathVector<T>& other) {
@@ -66,6 +87,10 @@ public:
     T dot(const MathVector<T>& other) const { // Скалярное произведение
         in_development();
         return T();
+    }
+    double norm() const { // длинна вектора
+        in_development();
+        return double;
     }
 };
 

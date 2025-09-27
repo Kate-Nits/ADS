@@ -776,7 +776,7 @@ TEST(TestMathVectorLib, test_find_all) {
     delete[] result; //ñïðîñè ÍÓÆÍÎ ëè ÓÄÀËßÒÜ????
 }
 
-TEST(TestMathVectorLib, test_operator_add) {
+TEST(TestMathVectorLib, test_operator_add_for_int) {
     // Arrange
     MathVector<int> vec1{ 1, 5, 3 };
     MathVector<int> vec2{ 1, 5, 3 };
@@ -787,4 +787,92 @@ TEST(TestMathVectorLib, test_operator_add) {
     EXPECT_EQ(2, res[0]);
     EXPECT_EQ(10, res[1]);
     EXPECT_EQ(6, res[2]);
+}
+
+TEST(TestMathVectorLib, test_operator_add_for_double) {
+    // Arrange
+    MathVector<double> vec1{ 1.3, 5.7, 3.1 };
+    MathVector<double> vec2{ 2.7, 5.2, 9.5 };
+    //Act
+    MathVector<double> res = vec1 + vec2;
+
+    // Assert
+    EXPECT_NEAR(4.0, res[0], EPSILON);
+    EXPECT_NEAR(10.9, res[1], EPSILON);
+    EXPECT_NEAR(12.6, res[2], EPSILON);
+}
+
+TEST(TestMathVectorLib, test_operator_add_for_different_size_vectors) {
+    // Arrange
+    MathVector<double> vec1{ 1.3, 5.7 };
+    MathVector<double> vec2{ 2.7, 5.2, 9.5 };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(vec1 + vec2);
+}
+
+TEST(TestMathVectorLib, test_operator_sub_for_int) {
+    // Arrange
+    MathVector<int> vec1{ 3, 5, -12 };
+    MathVector<int> vec2{ 1, 6, 3 };
+    //Act
+    MathVector<int> res = vec1 - vec2;
+
+    // Assert
+    EXPECT_EQ(2, res[0]);
+    EXPECT_EQ(-1, res[1]);
+    EXPECT_EQ(-15, res[2]);
+}
+
+TEST(TestMathVectorLib, test_operator_sub_for_double) {
+    // Arrange
+    MathVector<double> vec1{ 2.7, 5.7, -3.1 };
+    MathVector<double> vec2{ 1.3, 5.2, 9.5 };
+    //Act
+    MathVector<double> res = vec1 - vec2;
+
+    // Assert
+    EXPECT_NEAR(1.4, res[0], EPSILON);
+    EXPECT_NEAR(0.5, res[1], EPSILON);
+    EXPECT_NEAR(-12.6, res[2], EPSILON);
+}
+
+TEST(TestMathVectorLib, test_operator_sub_for_different_size_vectors) {
+    // Arrange
+    MathVector<double> vec1{ 1.3, 5.7 };
+    MathVector<double> vec2{ 2.7, 5.2, 9.5 };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(vec1 - vec2);
+}
+
+TEST(TestMathVectorLib, test_operator_mult_for_scalar) {
+    // Arrange
+    MathVector<int> vec{ 1, 2, 6 };
+
+    // Act
+    MathVector<int> result = vec * 2;
+
+    // Assert
+    EXPECT_EQ(2, result[0]);
+    EXPECT_EQ(4, result[1]);
+    EXPECT_EQ(12, result[2]);
+}
+
+TEST(TestMathVectorLib, test_operator_mult_dot_product) {
+    // Arrange
+    MathVector<int> vec1{ 1, 2, 6 };
+    MathVector<int> vec2{ 3, 1, 5 };
+
+    // Act & Assert
+    EXPECT_EQ(35, vec1*vec2);
+}
+
+TEST(TestMathVectorLib, test_operator_mult_which_vectors_have_sizes_not_equal) {
+    // Arrange
+    MathVector<int> vec1{ 1, 2, 6 };
+    MathVector<int> vec2{ 3, 1, 5, 8 };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(vec1 * vec2);
 }
