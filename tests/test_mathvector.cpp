@@ -122,6 +122,20 @@ TEST(TestMathVectorLib, test_constructor_list_double_init) {
     EXPECT_EQ(vec[3], 4.4);
 }
 
+TEST(TestMathVectorLib, test_conversion_constructors) {
+    // Arrange
+    MathVector<int> vec_int{ 1, 2, 3 };
+
+    // Act
+    MathVector<double> vec_double(vec_int);
+
+    // Assert
+    EXPECT_EQ(3, vec_double.size());
+    EXPECT_NEAR(1.0, vec_double[0], EPSILON);
+    EXPECT_NEAR(2.0, vec_double[1], EPSILON);
+    EXPECT_NEAR(3.0, vec_double[2], EPSILON);
+}
+
 TEST(TestMathVectorLib, test_at_checking_without_difficulties) {
     // Arrange
     size_t size = 8;

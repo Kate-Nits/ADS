@@ -29,7 +29,22 @@ public:
             this->_states[i] = empty;
         }
     }
-    // Может добавить конструктор преобразования типа из int в double?
+    template <typename U>
+    MathVector(const MathVector<U>& other) {
+        this->_size = other.size();
+        this->_capacity = this->_size + TVector<T>::RESERVE_MEMORY;
+        this->_deleted = 0;
+        this->_data = new T[this->_capacity];
+        this->_states = new State[this->_capacity];
+
+        for (size_t i = 0; i < this->_size; ++i) {
+            this->_data[i] = static_cast<T>(other.data(i)); // преобразование из U в T
+            this->_states[i] = other.state(i);
+        }
+        for (size_t i = this->_size; i < this->_capacity; ++i) {
+            this->_states[i] = State::empty;
+        }
+    }
     MathVector<T> operator+(const MathVector<T>& other) const {
         if (this->_size != other._size) {
             throw std::invalid_argument("Vectors should have same size for addition");
