@@ -122,7 +122,7 @@ TEST(TestMathVectorLib, test_constructor_list_double_init) {
     EXPECT_EQ(vec[3], 4.4);
 }
 
-TEST(TestMathVectorLib, test_conversion_constructors) {
+TEST(TestMathVectorLib, test_conversion_constructor) {
     // Arrange
     MathVector<int> vec_int{ 1, 2, 3 };
 
@@ -823,6 +823,20 @@ TEST(TestMathVectorLib, test_operator_add_for_different_size_vectors) {
 
     // Act & Assert
     ASSERT_ANY_THROW(vec1 + vec2);
+}
+
+TEST(TestMathVectorLib, test_operator_add_for_double_and_int) {
+    // Arrange
+    MathVector<double> vec1{ 1.3, 5.7, 3.1 };
+    MathVector<int> vec2{ 2, 5, 9 };
+
+    //Act
+    auto res = vec1 + vec2;
+
+    // Assert
+    EXPECT_NEAR(3.3, res[0], EPSILON);
+    EXPECT_NEAR(10.7, res[1], EPSILON);
+    EXPECT_NEAR(12.1, res[2], EPSILON);
 }
 
 TEST(TestMathVectorLib, test_operator_sub_for_int) {
