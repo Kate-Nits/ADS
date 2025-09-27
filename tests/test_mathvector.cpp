@@ -775,3 +775,16 @@ TEST(TestMathVectorLib, test_find_all) {
     EXPECT_TRUE(result[0] == 1 && result[1] == 3 && result[2] == 5);
     delete[] result; //ñïðîñè ÍÓÆÍÎ ëè ÓÄÀËßÒÜ????
 }
+
+TEST(TestMathVectorLib, test_operator_add) {
+    // Arrange
+    MathVector<int> vec1{ 1, 5, 3 };
+    MathVector<int> vec2{ 1, 5, 3 };
+    //Act
+    MathVector<int> res = vec1 + vec2;
+
+    // Assert
+    EXPECT_EQ(2, res[0]);
+    EXPECT_EQ(10, res[1]);
+    EXPECT_EQ(6, res[2]);
+}

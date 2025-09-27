@@ -30,15 +30,16 @@ public:
         }
     }
 
-    T dot(const MathVector<T>& other) const { // —кал€рное произведение
-        in_development();
-        return T();
-    }
-
-
     MathVector<T> operator+(const MathVector<T>& other) const {
-        in_development();
-        return MathVector<T>();
+        if (this->_size != other._size) {
+            throw std::invalid_argument("Vectors should have same size for addition");
+        }
+        MathVector<T> result(this->_size);
+        for (size_t i = 0; i < this->_size; ++i) {
+            result._data[i] = this->_data[i] + other._data[i];
+            result._states[i] = busy;
+        }
+        return result;
     }
     MathVector<T> operator-(const MathVector<T>& other) const {
         in_development();
@@ -62,7 +63,10 @@ public:
         in_development();
         return *this;
     }
-
+    T dot(const MathVector<T>& other) const { // —кал€рное произведение
+        in_development();
+        return T();
+    }
 };
 
 
