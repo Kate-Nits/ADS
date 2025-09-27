@@ -30,16 +30,6 @@ public:
         }
     }
 
-    MathVector<T>& operator=(const MathVector<T>& other) noexcept {
-        this->assign(other);
-        return *this;
-    }
-
-    MathVector<T>& operator=(MathVector<T>&& other) noexcept {
-        in_development();
-        return *this;
-    }
-
     T dot(const MathVector<T>& other) const { // —кал€рное произведение
         in_development();
         return T();
