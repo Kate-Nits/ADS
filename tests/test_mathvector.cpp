@@ -874,6 +874,19 @@ TEST(TestMathVectorLib, test_operator_sub_for_different_size_vectors) {
     ASSERT_ANY_THROW(vec1 - vec2);
 }
 
+TEST(TestMathVectorLib, test_operator_sub_for_double_and_int) {
+    // Arrange
+    MathVector<double> vec1{ 2.7, 5.7, -3.1 };
+    MathVector<int> vec2{ 1, 5, 9 };
+    //Act
+    auto res = vec1 - vec2;
+
+    // Assert
+    EXPECT_NEAR(1.7, res[0], EPSILON);
+    EXPECT_NEAR(0.7, res[1], EPSILON);
+    EXPECT_NEAR(-12.1, res[2], EPSILON);
+}
+
 TEST(TestMathVectorLib, test_operator_mult_for_scalar) {
     // Arrange
     MathVector<int> vec{ 1, 2, 6 };

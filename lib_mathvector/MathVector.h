@@ -79,7 +79,18 @@ public:
         }
         return result;
     }
-
+    template <typename U>
+    MathVector<std::common_type_t<T, U>> operator-(const MathVector<U>& other) const {
+        using R = std::common_type_t<T, U>; // std::common_type_t<T,U> автоматически выбирает “наибольший” тип
+        if (this->_size != other.size()) {
+            throw std::invalid_argument("Vectors should have same size for subtraction");
+        }
+        MathVector<R> result(this->_size);
+        for (size_t i = 0; i < this->_size; ++i) {
+            result[i] = static_cast<R>(this->_data[i]) - static_cast<R>(other[i]);
+        }
+        return result;
+    }
     MathVector<T> operator*(const T& scalar) const {
         MathVector<T> result(this->_size);
         for (size_t i = 0; i < this->_size; ++i) {
