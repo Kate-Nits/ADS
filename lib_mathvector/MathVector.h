@@ -12,20 +12,21 @@ template <class T>
 class MathVector : public TVector<T> {
 public:
     using TVector<T>::TVector; //наследую все конструкторы от TVector
+    MathVector(const MathVector<T>& other) : TVector<T>(other) {}
     MathVector(const std::initializer_list<T> list) {
-        this->_size = list.size;
-        this->_capacity = this->size + TVector<T>::RESERVE_MEMORY;
+        this->_size = list.size();
+        this->_capacity = this->_size + TVector<T>::RESERVE_MEMORY;
         this->_deleted = 0;
         this->_data = new T[this->_capacity];
-
+        this->_states = new State[this->_capacity];
         size_t i = 0;
         for (const auto& value : list) { //auto автоматически определяет тип из list
             this->_data[i] = value;
-            this->_states[i] = State::busy;
+            this->_states[i] = busy;
             ++i;
         }
         for (; i < this->_capacity; ++i) {
-            this->_states[i] = State::empty;
+            this->_states[i] = empty;
         }
     }
 

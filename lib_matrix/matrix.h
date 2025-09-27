@@ -9,8 +9,9 @@
 #include "../lib_algorithms/algorithms.h"
 #include "../lib_mathvector/MathVector.h"
 
+/*
 template <class T>
-class TMatrix : public MathVector< MathVector<T> > {
+class TMatrix : public MathVector<MathVector<T>> {
     size_t _rows;
     size_t _cols;
 public:
@@ -92,5 +93,7 @@ std::ostream& operator<<(std::ostream& out, const TMatrix<T>& matrix) {
     out << "";
     return out;
 }
+*/
+
 
 #endif // LIB_MATRIX_MATRIX_H

@@ -144,7 +144,7 @@ void what_matrix_sizes(size_t& sizeN, size_t& sizeM) {
     std::cout << "Enter the number of columns (parametr N): ";
     std::cin >> sizeN;
 }
-void print_res(const TMatrix<int>& matrix, size_t size_M, size_t size_N) {
+/*void print_res(const TMatrix<int>& matrix, size_t size_M, size_t size_N) {
 
 #ifndef REALISED_OPERATOR[]
 
@@ -158,7 +158,7 @@ void print_res(const TMatrix<int>& matrix, size_t size_M, size_t size_N) {
         std::cout << std::endl;
     }
 #endif // REALISED_OPERATOR[] 
-}
+}*/
 void do_user_want_to_save(int& want_to_save) {
     std::cout << "==================================================" << std::endl;
     std::cout << "Would you like to save result?" << std::endl;
@@ -177,7 +177,7 @@ void do_user_want_to_save(int& want_to_save) {
         std::cin >> want_to_save;
     }
 }
-void start_matrix_calculator(int& link_user_choice, int& link_want_to_save, TMatrix<int> res) {
+/*void start_matrix_calculator(int& link_user_choice, int& link_want_to_save, TMatrix<int> res) {
     int isExit = NO;
     int& link_isExit = isExit;
     int what_the_first_matrix = 0;
@@ -233,10 +233,14 @@ void start_matrix_calculator(int& link_user_choice, int& link_want_to_save, TMat
                 size_resM = sizeM2;
             }
             if (what_the_first_matrix == STANDART && what_the_second_matrix == STANDART) {
+#ifdef REALISED_CLASSES
                 TMatrix<int> matrix1;
                 TMatrix<int> matrix2;
                 TMatrix<int> intermediate_res;
-                
+#else
+                //in_development();
+#endif // REALISED_CLASSES
+
             }
             else if (what_the_first_matrix == TRIANGLE && what_the_second_matrix == TRIANGLE) {
 #ifdef REALISED_CLASSES
@@ -288,7 +292,7 @@ void start_matrix_calculator(int& link_user_choice, int& link_want_to_save, TMat
             break;
         }
     }
-}
+}*/
 void deleted_saved_matrix(int& link_user_choice_for_deleted, int& isThereMatrix1, int& isThereMatrix2, int& isThereMatrix3) {
     std::cout << "==================================================" << std::endl;
     std::cout << "  You can store a limited number of matrices" << std::endl;
@@ -315,8 +319,7 @@ void deleted_saved_matrix(int& link_user_choice_for_deleted, int& isThereMatrix1
         break;
     }
 }
-void viewing_saved_matrices(int count_of_saved_matrices,
-    TMatrix<int> matrix1, TMatrix<int> matrix2, TMatrix<int> matrix3) {
+/*void viewing_saved_matrices(int count_of_saved_matrices, TMatrix<int> matrix1, TMatrix<int> matrix2, TMatrix<int> matrix3) {
     std::cout << "==================================================" << std::endl;
     std::cout << "  Which matrix would you like to look at?" << std::endl;
     if (count_of_saved_matrices > 0) {
@@ -353,8 +356,9 @@ void viewing_saved_matrices(int count_of_saved_matrices,
     getchar();
     getchar();
     system("cls");
-}
+}*/
 void matrix_application() {
+    /*
     int user_choice;
     int& link_user_choice = user_choice;
     int isExit = NO;
@@ -362,7 +366,6 @@ void matrix_application() {
     int want_to_save = NO;
     int& link_want_to_save = want_to_save;
     int count_of_saved_matrices = 0;
-
     TMatrix<int> res;
     TMatrix<int> matrix1;
     TMatrix<int> matrix2;
@@ -428,6 +431,7 @@ void matrix_application() {
             break;
         }
     }
+    */
 }
 
 
