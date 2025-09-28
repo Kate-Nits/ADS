@@ -794,6 +794,7 @@ TEST(TestMathVectorLib, test_operator_add_for_int) {
     // Arrange
     MathVector<int> vec1{ 1, 5, 3 };
     MathVector<int> vec2{ 1, 5, 3 };
+
     //Act
     MathVector<int> res = vec1 + vec2;
 
@@ -807,6 +808,7 @@ TEST(TestMathVectorLib, test_operator_add_for_double) {
     // Arrange
     MathVector<double> vec1{ 1.3, 5.7, 3.1 };
     MathVector<double> vec2{ 2.7, 5.2, 9.5 };
+
     //Act
     MathVector<double> res = vec1 + vec2;
 
@@ -848,10 +850,37 @@ TEST(TestMathVectorLib, test_operator_add_for_different_size_vectors_which_have_
     ASSERT_ANY_THROW(vec1 + vec2);
 }
 
+TEST(TestMathVectorLib, states_after_addition) {
+    // Arrange
+    MathVector<int> vec1{ 1, 2, 3 };
+    MathVector<int> vec2{ 4, 5, 6 };
+
+    //Act
+    MathVector<int> res = vec1 + vec2;
+
+    // Assert
+    for (size_t i = 0; i < res.size(); ++i) {
+        EXPECT_EQ(State::busy, res.state(i));
+    }
+}
+
+TEST(TestMathVectorLib, empty_vectors_addition) {
+    // Arrange
+    MathVector<int> vec1;
+    MathVector<int> vec2;
+
+    //Act
+    MathVector<int> res = vec1 + vec2;
+
+    // Assert
+    EXPECT_EQ(0, res.size());
+}
+
 TEST(TestMathVectorLib, test_operator_sub_for_int) {
     // Arrange
     MathVector<int> vec1{ 3, 5, -12 };
     MathVector<int> vec2{ 1, 6, 3 };
+
     //Act
     MathVector<int> res = vec1 - vec2;
 
@@ -865,6 +894,7 @@ TEST(TestMathVectorLib, test_operator_sub_for_double) {
     // Arrange
     MathVector<double> vec1{ 2.7, 5.7, -3.1 };
     MathVector<double> vec2{ 1.3, 5.2, 9.5 };
+
     //Act
     MathVector<double> res = vec1 - vec2;
 
@@ -887,6 +917,7 @@ TEST(TestMathVectorLib, test_operator_sub_for_double_and_int) {
     // Arrange
     MathVector<double> vec1{ 2.7, 5.7, -3.1 };
     MathVector<int> vec2{ 1, 5, 9 };
+
     //Act
     auto res = vec1 - vec2;
 
@@ -903,6 +934,32 @@ TEST(TestMathVectorLib, test_operator_sub_for_different_size_vectors_which_have_
 
     // Act & Assert
     ASSERT_ANY_THROW(vec1 - vec2);
+}
+
+TEST(TestMathVectorLib, states_after_subtraction) {
+    // Arrange
+    MathVector<int> vec1{ 1, 2, 3 };
+    MathVector<int> vec2{ 4, 5, 6 };
+
+    //Act
+    MathVector<int> res = vec1 - vec2;
+
+    // Assert
+    for (size_t i = 0; i < res.size(); ++i) {
+        EXPECT_EQ(State::busy, res.state(i));
+    }
+}
+
+TEST(TestMathVectorLib, empty_vectors_subtraction) {
+    // Arrange
+    MathVector<int> vec1;
+    MathVector<int> vec2;
+
+    //Act
+    MathVector<int> res = vec1 - vec2;
+
+    // Assert
+    EXPECT_EQ(0, res.size());
 }
 
 TEST(TestMathVectorLib, test_operator_mult_for_scalar) {
@@ -980,6 +1037,7 @@ TEST(TestMathVectorLib, test_operator_add_equal_for_int) {
     // Arrange
     MathVector<int> vec1{ 1, 5, 3 };
     MathVector<int> vec2{ 2, 5, 9 };
+
     //Act
     vec1 += vec2;
 
@@ -993,6 +1051,7 @@ TEST(TestMathVectorLib, test_operator_add_equal_for_double) {
     // Arrange
     MathVector<double> vec1{ 1.3, 5.7, 3.1 };
     MathVector<double> vec2{ 2.7, 5.2, 9.5 };
+
     //Act
     vec1 += vec2;
 
@@ -1015,6 +1074,7 @@ TEST(TestMathVectorLib, test_operator_sub_equal_for_int) {
     // Arrange
     MathVector<int> vec1{ 3, 5, -12 };
     MathVector<int> vec2{ 1, 6, 3 };
+
     //Act
    vec1 -= vec2;
 
@@ -1028,6 +1088,7 @@ TEST(TestMathVectorLib, test_operator_sub_equal_for_double) {
     // Arrange
     MathVector<double> vec1{ 2.7, 5.7, -3.1 };
     MathVector<double> vec2{ 1.3, 5.2, 9.5 };
+
     //Act
     vec1 -= vec2;
 
@@ -1059,10 +1120,18 @@ TEST(TestMathVectorLib, test_operator_mult_equal_for_scalar) {
     EXPECT_EQ(18, vec[2]);
 }
 
-TEST(TestMathVectorLib, test_length_of_the_vector) {
+TEST(TestMathVectorLib, test_length_of_the_double_vector) {
     // Arrange
     MathVector<int> vec{ 3, 4 };
 
     // Act & Assert
     EXPECT_EQ(5.0, vec.length());
+}
+
+TEST(TestMathVectorLib, test_length_of_the_float_vector) {
+    // Arrange
+    MathVector<float> vec{ 3.0f, 4.0f };
+
+    // Act & Assert
+    EXPECT_NEAR(5.0, vec.length(), EPSILON);
 }

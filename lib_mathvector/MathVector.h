@@ -45,6 +45,7 @@ public:
             this->_states[i] = State::empty;
         }
     }
+
     MathVector<T> operator+(const MathVector<T>& other) const {
         if (this->_size != other._size) {
             throw std::invalid_argument("Vectors should have same size for addition");
@@ -64,10 +65,11 @@ public:
         }
         MathVector<R> result(this->_size);
         for (size_t i = 0; i < this->_size; ++i) {
-            result[i] = static_cast<R>((*this)[i]) + static_cast<R>(other[i]);
+            result[i] = static_cast<R>(this->data(i)) + static_cast<R>(other.data(i));
         }
         return result;
     }
+    
     MathVector<T> operator-(const MathVector<T>& other) const {
         if (this->_size != other._size) {
             throw std::invalid_argument("Vectors should have same size for subtraction");
@@ -75,7 +77,7 @@ public:
         MathVector<T> result(this->_size);
         for (size_t i = 0; i < this->_size; ++i) {
             result[i] = this->_data[i] - other._data[i];
-            result._states[i] = State::busy;
+            result._states[i] = busy;
         }
         return result;
     }
@@ -87,14 +89,16 @@ public:
         }
         MathVector<R> result(this->_size);
         for (size_t i = 0; i < this->_size; ++i) {
-            result[i] = static_cast<R>(this->_data[i]) - static_cast<R>(other[i]);
+            result[i] = static_cast<R>(this->data(i)) - static_cast<R>(other.data(i));
         }
         return result;
     }
+    
     MathVector<T> operator*(const T& scalar) const {
         MathVector<T> result(this->_size);
         for (size_t i = 0; i < this->_size; ++i) {
             result._data[i] = this->_data[i] * scalar;
+            result._states[i] = busy;
         }
         return result;
     }
@@ -103,7 +107,7 @@ public:
         using R = std::common_type_t<T, U>;
         MathVector<R> result(this->_size);
         for (size_t i = 0; i < this->_size; ++i) {
-            result[i] = static_cast<R>((*this)[i]) * static_cast<R>(scalar);
+            result[i] = static_cast<R>(this->data(i)) * static_cast<R>(scalar);
         }
         return result;
     }
@@ -125,7 +129,7 @@ public:
         }
         R result = 0;
         for (size_t i = 0; i < this->_size; ++i) {
-            result += static_cast<R>((*this)[i]) * static_cast<R>(other[i]);
+            result += static_cast<R>(this->data(i)) * static_cast<R>(other.data(i));
         }
         return result;
     }
@@ -155,12 +159,12 @@ public:
         return *this;
     }
 
-    double length() const { // длинна вектора
+    auto length() const { // длинна вектора
         T sum = 0;
         for (size_t i = 0; i < this->_size; i++) {
             sum += this->_data[i] * this->_data[i];
         }
-        return std::sqrt((double)sum);
+        return std::sqrt(sum);
     }
 };
 
