@@ -84,6 +84,17 @@ public:
         return *this;
     }
 
+    Matrix<T>& transpose() { 
+        Matrix<T> result(_cols, _rows);
+        for (size_t i = 0; i < _rows; ++i) {
+            for (size_t j = 0; j < _cols; ++j) {
+                result[j][i] = this->at(i, j);
+            }
+        }
+        (*this) = result;
+        return *this;
+    }
+
     /*
     Matrix<T> add_matrices(const Matrix<T>& other) const {
         in_development();

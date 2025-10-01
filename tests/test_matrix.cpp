@@ -127,6 +127,19 @@ TEST(TestMatrixLib, test_at_col_out_of_range) {
     ASSERT_ANY_THROW(matrix.at(0, 4));
 }
 
+TEST(TestMatrixLib, test_element_access) {
+    // Arrange & Act
+    Matrix<int> matrix(2, 3);
+    matrix[0][0] = 10;
+    matrix[0][1] = 20;
+    matrix[1][2] = 30;
+
+    // Assert
+    EXPECT_EQ(10, matrix[0][0]);
+    EXPECT_EQ(20, matrix[0][1]);
+    EXPECT_EQ(30, matrix[1][2]);
+}
+
 TEST(TestMatrixLib, test_operator_equal) {
     // Arrange 
     int number = 1;
@@ -146,15 +159,19 @@ TEST(TestMatrixLib, test_operator_equal) {
     }
 }
 
-TEST(TestMatrixLib, test_element_access) {
-    // Arrange & Act
-    Matrix<int> matrix(2, 3);
-    matrix[0][0] = 10;
-    matrix[0][1] = 20;
-    matrix[1][2] = 30;
+TEST(TestMatrixLib, test_transpose) {
+    // Arrange 
+    int number = 1;
+    Matrix<int> matrix{ { 1, 2, 3 }, { 4, 5, 6 }};
+
+    // Act
+    matrix.transpose();
 
     // Assert
-    EXPECT_EQ(10, matrix[0][0]);
-    EXPECT_EQ(20, matrix[0][1]);
-    EXPECT_EQ(30, matrix[1][2]);
+    EXPECT_EQ(1, matrix[0][0]);
+    EXPECT_EQ(4, matrix[0][1]);
+    EXPECT_EQ(2, matrix[1][0]);
+    EXPECT_EQ(5, matrix[1][1]);
+    EXPECT_EQ(3, matrix[2][0]);
+    EXPECT_EQ(6, matrix[2][1]);
 }
