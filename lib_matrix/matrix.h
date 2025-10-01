@@ -139,16 +139,38 @@ public:
         }
         return result;
     }
-
-    /*
+    Matrix<T> operator*(const T scalar) const {
+        Matrix<T> result(_rows, _cols);
+        for (size_t i = 0; i < _rows; ++i) {
+            for (size_t j = 0; j < _cols; ++j) {
+                result[i][j] = this->at(i, j) * scalar;
+            }
+        }
+        return result;
+    }
+    MathVector<T> operator*(const MathVector<T>& vec) const {
+        if (_cols != vec.size()) {
+            throw std::invalid_argument("Size of vector should have same size of cols for mult");
+        }
+        MathVector<T> result(_rows);
+        for (size_t i = 0; i < _rows; ++i) {
+            result[i] = this->data(i) * vec;
+        }
+        return result;
+    }
     Matrix<T> operator*(const Matrix<T>& other) const {
-        return Matrix<T>();
-    }
-    Matrix<T> operator*(const T value) const {
-        return Matrix<T>();
-    }
-    Matrix<T> operator*(const Vector<T>& vec) const {
-        return Matrix<T>();
+        if (_cols != other.rows()) {
+            throw std::invalid_argument("Cols of the first matrix should be equal rows of the second matrix for mult");
+        }
+        Matrix<T> result(_rows, other.cols());
+        Matrix<T> transport_other = other;
+        transport_other.transpose();
+        for (size_t i = 0; i < _rows; ++i) {
+            for (size_t j = 0; j < transport_other.rows(); ++j) {
+                result[i][j] = (*this)[i] * transport_other[j];
+            }
+        }
+        return result;
     }
     void resize(size_t newRows, size_t newCols) { // Подумай нужна ли эта функция вообще?
         in_development();
@@ -156,7 +178,7 @@ public:
         _cols = newCols;
     }
     void print() const { in_development(); }
-    friend std::ostream& operator<< <>(std::ostream& out, const TMatrix<T>& matrix);*/
+    friend std::ostream& operator<< <>(std::ostream& out, const TMatrix<T>& matrix);
 };
 
 #endif // LIB_MATRIX_MATRIX_H

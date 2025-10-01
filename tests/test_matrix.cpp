@@ -249,3 +249,62 @@ TEST(TestMatrixLib, test_sub_to_int_matrixes_with_different_cols) {
     // Act & Assert
     ASSERT_ANY_THROW(matrix1 - matrix2);
 }
+
+TEST(TestMatrixLib, test_mult_a_matrix_by_a_scalar) {
+    // Arrange 
+    Matrix<int> matrix1{ { 1, 2, 3 }, { 4, 5, 6 } };
+    int number = 1;
+
+    // Act
+    Matrix<int> result = matrix1 * 2;
+
+    // Assert
+    EXPECT_EQ(2, result.rows());
+    EXPECT_EQ(3, result.cols());
+    for (size_t i = 0; i < result.rows(); ++i) {
+        for (size_t j = 0; j < result.cols(); ++j) {
+            EXPECT_EQ(number*2, result[i][j]);
+            number++;
+        }
+    }
+}
+
+TEST(TestMatrixLib, test_mult_a_matrix_by_a_vector) {
+    // Arrange 
+    Matrix<int> matrix{ { 1, 2 }, { 3, 4 }, { 5, 6 } };
+    MathVector<int> vector{ 10, 20 };
+
+    // Act
+    MathVector<int> result = matrix * vector;
+
+    // Assert
+    EXPECT_EQ(50, result[0]);
+    EXPECT_EQ(110, result[1]);
+    EXPECT_EQ(170, result[2]);
+}
+
+TEST(TestMatrixLib, test_mult_a_int_matrix_by_a_int_matrix_with_correct_size) {
+    // Arrange
+    Matrix<int> A{ {1, 2}, {3, 4} };
+    Matrix<int> B{ {2, 0}, {1, 2} };
+
+    // Act
+    Matrix<int> C = A * B;
+
+    // Assert
+    EXPECT_EQ(C.rows(), 2);
+    EXPECT_EQ(C.cols(), 2);
+    EXPECT_EQ(1 * 2 + 2 * 1, C.at(0, 0));
+    EXPECT_EQ(1 * 0 + 2 * 2, C.at(0, 1));
+    EXPECT_EQ(3 * 2 + 4 * 1, C.at(1, 0));
+    EXPECT_EQ(3 * 0 + 4 * 2, C.at(1, 1));
+}
+
+TEST(TestMatrixLib, test_mult_a_int_matrix_by_a_int_matrix_without_correct_size) {
+    // Arrange
+    Matrix<int> A{ {1, 2}, {3, 4} };
+    Matrix<int> B{ {2, 0}, {1, 2}, {3, 4} };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(A * B);
+}
