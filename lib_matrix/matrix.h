@@ -124,11 +124,23 @@ public:
         }
         return result;
     }
+    Matrix<T> operator-(const Matrix<T>& other) const {
+        if (_rows != other._rows) {
+            throw std::invalid_argument("Rows should have same size for subtraction");
+        }
+        if (_cols != other._cols) {
+            throw std::invalid_argument("Cols should have same size for subtraction");
+        }
+        Matrix<T> result(_rows, _cols);
+        for (size_t i = 0; i < _rows; ++i) {
+            for (size_t j = 0; j < _cols; ++j) {
+                result[i][j] = this->at(i, j) - other.at(i, j);
+            }
+        }
+        return result;
+    }
 
     /*
-    Matrix<T> operator-(const Matrix<T>& other) const {
-        return Matrix<T>();
-    }
     Matrix<T> operator*(const Matrix<T>& other) const {
         return Matrix<T>();
     }
