@@ -27,6 +27,20 @@ public:
         }
     }
     Matrix(const std::initializer_list<MathVector<T>> list) {
+        if (list.size() == 0) { // без это поверки, если размер нулевой по умолчанию получиться list.begin() == list.end() 
+            _rows = 0;
+            _cols = 0;
+            this->_size = 0;
+            this->_capacity = TVector<T>::RESERVE_MEMORY;
+            this->_deleted = 0;
+
+            this->_data = new MathVector<T>[this->_capacity];
+            this->_states = new State[this->_capacity];
+            for (size_t i = 0; i < this->_capacity; ++i) {
+                this->_states[i] = empty;
+            }
+            return;
+        }
         _rows = list.size();
         _cols = list.begin()->size();
 
@@ -75,7 +89,7 @@ public:
     MathVector<T>& operator[](size_t row) { return this->_data[row]; }
     const MathVector<T>& operator[](size_t row) const { return this->_data[row]; } // для столбцов должен вызваться [] от TVector
 
-    Matrix<T>& operator=(const Matrix<T>& other) noexcept {
+    Matrix<T>& operator=(const Matrix<T>& other) {
         if (this != &other) {
             MathVector<MathVector<T>>::operator=(other);
             _rows = other._rows;
@@ -95,25 +109,40 @@ public:
         return *this;
     }
 
+    Matrix<T> operator+(const Matrix<T>& other) const {
+        if (_rows != other._rows) {
+            throw std::invalid_argument("Rows should have same size for addition");
+        }
+        if (_cols != other._cols) {
+            throw std::invalid_argument("Cols should have same size for addition");
+        }
+        Matrix<T> result(_rows, _cols);
+        for (size_t i = 0; i < _rows; ++i) {
+            for (size_t j = 0; j < _cols; ++j) {
+                result[i][j] = this->at(i, j) + other.at(i, j);
+            }
+        }
+        return result;
+    }
+
     /*
-    Matrix<T> add_matrices(const Matrix<T>& other) const {
-        in_development();
+    Matrix<T> operator-(const Matrix<T>& other) const {
         return Matrix<T>();
     }
-    TMatrix<T> subtract_matrices(const TMatrix<T>& other) const {
-        in_development();
-        return TMatrix<T>();
+    Matrix<T> operator*(const Matrix<T>& other) const {
+        return Matrix<T>();
     }
-    TMatrix<T> multiply_matrices(const TMatrix<T>& other) const {
-        in_development();
-        return TMatrix<T>();
+    Matrix<T> operator*(const T value) const {
+        return Matrix<T>();
     }
-    void resize(size_t newRows, size_t newCols) {
+    Matrix<T> operator*(const Vector<T>& vec) const {
+        return Matrix<T>();
+    }
+    void resize(size_t newRows, size_t newCols) { // Подумай нужна ли эта функция вообще?
         in_development();
         _rows = newRows;
         _cols = newCols;
     }
-    void transpose() { in_development(); }
     void print() const { in_development(); }
     friend std::ostream& operator<< <>(std::ostream& out, const TMatrix<T>& matrix);*/
 };

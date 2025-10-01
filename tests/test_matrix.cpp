@@ -175,3 +175,41 @@ TEST(TestMatrixLib, test_transpose) {
     EXPECT_EQ(3, matrix[2][0]);
     EXPECT_EQ(6, matrix[2][1]);
 }
+
+TEST(TestMatrixLib, test_add_to_int_matrixes) {
+    // Arrange 
+    Matrix<int> matrix1{ { 1, 2, 3 }, { 4, 5, 6 } };
+    Matrix<int> matrix2{ { 1, 2, 3 }, { 4, 5, 6 } };
+    int number = 1;
+
+    // Act
+    Matrix<int> result = matrix1 + matrix2;
+
+    // Assert
+    EXPECT_EQ(2, result.rows());
+    EXPECT_EQ(3, result.cols());
+    for (size_t i = 0; i < result.rows(); ++i) {
+        for (size_t j = 0; j < result.cols(); ++j) {
+            EXPECT_EQ(number * 2, result[i][j]);
+            number++;
+        }
+    }
+}
+
+TEST(TestMatrixLib, test_add_to_int_matrixes_with_different_rows) {
+    // Arrange 
+    Matrix<int> matrix1{ { 1, 2, 3 }, { 4, 5, 6 } };
+    Matrix<int> matrix2{ { 1, 2, 3 }, { 4, 5, 6 }, { 4, 5, 6 } };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(matrix1 + matrix2);
+}
+
+TEST(TestMatrixLib, test_add_to_int_matrixes_with_different_cols) {
+    // Arrange 
+    Matrix<int> matrix1{ { 1, 2, 3 }, { 4, 5, 6 } };
+    Matrix<int> matrix2{ { 1, 2, 3, 1 }, { 4, 5, 6, 1 } };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(matrix1 + matrix2);
+}
