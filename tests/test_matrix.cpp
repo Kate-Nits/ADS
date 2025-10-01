@@ -110,3 +110,22 @@ TEST(TestMatrixLib, copy_constructor) {
         }
     }
 }
+
+TEST(TestMatrixLib, test_operator_equal) {
+    // Arrange 
+    int number = 1;
+    Matrix<int> m{ { 1, 2, 3 }, { 4, 5, 6 }, {7, 8, 9}, {10, 11, 12} };
+
+    // Act
+    Matrix<int> matrix = m;
+
+    // Assert
+    EXPECT_EQ(4, matrix.rows());
+    EXPECT_EQ(3, matrix.cols());
+    for (size_t i = 0; i < matrix.rows(); ++i) {
+        for (size_t j = 0; j < matrix.cols(); ++j) {
+            EXPECT_EQ(number, matrix.at(i, j));
+            number++;
+        }
+    }
+}

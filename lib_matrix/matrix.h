@@ -51,31 +51,26 @@ public:
         }
     }
     Matrix(const Matrix<T>& other) : MathVector<MathVector<T>>(other), _rows(other._rows), _cols(other._cols) {}
-    
 
     size_t rows() const noexcept { return _rows; }
     size_t cols() const noexcept { return _cols; }
-    T& at(size_t row, size_t col) {
-        return this->_data[row][col];
-    }
-    const T& at(size_t row, size_t col) const{
-        return this->_data[row][col];
-    }
+    T& at(size_t row, size_t col) { return this->_data[row][col]; }
+    const T& at(size_t row, size_t col) const { return this->_data[row][col]; }
 
+    Matrix<T>& operator=(const Matrix<T>& other) noexcept {
+        if (this != &other) {
+            MathVector<MathVector<T>>::operator=(other);
+            _rows = other._rows;
+            _cols = other._cols;
+        }
+        return *this;
+    }
     /*
-    TMatrix<T>& operator=(const TMatrix<T>& other) noexcept {
-        in_development();
-        return *this;
-    }
-    TMatrix<T>& operator=(TMatrix<T>&& other) noexcept {
-        in_development();
-        return *this;
-    }
     MathVector<T>& operator[](size_t row) { in_development();}
     const MathVector<T>& operator[](size_t row) const { in_development(); }
-    TMatrix<T> add_matrices(const TMatrix<T>& other) const {
+    Matrix<T> add_matrices(const Matrix<T>& other) const {
         in_development();
-        return TMatrix<T>();
+        return Matrix<T>();
     }
     TMatrix<T> subtract_matrices(const TMatrix<T>& other) const {
         in_development();
