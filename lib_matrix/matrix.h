@@ -5,95 +5,94 @@
 
 #include <iostream>
 #include <stdexcept>
-
-#include "../lib_algorithms/algorithms.h"
+template <class T>
+class MathVector;
 #include "../lib_mathvector/MathVector.h"
 
-/*
+
 template <class T>
-class TMatrix : public MathVector<MathVector<T>> {
-    size_t _rows;
-    size_t _cols;
+class Matrix : public MathVector<MathVector<T>> {
+    size_t _rows; // строки
+    size_t _cols; // столбцы
 public:
-    TMatrix() noexcept = default;
-    TMatrix(size_t rows, size_t cols) {
-        in_development();
-        _rows = rows;
-        _cols = cols;
+    using MathVector<MathVector<T>>::MathVector; // наследую конструкторы
+    Matrix() : MathVector<MathVector<T>>(), _rows(0), _cols(0) {}
+    Matrix(size_t value_rows, size_t value_cols) : MathVector<MathVector<T>>(value_rows), _rows(value_rows), _cols(value_cols) {
+        for (size_t i = 0; i < value_rows; ++i) {
+            this->_data[i] = MathVector<T>(value_cols);
+            this->_states[i] = busy;
+            for (size_t j = 0; j < value_cols; ++j) {
+                this->_data[i][j] = T{}; // {} нужны чтобы проинициализировался автоматом 0 и подстроился под тип
+            }
+        }
+    }
+    Matrix(const std::initializer_list<MathVector<T>> list) {
+        _rows = list.size();
+        _cols = list.begin()->size();
+
+        this->_size = _rows;
+        this->_capacity = _rows + TVector<T>::RESERVE_MEMORY;
+        this->_deleted = 0;
+
+        this->_data = new MathVector<T>[this->_capacity];
+        this->_states = new State[this->_capacity];
+
+        size_t i = 0;
+        for (const auto& row : list) { //auto автоматически определяет тип из list
+            if (row.size() != _cols) {
+                throw std::invalid_argument("All rows must have the same size");
+            }
+            this->_data[i] = row;
+            this->_states[i] = busy;
+            ++i;
+        }
+        for (; i < this->_capacity; ++i) {
+            this->_states[i] = empty;
+        }
+    }
+    Matrix(const Matrix<T>& other) : MathVector<MathVector<T>>(other), _rows(other._rows), _cols(other._cols) {}
+    
+
+    size_t rows() const noexcept { return _rows; }
+    size_t cols() const noexcept { return _cols; }
+    T& at(size_t row, size_t col) {
+        return this->_data[row][col];
+    }
+    const T& at(size_t row, size_t col) const{
+        return this->_data[row][col];
     }
 
-    TMatrix(const TMatrix<T>& other) = default;
-    TMatrix(TMatrix<T>&& other) noexcept = default;
-    ~TMatrix() = default;
-
+    /*
     TMatrix<T>& operator=(const TMatrix<T>& other) noexcept {
         in_development();
         return *this;
     }
-
     TMatrix<T>& operator=(TMatrix<T>&& other) noexcept {
         in_development();
         return *this;
     }
-
-    MathVector<T>& operator[](size_t row) {
-        in_development();
-    }
-
-    const MathVector<T>& operator[](size_t row) const {
-        in_development();
-    }
-
+    MathVector<T>& operator[](size_t row) { in_development();}
+    const MathVector<T>& operator[](size_t row) const { in_development(); }
     TMatrix<T> add_matrices(const TMatrix<T>& other) const {
         in_development();
         return TMatrix<T>();
     }
-
     TMatrix<T> subtract_matrices(const TMatrix<T>& other) const {
         in_development();
         return TMatrix<T>();
     }
-
     TMatrix<T> multiply_matrices(const TMatrix<T>& other) const {
         in_development();
         return TMatrix<T>();
     }
-
-    size_t rows() const noexcept {
-        in_development();
-        return _rows;
-    }
-
-    size_t cols() const noexcept {
-        in_development();
-        return _cols;
-    }
-
     void resize(size_t newRows, size_t newCols) {
         in_development();
         _rows = newRows;
         _cols = newCols;
     }
-
-    void transpose() {
-        in_development();
-    }
-
-    void print() const {
-        in_development();
-    }
-
-    friend std::ostream& operator<< <>(std::ostream& out, const TMatrix<T>& matrix);
+    void transpose() { in_development(); }
+    void print() const { in_development(); }
+    friend std::ostream& operator<< <>(std::ostream& out, const TMatrix<T>& matrix);*/
 };
-
-
-template <class T>
-std::ostream& operator<<(std::ostream& out, const TMatrix<T>& matrix) {
-    in_development();
-    out << "";
-    return out;
-}
-*/
-
 
 #endif // LIB_MATRIX_MATRIX_H

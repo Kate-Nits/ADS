@@ -12,10 +12,11 @@ template <class T>
 class MathVector : public TVector<T> {
 public:
     using TVector<T>::TVector; //наследую все конструкторы от TVector
+    MathVector() : TVector<T>() {}
     MathVector(const MathVector<T>& other) : TVector<T>(other) {}
     MathVector(const std::initializer_list<T> list) {
-        this->_size = list.size();
-        this->_capacity = this->_size + TVector<T>::RESERVE_MEMORY;
+        this->_size= list.size();
+        this->_capacity = this->size()+ TVector<T>::RESERVE_MEMORY;
         this->_deleted = 0;
         this->_data = new T[this->_capacity];
         this->_states = new State[this->_capacity];
@@ -32,7 +33,7 @@ public:
     template <typename U>
     MathVector(const MathVector<U>& other) {
         this->_size = other.size();
-        this->_capacity = this->_size + TVector<T>::RESERVE_MEMORY;
+        this->_capacity = this->size()+ TVector<T>::RESERVE_MEMORY;
         this->_deleted = 0;
         this->_data = new T[this->_capacity];
         this->_states = new State[this->_capacity];
@@ -47,12 +48,12 @@ public:
     }
 
     MathVector<T> operator+(const MathVector<T>& other) const {
-        if (this->_size != other._size) {
+        if (this->size()!= other._size) {
             throw std::invalid_argument("Vectors should have same size for addition");
         }
         MathVector<T> result(this->_size);
         for (size_t i = 0; i < this->_size; ++i) {
-            result._data[i] = this->_data[i] + other._data[i];
+            result[i] = this->data(i) + other._data[i];
             result._states[i] = busy;
         }
         return result;
@@ -60,7 +61,7 @@ public:
     template <typename U>
     MathVector<std::common_type_t<T, U>> operator+(const MathVector<U>& other) const {
         using R = std::common_type_t<T, U>; // std::common_type_t<T,U> автоматически выбирает “наибольший” тип
-        if (this->_size != other.size()) {
+        if (this->size()!= other.size()) {
             throw std::invalid_argument("Vectors should have same size for addition");
         }
         MathVector<R> result(this->_size);
@@ -71,12 +72,12 @@ public:
     }
     
     MathVector<T> operator-(const MathVector<T>& other) const {
-        if (this->_size != other._size) {
+        if (this->size()!= other._size) {
             throw std::invalid_argument("Vectors should have same size for subtraction");
         }
         MathVector<T> result(this->_size);
         for (size_t i = 0; i < this->_size; ++i) {
-            result[i] = this->_data[i] - other._data[i];
+            result[i] = this->data(i) - other._data[i];
             result._states[i] = busy;
         }
         return result;
@@ -84,7 +85,7 @@ public:
     template <typename U>
     MathVector<std::common_type_t<T, U>> operator-(const MathVector<U>& other) const {
         using R = std::common_type_t<T, U>; // std::common_type_t<T,U> автоматически выбирает “наибольший” тип
-        if (this->_size != other.size()) {
+        if (this->size()!= other.size()) {
             throw std::invalid_argument("Vectors should have same size for subtraction");
         }
         MathVector<R> result(this->_size);
@@ -97,7 +98,7 @@ public:
     MathVector<T> operator*(const T& scalar) const {
         MathVector<T> result(this->_size);
         for (size_t i = 0; i < this->_size; ++i) {
-            result._data[i] = this->_data[i] * scalar;
+            result[i] = this->data(i) * scalar;
             result._states[i] = busy;
         }
         return result;
@@ -112,7 +113,7 @@ public:
         return result;
     }
     T operator*(const MathVector& other_vec) const {
-        if (this->_size != other_vec._size) {
+        if (this->size()!= other_vec._size) {
             throw std::invalid_argument("Vectors should have same size for dot product");
         }
         T result = 0;
@@ -124,7 +125,7 @@ public:
     template <typename U>
     std::common_type_t<T, U> operator*(const MathVector<U>& other) const {
         using R = std::common_type_t<T, U>;
-        if (this->_size != other.size()) {
+        if (this->size()!= other.size()) {
             throw std::invalid_argument("Vectors should have same size for dot product");
         }
         R result = 0;
@@ -135,26 +136,26 @@ public:
     }
 
     MathVector<T>& operator+=(const MathVector<T>& other) {
-        if (this->_size != other._size) {
+        if (this->size()!= other._size) {
             throw std::invalid_argument("Vectors should have same size for addition");
         }
         for (size_t i = 0; i < this->_size; ++i) {
-            this->_data[i] = this->_data[i] + other._data[i];
+            this->_data[i] = this->data(i) + other._data[i];
         }
         return *this;
     }
     MathVector<T>& operator-=(const MathVector<T>& other) {
-        if (this->_size != other._size) {
+        if (this->size()!= other._size) {
             throw std::invalid_argument("Vectors should have same size for subtraction");
         }
         for (size_t i = 0; i < this->_size; ++i) {
-            this->_data[i] = this->_data[i] - other._data[i];
+            this->_data[i] = this->data(i) - other._data[i];
         }
         return *this;
     }
     MathVector<T>& operator*=(const T& scalar) {
         for (size_t i = 0; i < this->_size; ++i) {
-            this->_data[i] = this->_data[i] * scalar;
+            this->_data[i] = this->data(i) * scalar;
         }
         return *this;
     }
@@ -162,7 +163,7 @@ public:
     auto length() const { // длинна вектора
         T sum = 0;
         for (size_t i = 0; i < this->_size; i++) {
-            sum += this->_data[i] * this->_data[i];
+            sum += this->data(i) * this->data(i);
         }
         return std::sqrt(sum);
     }

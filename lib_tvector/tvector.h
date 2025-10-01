@@ -21,7 +21,7 @@ public:
 	static const size_t RESERVE_MEMORY = 15;
 	static const size_t MAX_PERCENT_DELETED = 15;
 
-	TVector() : _data(nullptr), _states(nullptr), _size(0), _capacity(0), _deleted(0) {} //êîíñòðóêòîð ïî óìîë÷àíèþ
+	TVector() : _data(nullptr), _states(nullptr), _size(0), _capacity(0), _deleted(0) {}
 	TVector(size_t size) { //конструктор вектора заданного размера
 		_size = size;
 		_capacity = size + RESERVE_MEMORY;
