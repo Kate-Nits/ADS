@@ -54,8 +54,26 @@ public:
 
     size_t rows() const noexcept { return _rows; }
     size_t cols() const noexcept { return _cols; }
-    T& at(size_t row, size_t col) { return this->_data[row][col]; }
-    const T& at(size_t row, size_t col) const { return this->_data[row][col]; }
+    T& at(size_t row, size_t col) { 
+        if (row >= _rows) {
+            throw std::out_of_range("Row index out of range");
+        }
+        if (col >= _cols) {
+            throw std::out_of_range("Col index out of range");
+        }
+        return this->_data[row][col]; 
+    }
+    const T& at(size_t row, size_t col) const { 
+        if (row >= _rows) {
+            throw std::out_of_range("Row index out of range");
+        }
+        if (col >= _cols) {
+            throw std::out_of_range("Col index out of range");
+        }
+        return this->_data[row][col]; 
+    }
+    MathVector<T>& operator[](size_t row) { return this->_data[row]; }
+    const MathVector<T>& operator[](size_t row) const { return this->_data[row]; } // для столбцов должен вызваться [] от TVector
 
     Matrix<T>& operator=(const Matrix<T>& other) noexcept {
         if (this != &other) {
@@ -65,9 +83,8 @@ public:
         }
         return *this;
     }
+
     /*
-    MathVector<T>& operator[](size_t row) { in_development();}
-    const MathVector<T>& operator[](size_t row) const { in_development(); }
     Matrix<T> add_matrices(const Matrix<T>& other) const {
         in_development();
         return Matrix<T>();

@@ -111,6 +111,22 @@ TEST(TestMatrixLib, copy_constructor) {
     }
 }
 
+TEST(TestMatrixLib, test_at_row_out_of_range) {
+    // Arrange & Act
+    Matrix<int> matrix(2, 2);
+
+    // Assert
+    ASSERT_ANY_THROW(matrix.at(2, 0));
+}
+
+TEST(TestMatrixLib, test_at_col_out_of_range) {
+    // Arrange & Act
+    Matrix<int> matrix(2, 2);
+
+    // Assert
+    ASSERT_ANY_THROW(matrix.at(0, 4));
+}
+
 TEST(TestMatrixLib, test_operator_equal) {
     // Arrange 
     int number = 1;
@@ -128,4 +144,17 @@ TEST(TestMatrixLib, test_operator_equal) {
             number++;
         }
     }
+}
+
+TEST(TestMatrixLib, test_element_access) {
+    // Arrange & Act
+    Matrix<int> matrix(2, 3);
+    matrix[0][0] = 10;
+    matrix[0][1] = 20;
+    matrix[1][2] = 30;
+
+    // Assert
+    EXPECT_EQ(10, matrix[0][0]);
+    EXPECT_EQ(20, matrix[0][1]);
+    EXPECT_EQ(30, matrix[1][2]);
 }
