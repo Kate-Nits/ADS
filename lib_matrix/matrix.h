@@ -172,13 +172,26 @@ public:
         }
         return result;
     }
-    void resize(size_t newRows, size_t newCols) { // Подумай нужна ли эта функция вообще?
-        in_development();
-        _rows = newRows;
-        _cols = newCols;
+    void print() const {
+        for (size_t i = 0; i < _rows; ++i) {
+            std::cout << "[ ";
+            for (size_t j = 0; j < _cols; ++j) {
+                std::cout << this->at(i, j) << "  ";
+            }
+            std::cout << "]" << std::endl;;
+        }
     }
-    void print() const { in_development(); }
-    friend std::ostream& operator<< <>(std::ostream& out, const TMatrix<T>& matrix);
+    friend std::ostream& operator<< <>(std::ostream& out, const Matrix<T>& matrix);
 };
-
+template <typename T>
+std::ostream& operator<< <>(std::ostream& out, const Matrix<T>& matrix) {
+    for (size_t i = 0; i < matrix.rows(); ++i) {
+        out << "[ ";
+        for (size_t j = 0; j < matrix.cols(); ++j) {
+            out << matrix.at(i, j) << " ";
+        }
+        out << "]\n";
+    }
+    return out;
+}
 #endif // LIB_MATRIX_MATRIX_H
