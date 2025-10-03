@@ -92,6 +92,15 @@ TEST(TestMatrixLib, constructor_with_initializer_list_without_vectors_with_int) 
     }
 }
 
+TEST(TestMatrixLib, constructor_with_empty_initializer_list) {
+    // Arrange & Act
+    Matrix<int> matrix{};
+
+    // Assert
+    EXPECT_EQ(0, matrix.rows());
+    EXPECT_EQ(0, matrix.cols());
+}
+
 TEST(TestMatrixLib, copy_constructor) {
     // Arrange 
     int number = 1;
@@ -162,7 +171,7 @@ TEST(TestMatrixLib, test_operator_equal) {
 TEST(TestMatrixLib, test_transpose) {
     // Arrange 
     int number = 1;
-    Matrix<int> matrix{ { 1, 2, 3 }, { 4, 5, 6 }};
+    Matrix<int> matrix{ { 1, 2, 3 }, { 4, 5, 6 } };
 
     // Act
     matrix.transpose();
@@ -174,6 +183,19 @@ TEST(TestMatrixLib, test_transpose) {
     EXPECT_EQ(5, matrix[1][1]);
     EXPECT_EQ(3, matrix[2][0]);
     EXPECT_EQ(6, matrix[2][1]);
+}
+
+TEST(TestMatrixLib, test_double_transpose_returns_original) {
+    // Arrange 
+    Matrix<int> matrix{ { 1, 2, 3 }, { 4, 5, 6 } };
+    Matrix<int> original = matrix;
+
+    // Act
+    matrix.transpose();
+    matrix.transpose();
+
+    // Assert
+    EXPECT_TRUE(matrix == original);
 }
 
 TEST(TestMatrixLib, test_add_to_int_matrixes) {
@@ -263,8 +285,26 @@ TEST(TestMatrixLib, test_mult_a_matrix_by_a_scalar) {
     EXPECT_EQ(3, result.cols());
     for (size_t i = 0; i < result.rows(); ++i) {
         for (size_t j = 0; j < result.cols(); ++j) {
-            EXPECT_EQ(number*2, result[i][j]);
+            EXPECT_EQ(number * 2, result[i][j]);
             number++;
+        }
+    }
+}
+
+TEST(TestMatrixLib, test_mult_a_matrix_by_a_zero_scalar) {
+    // Arrange 
+    Matrix<int> matrix1{ { 1, 2, 3 }, { 4, 5, 6 } };
+    int number = 1;
+
+    // Act
+    Matrix<int> result = matrix1 * 0;
+
+    // Assert
+    EXPECT_EQ(2, result.rows());
+    EXPECT_EQ(3, result.cols());
+    for (size_t i = 0; i < result.rows(); ++i) {
+        for (size_t j = 0; j < result.cols(); ++j) {
+            EXPECT_EQ(0, result[i][j]);
         }
     }
 }
@@ -283,7 +323,7 @@ TEST(TestMatrixLib, test_mult_a_matrix_by_a_vector) {
     EXPECT_EQ(170, result[2]);
 }
 
-TEST(TestMatrixLib, test_mult_a_int_matrix_by_a_int_matrix_with_correct_size) {
+TEST(TestMatrixLib, test_mult_a_int_matrix_by_a_int_matrix_with_correct_equal_size) {
     // Arrange
     Matrix<int> A{ {1, 2}, {3, 4} };
     Matrix<int> B{ {2, 0}, {1, 2} };
@@ -292,12 +332,29 @@ TEST(TestMatrixLib, test_mult_a_int_matrix_by_a_int_matrix_with_correct_size) {
     Matrix<int> C = A * B;
 
     // Assert
-    EXPECT_EQ(C.rows(), 2);
-    EXPECT_EQ(C.cols(), 2);
+    EXPECT_EQ(2, C.rows());
+    EXPECT_EQ(2, C.cols());
     EXPECT_EQ(1 * 2 + 2 * 1, C.at(0, 0));
     EXPECT_EQ(1 * 0 + 2 * 2, C.at(0, 1));
     EXPECT_EQ(3 * 2 + 4 * 1, C.at(1, 0));
     EXPECT_EQ(3 * 0 + 4 * 2, C.at(1, 1));
+}
+
+TEST(TestMatrixLib, test_mult_a_int_matrix_by_a_int_matrix_with_correct_not_equal_size) {
+    // Arrange
+    Matrix<int> A{ {2, 3, 4}, {1, 2, 0} };
+    Matrix<int> B{ {1, 0}, {2, 2}, {1, 4} };
+
+    // Act
+    Matrix<int> C = A * B;
+
+    // Assert
+    EXPECT_EQ(2, C.rows());
+    EXPECT_EQ(2, C.cols());
+    EXPECT_EQ(12, C.at(0, 0));
+    EXPECT_EQ(22, C.at(0, 1));
+    EXPECT_EQ(5, C.at(1, 0));
+    EXPECT_EQ(4, C.at(1, 1));
 }
 
 TEST(TestMatrixLib, test_mult_a_int_matrix_by_a_int_matrix_without_correct_size) {

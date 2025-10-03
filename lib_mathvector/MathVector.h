@@ -33,7 +33,7 @@ public:
     template <typename U>
     MathVector(const MathVector<U>& other) {
         this->_size = other.size();
-        this->_capacity = this->size()+ TVector<T>::RESERVE_MEMORY;
+        this->_capacity = this->size() + TVector<T>::RESERVE_MEMORY;
         this->_deleted = 0;
         this->_data = new T[this->_capacity];
         this->_states = new State[this->_capacity];

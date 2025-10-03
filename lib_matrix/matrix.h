@@ -87,7 +87,8 @@ public:
         return this->_data[row][col]; 
     }
     MathVector<T>& operator[](size_t row) { return this->_data[row]; }
-    const MathVector<T>& operator[](size_t row) const { return this->_data[row]; } // для столбцов должен вызваться [] от TVector
+    const MathVector<T>& operator[](size_t row) const { return this->_data[row]; } 
+    // для столбцов должен вызваться [] от TVector
 
     Matrix<T>& operator=(const Matrix<T>& other) {
         if (this != &other) {
