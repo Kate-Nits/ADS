@@ -12,6 +12,7 @@ class MathVector;
 
 template <class T>
 class Matrix : public MathVector<MathVector<T>> {
+protected:
     size_t _rows; // строки
     size_t _cols; // столбцы
 public:
