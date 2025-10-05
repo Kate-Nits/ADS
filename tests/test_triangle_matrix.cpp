@@ -86,13 +86,12 @@ TEST(TestTriangleMatrixLib, test_addition_int_triangle_matrix_without_the_same_s
     TriangleMatrix<int> a(3), b(4);
 
     // Act & Assert
-    EXPECT_ANY_THROW(a + b);
+    ASSERT_ANY_THROW(a + b);
 }
 
 TEST(TestTriangleMatrixLib, test_subtraction_int_triangle_matrix_with_the_same_size) {
     // Arrange
     TriangleMatrix<int> a(3), b(3);
-    int number = 1;
     a.at(0, 0) = 1; a.at(0, 1) = 2; a.at(0, 2) = 3; a.at(1, 1) = 4; a.at(1, 2) = 5; a.at(2, 2) = 6;
     b.at(0, 0) = 7; b.at(0, 1) = 8; b.at(0, 2) = 9; b.at(1, 1) = 10; b.at(1, 2) = 11; b.at(2, 2) = 12;
 
@@ -116,5 +115,78 @@ TEST(TestTriangleMatrixLib, test_subtraction_int_triangle_matrix_without_the_sam
     TriangleMatrix<int> a(4), b(3);
 
     // Act & Assert
-    EXPECT_ANY_THROW(a - b);
+    ASSERT_ANY_THROW(a - b);
+}
+
+TEST(TestTriangleMatrixLib, test_mult_a_int_TriangleMatrix_by_a_scalar) {
+    // Arrange
+    TriangleMatrix<int> A(3);
+    A.at(0, 0) = 1; A.at(0, 1) = 2; A.at(0, 2) = 3; A.at(1, 1) = 4; A.at(1, 2) = 5; A.at(2, 2) = 6;
+
+    // Act
+    TriangleMatrix<int> C = A * 2;
+
+    // Assert
+    EXPECT_EQ(2, C.at(0, 0));
+    EXPECT_EQ(4, C.at(0, 1));
+    EXPECT_EQ(6, C.at(0, 2));
+    EXPECT_EQ(0, C.at(1, 0));
+    EXPECT_EQ(8, C.at(1, 1));
+    EXPECT_EQ(10, C.at(1, 2));
+    EXPECT_EQ(0, C.at(2, 0));
+    EXPECT_EQ(0, C.at(2, 1));
+    EXPECT_EQ(12, C.at(2, 2));
+}
+
+TEST(TestTriangleMatrixLib, test_mult_a_int_TriangleMatrix_by_a_vector_with_correct_equal_size) {
+    // Arrange
+    TriangleMatrix<int> A(3);
+    A.at(0, 0) = 1; A.at(0, 1) = 2; A.at(0, 2) = 3; A.at(1, 1) = 4; A.at(1, 2) = 5; A.at(2, 2) = 6;
+    MathVector<int> vec{ 7, 8, 9 };
+
+    // Act
+    MathVector<int> C = A * vec;
+
+    // Assert
+    EXPECT_EQ(50, C.at(0));
+    EXPECT_EQ(77, C.at(1));
+    EXPECT_EQ(54, C.at(2));
+}
+
+TEST(TestTriangleMatrixLib, test_mult_a_int_TriangleMatrix_by_a_vector_without_correct_equal_size) {
+    // Arrange
+    TriangleMatrix<int> A(3);
+    MathVector<int> vec(4);
+
+    // Act & Assert
+    ASSERT_ANY_THROW(A * vec);
+}
+
+TEST(TestTriangleMatrixLib, test_mult_a_int_TriangleMatrix_by_a_int_TriangleMatrix_with_correct_equal_size) {
+    // Arrange
+    TriangleMatrix<int> A(3), B(3);
+    A.at(0, 0) = 1; A.at(0, 1) = 2; A.at(0, 2) = 3; A.at(1, 1) = 4; A.at(1, 2) = 5; A.at(2, 2) = 6;
+    B.at(0, 0) = 7; B.at(0, 1) = 8; B.at(0, 2) = 9; B.at(1, 1) = 10; B.at(1, 2) = 11; B.at(2, 2) = 12;
+
+    // Act
+    TriangleMatrix<int> C = A * B;
+
+    // Assert
+    EXPECT_EQ(7, C.at(0, 0));
+    EXPECT_EQ(28, C.at(0, 1));
+    EXPECT_EQ(67, C.at(0, 2));
+    EXPECT_EQ(0, C.at(1, 0));
+    EXPECT_EQ(40, C.at(1, 1));
+    EXPECT_EQ(104, C.at(1, 2));
+    EXPECT_EQ(0, C.at(2, 0));
+    EXPECT_EQ(0, C.at(2, 1));
+    EXPECT_EQ(72, C.at(2, 2));
+}
+
+TEST(TestTriangleMatrixLib, test_mult_a_int_TriangleMatrix_by_a_int_TriangleMatrix_without_correct_equal_size) {
+    // Arrange
+    TriangleMatrix<int> A(3), B(4);
+
+    // Act & Assert
+    ASSERT_ANY_THROW(A * B);
 }

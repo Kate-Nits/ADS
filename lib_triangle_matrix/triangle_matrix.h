@@ -85,7 +85,7 @@ public:
         }
         TriangleMatrix<T> result(_n);
         for (size_t i = 0; i < _n; ++i) {
-            for (size_t j = 0; j < _n; ++j) {
+            for (size_t j = i; j < _n; ++j) {
                 result.at(i, j) = this->at(i, j) + other.at(i, j);
             }
         }
@@ -97,18 +97,55 @@ public:
         }
         TriangleMatrix<T> result(_n);
         for (size_t i = 0; i < _n; ++i) {
-            for (size_t j = 0; j < _n; ++j) {
+            for (size_t j = i; j < _n; ++j) {
                 result.at(i, j) = this->at(i, j) - other.at(i, j);
             }
         }
         return result;
     }
-
-    /*
-    TriangleMatrix<T> multiply_matrices(const TriangleMatrix<T>& other) const {
-        in_development();
-        return TriangleMatrix<T>();
+    TriangleMatrix<T> operator*(const T scalar) const {
+        TriangleMatrix<T> result(_n);
+        for (size_t i = 0; i < _n; ++i) {
+            for (size_t j = i; j < _n; ++j) {
+                result.at(i, j) = this->at(i, j) * scalar;
+            }
+        }
+        return result;
     }
+    MathVector<T> operator*(const MathVector<T>& vec) const {
+        if (_n != vec.size()) {
+            throw std::invalid_argument("Size of vector should have same size of cols for mult");
+        }
+        MathVector<T> result(_n);
+        for (size_t i = 0; i < _n; ++i) {
+            for (size_t j = i; j < _n; ++j) {
+                T sum{};
+                for (size_t k = i; k <= j; ++k) {
+                    sum += this->at(i, k) * vec.at(k);
+                }
+                result[i] = sum;
+            }
+        }
+        return result;
+    }
+    TriangleMatrix<T> operator*(const TriangleMatrix<T>& other) const {
+        if (_n != other._n) {
+            throw std::invalid_argument("Triangle Matrix should have the same size for mult");
+        }
+        TriangleMatrix<T> result(_n);
+        for (size_t i = 0; i < _n; ++i) {
+            for (size_t j = i; j < _n; ++j) {
+                T sum{};
+                for (size_t k = i; k <= j; ++k) {
+                    sum += this->at(i, k) * other.at(k, j);
+                }
+                result.at(i, j) = sum;
+            }
+        }
+        return result;
+    }
+    /*
+    
     friend std::ostream& operator<< <>(std::ostream& out, const TriangleMatrix<T>& matrix);*/
 };
 /*
