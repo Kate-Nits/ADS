@@ -212,6 +212,16 @@ TEST(TestTriangleMatrixLib, test_addition_int_matrix_and_int_triangle_matrix_wit
     EXPECT_EQ(7, c.at(2, 2));
 }
 
+TEST(TestTriangleMatrixLib, test_addition_int_matrix_and_int_triangle_matrix_without_the_same_size) {
+    // Arrange
+    TriangleMatrix<int> a(3);
+    a.at(0, 0) = 1; a.at(0, 1) = 2; a.at(0, 2) = 3; a.at(1, 1) = 4; a.at(1, 2) = 5; a.at(2, 2) = 6;
+    Matrix<int> b{ {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1} };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(b + a);
+}
+
 TEST(TestTriangleMatrixLib, test_addition_int_triangle_matrix_and_int_matrix_with_the_same_size) {
     // Arrange
     TriangleMatrix<int> a(3);
@@ -231,4 +241,74 @@ TEST(TestTriangleMatrixLib, test_addition_int_triangle_matrix_and_int_matrix_wit
     EXPECT_EQ(1, c.at(2, 0));
     EXPECT_EQ(1, c.at(2, 1));
     EXPECT_EQ(7, c.at(2, 2));
+}
+
+TEST(TestTriangleMatrixLib, test_addition_int_triangle_matrix_and_int_matrix_without_the_same_size) {
+    // Arrange
+    TriangleMatrix<int> a(3);
+    a.at(0, 0) = 1; a.at(0, 1) = 2; a.at(0, 2) = 3; a.at(1, 1) = 4; a.at(1, 2) = 5; a.at(2, 2) = 6;
+    Matrix<int> b{ {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1} };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(a + b);
+}
+
+TEST(TestTriangleMatrixLib, test_subtraction_int_matrix_and_int_triangle_matrix_with_the_same_size) {
+    // Arrange
+    TriangleMatrix<int> a(3);
+    a.at(0, 0) = 1; a.at(0, 1) = 2; a.at(0, 2) = 3; a.at(1, 1) = 4; a.at(1, 2) = 5; a.at(2, 2) = 6;
+    Matrix<int> b{ {20, 20, 20}, {20, 20, 20}, {20, 20, 20} };
+
+    // Act
+    Matrix<int> c = b - a;
+
+    // Assert
+    EXPECT_EQ(19, c.at(0, 0));
+    EXPECT_EQ(18, c.at(0, 1));
+    EXPECT_EQ(17, c.at(0, 2));
+    EXPECT_EQ(20, c.at(1, 0));
+    EXPECT_EQ(16, c.at(1, 1));
+    EXPECT_EQ(15, c.at(1, 2));
+    EXPECT_EQ(20, c.at(2, 0));
+    EXPECT_EQ(20, c.at(2, 1));
+    EXPECT_EQ(14, c.at(2, 2));
+}
+
+TEST(TestTriangleMatrixLib, test_subtraction_int_matrix_and_int_triangle_matrix_without_the_same_size) {
+    // Arrange
+    TriangleMatrix<int> a(4);
+    Matrix<int> b{ {20, 20, 20}, {20, 20, 20}, {20, 20, 20} };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(b - a);
+}
+
+TEST(TestTriangleMatrixLib, test_subtraction_int_triangle_matrix_and_int_matrix_with_the_same_size) {
+    // Arrange
+    TriangleMatrix<int> a(3);
+    a.at(0, 0) = 1; a.at(0, 1) = 2; a.at(0, 2) = 3; a.at(1, 1) = 4; a.at(1, 2) = 5; a.at(2, 2) = 6;
+    Matrix<int> b{ {20, 20, 20}, {20, 20, 20}, {20, 20, 20} };
+
+    // Act
+    Matrix<int> c = a - b;
+
+    // Assert
+    EXPECT_EQ(-19, c.at(0, 0));
+    EXPECT_EQ(-18, c.at(0, 1));
+    EXPECT_EQ(-17, c.at(0, 2));
+    EXPECT_EQ(-20, c.at(1, 0));
+    EXPECT_EQ(-16, c.at(1, 1));
+    EXPECT_EQ(-15, c.at(1, 2));
+    EXPECT_EQ(-20, c.at(2, 0));
+    EXPECT_EQ(-20, c.at(2, 1));
+    EXPECT_EQ(-14, c.at(2, 2));
+}
+
+TEST(TestTriangleMatrixLib, test_subtraction_int_triangle_matrix_and_int_matrix_without_the_same_size) {
+    // Arrange
+    TriangleMatrix<int> a(4);
+    Matrix<int> b{ {20, 20, 20}, {20, 20, 20}, {20, 20, 20} };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(a - b);
 }
