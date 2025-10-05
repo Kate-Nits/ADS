@@ -60,10 +60,9 @@ TEST(TestTriangleMatrixLib, constructor_copy) {
     EXPECT_EQ(2, matrix2.at(0, 1));
 }
 
-TEST(TestTriangleMatrixLib, test_addition_int_triangle_matrix) {
+TEST(TestTriangleMatrixLib, test_addition_int_triangle_matrix_with_the_same_size) {
     // Arrange
     TriangleMatrix<int> a(3), b(3);
-    int number = 1;
     a.at(0, 0) = 1; a.at(0, 1) = 2; a.at(0, 2) = 3; a.at(1, 1) = 4; a.at(1, 2) = 5; a.at(2, 2) = 6;
     b.at(0, 0) = 7; b.at(0, 1) = 8; b.at(0, 2) = 9; b.at(1, 1) = 10; b.at(1, 2) = 11; b.at(2, 2) = 12;
     
@@ -82,7 +81,15 @@ TEST(TestTriangleMatrixLib, test_addition_int_triangle_matrix) {
     EXPECT_EQ(18, c.at(2, 2));
 }
 
-TEST(TestTriangleMatrixLib, test_subtraction_int_triangle_matrix) {
+TEST(TestTriangleMatrixLib, test_addition_int_triangle_matrix_without_the_same_size) {
+    // Arrange
+    TriangleMatrix<int> a(3), b(4);
+
+    // Act & Assert
+    EXPECT_ANY_THROW(a + b);
+}
+
+TEST(TestTriangleMatrixLib, test_subtraction_int_triangle_matrix_with_the_same_size) {
     // Arrange
     TriangleMatrix<int> a(3), b(3);
     int number = 1;
@@ -102,4 +109,12 @@ TEST(TestTriangleMatrixLib, test_subtraction_int_triangle_matrix) {
     EXPECT_EQ(0, c.at(2, 0));
     EXPECT_EQ(0, c.at(2, 1));
     EXPECT_EQ(6, c.at(2, 2));
+}
+
+TEST(TestTriangleMatrixLib, test_subtraction_int_triangle_matrix_without_the_same_size) {
+    // Arrange
+    TriangleMatrix<int> a(4), b(3);
+
+    // Act & Assert
+    EXPECT_ANY_THROW(a - b);
 }
