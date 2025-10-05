@@ -188,7 +188,7 @@ Matrix<T> operator+(const TriangleMatrix<T>& triangle_matrix, const Matrix<T>& m
 template <class T>
 Matrix<T> operator-(const Matrix<T>& matrix, const TriangleMatrix<T>& triangle_matrix) {
     if (matrix.rows() != triangle_matrix.n() || matrix.cols() != triangle_matrix.n()) {
-        throw std::invalid_argument("Matrixes should have the same size for addition");
+        throw std::invalid_argument("Matrixes should have the same size for subtraction");
     }
     Matrix<T> result(matrix.rows(), matrix.cols());
     for (size_t i = 0; i < matrix.rows(); ++i) {
@@ -201,12 +201,50 @@ Matrix<T> operator-(const Matrix<T>& matrix, const TriangleMatrix<T>& triangle_m
 template <class T>
 Matrix<T> operator-(const TriangleMatrix<T>& triangle_matrix, const Matrix<T>& matrix) {
     if (matrix.rows() != triangle_matrix.n() || matrix.cols() != triangle_matrix.n()) {
-        throw std::invalid_argument("Matrixes should have the same size for addition");
+        throw std::invalid_argument("Matrixes should have the same size for subtraction");
     }
     Matrix<T> result(matrix.rows(), matrix.cols());
     for (size_t i = 0; i < matrix.rows(); ++i) {
         for (size_t j = 0; j < matrix.cols(); ++j) {
             result[i][j] = triangle_matrix.at(i, j) - matrix.at(i, j);
+        }
+    }
+    return result;
+}
+template <class T>
+Matrix<T> operator*(const Matrix<T>& matrix, const TriangleMatrix<T>& triangle_matrix) {
+    if (matrix.cols() != triangle_matrix.n()) {
+        throw std::invalid_argument("Matrix should have the same size for mult");
+    }
+    Matrix<T> result(matrix.rows(), matrix.cols());
+    TriangleMatrix<T> transpose_triangle_matrix = triangle_matrix;
+    transpose_triangle_matrix.transpose();
+    for (size_t i = 0; i < triangle_matrix.n(); ++i) {
+        for (size_t j = 0; j < triangle_matrix.n(); ++j) {
+            T sum{};
+            for (size_t k = 0; k < triangle_matrix.n(); ++k) {
+                sum += matrix.at(i, k) * triangle_matrix.at(k, j);
+            }
+            result[i][j] = sum;
+        }
+    }
+    return result;
+}
+template <class T>
+Matrix<T> operator*(const TriangleMatrix<T>& triangle_matrix, const Matrix<T>& matrix) {
+    if (matrix.cols() != triangle_matrix.n()) {
+        throw std::invalid_argument("Matrix should have the same size for mult");
+    }
+    Matrix<T> result(matrix.rows(), matrix.cols());
+    TriangleMatrix<T> transpose_triangle_matrix = triangle_matrix;
+    transpose_triangle_matrix.transpose();
+    for (size_t i = 0; i < triangle_matrix.n(); ++i) {
+        for (size_t j = 0; j < triangle_matrix.n(); ++j) {
+            T sum{};
+            for (size_t k = 0; k < triangle_matrix.n(); ++k) {
+                sum += triangle_matrix.at(i, k) * matrix.at(k, j);
+            }
+            result[i][j] = sum;
         }
     }
     return result;

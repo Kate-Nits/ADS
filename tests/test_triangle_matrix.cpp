@@ -312,3 +312,65 @@ TEST(TestTriangleMatrixLib, test_subtraction_int_triangle_matrix_and_int_matrix_
     // Act & Assert
     ASSERT_ANY_THROW(a - b);
 }
+
+TEST(TestTriangleMatrixLib, test_mult_a_int_Matrix_by_a_int_Triangle_Matrix_with_correct_equal_size) {
+    // Arrange
+    TriangleMatrix<int> A(3);
+    A.at(0, 0) = 1; A.at(0, 1) = 2; A.at(0, 2) = 3; A.at(1, 1) = 4; A.at(1, 2) = 5; A.at(2, 2) = 6;
+    Matrix<int> B{ {2, 2, 2}, {2, 2, 2}, {2, 2, 2} };
+
+    // Act
+    Matrix<int> C = B * A;
+
+    // Assert
+    EXPECT_EQ(2, C.at(0, 0));
+    EXPECT_EQ(12, C.at(0, 1));
+    EXPECT_EQ(28, C.at(0, 2));
+    EXPECT_EQ(2, C.at(1, 0));
+    EXPECT_EQ(12, C.at(1, 1));
+    EXPECT_EQ(28, C.at(1, 2));
+    EXPECT_EQ(2, C.at(2, 0));
+    EXPECT_EQ(12, C.at(2, 1));
+    EXPECT_EQ(28, C.at(2, 2));
+}
+
+TEST(TestTriangleMatrixLib, test_mult_a_int_Matrix_by_a_int_Triangle_Matrix_without_correct_equal_size) {
+    // Arrange
+    TriangleMatrix<int> A(4);
+    A.at(0, 0) = 1; A.at(0, 1) = 2; A.at(0, 2) = 3; A.at(1, 1) = 4; A.at(1, 2) = 5; A.at(2, 2) = 6;
+    Matrix<int> B{ {2, 2, 2}, {2, 2, 2}, {2, 2, 2} };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(B * A);
+}
+
+TEST(TestTriangleMatrixLib, test_mult_a_int_Triangle_Matrix_by_a_int_Matrix_with_correct_equal_size) {
+    // Arrange
+    TriangleMatrix<int> A(3);
+    A.at(0, 0) = 1; A.at(0, 1) = 2; A.at(0, 2) = 3; A.at(1, 1) = 4; A.at(1, 2) = 5; A.at(2, 2) = 6;
+    Matrix<int> B{ {2, 2, 2}, {2, 2, 2}, {2, 2, 2} };
+
+    // Act
+    Matrix<int> C = A * B;
+
+    // Assert
+    EXPECT_EQ(12, C.at(0, 0));
+    EXPECT_EQ(12, C.at(0, 1));
+    EXPECT_EQ(12, C.at(0, 2));
+    EXPECT_EQ(18, C.at(1, 0));
+    EXPECT_EQ(18, C.at(1, 1));
+    EXPECT_EQ(18, C.at(1, 2));
+    EXPECT_EQ(12, C.at(2, 0));
+    EXPECT_EQ(12, C.at(2, 1));
+    EXPECT_EQ(12, C.at(2, 2));
+}
+
+TEST(TestTriangleMatrixLib, test_mult_a_int_Triangle_Matrix_by_a_int_Matrix_without_correct_equal_size) {
+    // Arrange
+    TriangleMatrix<int> A(4);
+    A.at(0, 0) = 1; A.at(0, 1) = 2; A.at(0, 2) = 3; A.at(1, 1) = 4; A.at(1, 2) = 5; A.at(2, 2) = 6;
+    Matrix<int> B{ {2, 2, 2}, {2, 2, 2}, {2, 2, 2} };
+
+    // Act & Assert
+    ASSERT_ANY_THROW(A * B);
+}
