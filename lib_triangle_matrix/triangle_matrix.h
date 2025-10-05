@@ -37,6 +37,7 @@ public:
     }
     TriangleMatrix(const TriangleMatrix<T>& other) : Matrix<T>(other), _n(other._n) {}
     ~TriangleMatrix() = default;
+    size_t n() const noexcept { return _n;  }
     T& at(size_t i, size_t j) {
         if (i >= _n || j >= _n) {
             throw std::out_of_range("Index out of range");
@@ -57,39 +58,57 @@ public:
         }
         return this->_data[i][j - i];
     }
-    /*TriangleMatrix<T>& operator=(const TriangleMatrix<T>& other) noexcept {
-        in_development();
+    MathVector<T>& operator[](size_t i) {
+        if (i >= _n) {
+            throw std::out_of_range("Index out of range");
+        }
+        return this->_data[i];
+    }
+    const MathVector<T>& operator[](size_t row) const {
+        if (i >= _n) {
+            throw std::out_of_range("Index out of range");
+        }
+        return this->_data[i];
+    }
+
+    TriangleMatrix<T>& operator=(const TriangleMatrix<T>& other) noexcept {
+        if (this != &other) {
+            Matrix<T>::operator=(other);
+            _n = other._n;
+        }
         return *this;
     }
 
-    TriangleMatrix<T>& operator=(TriangleMatrix<T>&& other) noexcept {
-        in_development();
-        return *this;
+    TriangleMatrix<T> operator+(const TriangleMatrix<T>& other) const {
+        if (_n != other._n) {
+            throw std::invalid_argument("Triangle Matrix should have the same size for addition");
+        }
+        TriangleMatrix<T> result(_n);
+        for (size_t i = 0; i < _n; ++i) {
+            for (size_t j = 0; j < _n; ++j) {
+                result.at(i, j) = this->at(i, j) + other.at(i, j);
+            }
+        }
+        return result;
+    }
+    TriangleMatrix<T> operator-(const TriangleMatrix<T>& other) const {
+        if (_n != other._n) {
+            throw std::invalid_argument("Triangle Matrix should have the same size for subtraction");
+        }
+        TriangleMatrix<T> result(_n);
+        for (size_t i = 0; i < _n; ++i) {
+            for (size_t j = 0; j < _n; ++j) {
+                result.at(i, j) = this->at(i, j) - other.at(i, j);
+            }
+        }
+        return result;
     }
 
-    TriangleMatrix<T> add_matrices(const TriangleMatrix<T>& other) const {
-        in_development();
-        return TriangleMatrix<T>();
-    }
-
-    TriangleMatrix<T> subtract_matrices(const TriangleMatrix<T>& other) const {
-        in_development();
-        return TriangleMatrix<T>();
-    }
-
+    /*
     TriangleMatrix<T> multiply_matrices(const TriangleMatrix<T>& other) const {
         in_development();
         return TriangleMatrix<T>();
     }
-
-    MathVector<T>& operator[](size_t other) {
-        in_development();
-    }
-
-    const MathVector<T>& operator[](size_t row) const {
-        in_development();
-    }
-
     friend std::ostream& operator<< <>(std::ostream& out, const TriangleMatrix<T>& matrix);*/
 };
 /*

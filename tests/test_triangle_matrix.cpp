@@ -59,3 +59,47 @@ TEST(TestTriangleMatrixLib, constructor_copy) {
     EXPECT_EQ(1, matrix2.at(0, 0));
     EXPECT_EQ(2, matrix2.at(0, 1));
 }
+
+TEST(TestTriangleMatrixLib, test_addition_int_triangle_matrix) {
+    // Arrange
+    TriangleMatrix<int> a(3), b(3);
+    int number = 1;
+    a.at(0, 0) = 1; a.at(0, 1) = 2; a.at(0, 2) = 3; a.at(1, 1) = 4; a.at(1, 2) = 5; a.at(2, 2) = 6;
+    b.at(0, 0) = 7; b.at(0, 1) = 8; b.at(0, 2) = 9; b.at(1, 1) = 10; b.at(1, 2) = 11; b.at(2, 2) = 12;
+    
+    // Act
+    TriangleMatrix<int> c = a + b;
+
+    // Assert
+    EXPECT_EQ(8, c.at(0, 0));
+    EXPECT_EQ(10, c.at(0, 1));
+    EXPECT_EQ(12, c.at(0, 2));
+    EXPECT_EQ(0, c.at(1, 0));
+    EXPECT_EQ(14, c.at(1, 1));
+    EXPECT_EQ(16, c.at(1, 2));
+    EXPECT_EQ(0, c.at(2, 0));
+    EXPECT_EQ(0, c.at(2, 1));
+    EXPECT_EQ(18, c.at(2, 2));
+}
+
+TEST(TestTriangleMatrixLib, test_subtraction_int_triangle_matrix) {
+    // Arrange
+    TriangleMatrix<int> a(3), b(3);
+    int number = 1;
+    a.at(0, 0) = 1; a.at(0, 1) = 2; a.at(0, 2) = 3; a.at(1, 1) = 4; a.at(1, 2) = 5; a.at(2, 2) = 6;
+    b.at(0, 0) = 7; b.at(0, 1) = 8; b.at(0, 2) = 9; b.at(1, 1) = 10; b.at(1, 2) = 11; b.at(2, 2) = 12;
+
+    // Act
+    TriangleMatrix<int> c = b - a;
+
+    // Assert
+    EXPECT_EQ(6, c.at(0, 0));
+    EXPECT_EQ(6, c.at(0, 1));
+    EXPECT_EQ(6, c.at(0, 2));
+    EXPECT_EQ(0, c.at(1, 0));
+    EXPECT_EQ(6, c.at(1, 1));
+    EXPECT_EQ(6, c.at(1, 2));
+    EXPECT_EQ(0, c.at(2, 0));
+    EXPECT_EQ(0, c.at(2, 1));
+    EXPECT_EQ(6, c.at(2, 2));
+}
