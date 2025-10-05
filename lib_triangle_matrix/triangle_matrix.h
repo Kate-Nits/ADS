@@ -144,17 +144,45 @@ public:
         }
         return result;
     }
-    /*
     
-    friend std::ostream& operator<< <>(std::ostream& out, const TriangleMatrix<T>& matrix);*/
+    friend std::ostream& operator<< <>(std::ostream& out, const TriangleMatrix<T>& matrix);
 };
-/*
 template <class T>
-std::ostream& operator<<(std::ostream& out, const TriangleMatrix<T>& matrix) {
-    in_development();
-    out << " ";
+std::ostream& operator<< <>(std::ostream& out, const TriangleMatrix<T>& matrix) {
+    for (size_t i = 0; i < matrix.n(); ++i) {
+        out << "[ ";
+        for (size_t j = 0; i < matrix.n(); ++j) {
+            out << matrix.at(i, j) << "  ";
+        }
+        out << "]\n";
+    }
     return out;
 }
-*/
 
+template <class T>
+Matrix<T> operator+(const Matrix<T>& matrix, const TriangleMatrix<T>& triangle_matrix) {
+    if (matrix.rows() != triangle_matrix.n() || matrix.cols() != triangle_matrix.n()) {
+        throw std::invalid_argument("Matrixes should have the same size for addition");
+    }
+    Matrix<T> result(matrix.rows(), matrix.cols());
+    for (size_t i = 0; i < matrix.rows(); ++i) {
+        for (size_t j = 0; j < matrix.cols(); ++j) {
+            result[i][j] = matrix.at(i, j) + triangle_matrix.at(i, j);
+        }
+    }
+    return result;
+}
+template <class T>
+Matrix<T> operator+(const TriangleMatrix<T>& triangle_matrix, const Matrix<T>& matrix) {
+    if (matrix.rows() != triangle_matrix.n() || matrix.cols() != triangle_matrix.n()) {
+        throw std::invalid_argument("Matrixes should have the same size for addition");
+    }
+    Matrix<T> result(matrix.rows(), matrix.cols());
+    for (size_t i = 0; i < matrix.rows(); ++i) {
+        for (size_t j = 0; j < matrix.cols(); ++j) {
+            result[i][j] = matrix.at(i, j) + triangle_matrix.at(i, j);
+        }
+    }
+    return result;
+}
 #endif // TRIANGLE_MATRIX_TRIANGLE_MATRIX_X

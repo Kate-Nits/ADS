@@ -190,3 +190,45 @@ TEST(TestTriangleMatrixLib, test_mult_a_int_TriangleMatrix_by_a_int_TriangleMatr
     // Act & Assert
     ASSERT_ANY_THROW(A * B);
 }
+
+TEST(TestTriangleMatrixLib, test_addition_int_matrix_and_int_triangle_matrix_with_the_same_size) {
+    // Arrange
+    TriangleMatrix<int> a(3);
+    a.at(0, 0) = 1; a.at(0, 1) = 2; a.at(0, 2) = 3; a.at(1, 1) = 4; a.at(1, 2) = 5; a.at(2, 2) = 6;
+    Matrix<int> b{ {1, 1, 1}, {1, 1, 1}, {1, 1, 1} };
+
+    // Act
+    Matrix<int> c = b + a;
+
+    // Assert
+    EXPECT_EQ(2, c.at(0, 0));
+    EXPECT_EQ(3, c.at(0, 1));
+    EXPECT_EQ(4, c.at(0, 2));
+    EXPECT_EQ(1, c.at(1, 0));
+    EXPECT_EQ(5, c.at(1, 1));
+    EXPECT_EQ(6, c.at(1, 2));
+    EXPECT_EQ(1, c.at(2, 0));
+    EXPECT_EQ(1, c.at(2, 1));
+    EXPECT_EQ(7, c.at(2, 2));
+}
+
+TEST(TestTriangleMatrixLib, test_addition_int_triangle_matrix_and_int_matrix_with_the_same_size) {
+    // Arrange
+    TriangleMatrix<int> a(3);
+    a.at(0, 0) = 1; a.at(0, 1) = 2; a.at(0, 2) = 3; a.at(1, 1) = 4; a.at(1, 2) = 5; a.at(2, 2) = 6;
+    Matrix<int> b{ {1, 1, 1}, {1, 1, 1}, {1, 1, 1} };
+
+    // Act
+    Matrix<int> c = a + b;
+
+    // Assert
+    EXPECT_EQ(2, c.at(0, 0));
+    EXPECT_EQ(3, c.at(0, 1));
+    EXPECT_EQ(4, c.at(0, 2));
+    EXPECT_EQ(1, c.at(1, 0));
+    EXPECT_EQ(5, c.at(1, 1));
+    EXPECT_EQ(6, c.at(1, 2));
+    EXPECT_EQ(1, c.at(2, 0));
+    EXPECT_EQ(1, c.at(2, 1));
+    EXPECT_EQ(7, c.at(2, 2));
+}
