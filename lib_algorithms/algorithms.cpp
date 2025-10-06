@@ -31,11 +31,11 @@
 #define MULTIPLY 3
 #define EXIT_CALCULATE_MATRIX_MENU 4
 
-//#define REALISED_ADD
-//#define REALISED_SUBTRACT
-//#define REALISED_MULTIPLY
-//#define REALISED_OPERATOR[]
-//#define REALISED_CLASSES
+#define REALISED_ADD
+#define REALISED_SUBTRACT
+#define REALISED_MULTIPLY
+#define REALISED_OPERATOR
+#define REALISED_CLASSES
 
 #define STANDART 1
 #define TRIANGLE 2
@@ -137,28 +137,21 @@ void what_matrices(int& what_the_first_matrix, int& what_the_second_matrix, int&
         what_the_second_matrix = TRIANGLE;
     }
 }
-void what_matrix_sizes(size_t& sizeN, size_t& sizeM) {
+void what_matrix_sizes(size_t& size_n, size_t& size_m) {
     std::cout << "==================================================" << std::endl;
     std::cout << "Enter the number of lines (parametr M): ";
-    std::cin >> sizeM;
+    std::cin >> size_m;
     std::cout << "Enter the number of columns (parametr N): ";
-    std::cin >> sizeN;
+    std::cin >> size_n;
 }
-/*void print_res(const TMatrix<int>& matrix, size_t size_M, size_t size_N) {
-
-#ifndef REALISED_OPERATOR[]
-
-    in_development();
-
-#else
-    for (size_t i = 0; i < size_M; i++) {
+void print_res(const Matrix<int>& matrix, size_t size_m, size_t size_N) {
+    for (size_t i = 0; i < size_m; i++) {
         for (size_t j = 0; j < size_N; j++) {
-            std::cout << matrix[i][j] << "   ";
+            std::cout << matrix.at(i, j) << "   ";
         }
         std::cout << std::endl;
     }
-#endif // REALISED_OPERATOR[] 
-}*/
+}
 void do_user_want_to_save(int& want_to_save) {
     std::cout << "==================================================" << std::endl;
     std::cout << "Would you like to save result?" << std::endl;
@@ -177,122 +170,145 @@ void do_user_want_to_save(int& want_to_save) {
         std::cin >> want_to_save;
     }
 }
-/*void start_matrix_calculator(int& link_user_choice, int& link_want_to_save, TMatrix<int> res) {
-    int isExit = NO;
-    int& link_isExit = isExit;
-    int what_the_first_matrix = 0;
-    int what_the_second_matrix = 0;
-    int& link_what_the_first_matrix = what_the_first_matrix;
-    int& link_what_the_second_matrix = what_the_second_matrix;
-    print_menu_matrix_calculator();
-    while (!input_user_choice(link_user_choice, START_MENU_MATRIX_CALCULATE_SIZE));
-    system("cls");
-    while (!isExit) {
-        if (link_user_choice != EXIT_CALCULATE_MATRIX_MENU) {
-            what_matrices(link_what_the_first_matrix, link_what_the_second_matrix, link_isExit);
-            system("cls");
-            if (isExit == YES) {
-                break;
-            }
-            size_t sizeM1, sizeN1;
-            size_t& link_sizeM1 = sizeM1;
-            size_t& link_sizeN1 = sizeN1;
-            size_t sizeM2, sizeN2;
-            size_t& link_sizeM2 = sizeM2;
-            size_t& link_sizeN2 = sizeN2;
-            size_t size_resM, size_resN;
-            size_t& link_size_resM = size_resM;
-            size_t& link_size_resN = size_resN;
-            if (link_user_choice == ADD || link_user_choice == SUBTRACT) {
-                what_matrix_sizes(link_sizeN1, link_sizeM1);
-                sizeM2 = sizeM1;
-                size_resM = sizeM1;
-                sizeN2 = sizeN1;
-                size_resN = sizeN1;
-            }
-            else if (link_user_choice == MULTIPLY) {
-                std::cout << "==================================================" << std::endl;
-                std::cout << "  For the first matrix" << std::endl;
-                what_matrix_sizes(link_sizeN1, link_sizeM1);
-                std::cout << "==================================================" << std::endl;
-                std::cout << "  For the second matrix" << std::endl;
-                what_matrix_sizes(link_sizeN2, link_sizeM2);
-                while (sizeN1 != sizeM2) {
-                    set_color(12, 0);
-                    std::cout << "ERROR: ";
-                    set_color(7, 0);
-                    std::cout << "The parameter N for 1 of the matrix and the parametr M for 2 must be equal" << std::endl;
-                    std::cout << "==================================================" << std::endl;
-                    std::cout << "  For the first matrix" << std::endl;
-                    what_matrix_sizes(link_sizeN1, link_sizeM1);
-                    std::cout << "==================================================" << std::endl;
-                    std::cout << "  For the second matrix" << std::endl;
-                    what_matrix_sizes(link_sizeN2, link_sizeM2);
-                }
-                size_resM = sizeN1;
-                size_resM = sizeM2;
-            }
-            if (what_the_first_matrix == STANDART && what_the_second_matrix == STANDART) {
-#ifdef REALISED_CLASSES
-                TMatrix<int> matrix1;
-                TMatrix<int> matrix2;
-                TMatrix<int> intermediate_res;
-#else
-                //in_development();
-#endif // REALISED_CLASSES
-
-            }
-            else if (what_the_first_matrix == TRIANGLE && what_the_second_matrix == TRIANGLE) {
-#ifdef REALISED_CLASSES
-                TriangleMatrix<int> matrix1;
-                TriangleMatrix<int> matrix2;
-                TriangleMatrix<int> intermediate_res;
-#else
-                //in_development();
-#endif // REALISED_CLASSES
-            }
-        }
-        system("cls");
-        switch (link_user_choice) {
-        case ADD:
-#ifndef REALISED_ADD
-            in_development();
-#else
-            intermediate_res = matrix1.add_matrices(matrix2);
-            res = intermediate_res;
-            print_res(res, size_resM, size_resN);
-            do_user_want_to_save(link_want_to_save);
-#endif //REALISED_ADD
-            break;
-
-        case SUBTRACT:
-#ifndef REALISED_SUBTRACT
-            in_development();
-#else
-            intermediate_res = matrix1.subtract_matrices(matrix2);
-            res = intermediate_res;
-            print_res(res, size_resM, size_resN);
-            do_user_want_to_save(link_want_to_save);
-#endif //REALISED_SUBTRACT
-            break;
-
-        case MULTIPLY:
-#ifndef REALISED_MULTIPLY
-            in_development();
-#else
-            intermediate_res = matrix1.multiply_matrices(matrix2);
-            res = intermediate_res;
-            print_res(res, size_resM, size_resN);
-            do_user_want_to_save(link_want_to_save);
-#endif //REALISED_MULTIPLY
-            break;
-
-        case EXIT_CALCULATE_MATRIX_MENU:
-            isExit = YES;
-            break;
+void input_standard_matrix(Matrix<int>& matrix, size_t rows, size_t cols) {
+    std::cout << "Enter matrix elements:" << std::endl;
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            std::cout << "[" << i << "][" << j << "] = ";
+            std::cin >> matrix[i][j];
         }
     }
-}*/
+}
+void input_triangle_matrix(TriangleMatrix<int>& matrix, size_t n) {
+    std::cout << "Enter upper-triangle elements (including diagonal):" << std::endl;
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = i; j < n; ++j) {
+            std::cout << "[" << i << "][" << j << "] = ";
+            std::cin >> matrix.at(i, j);
+        }
+    }
+}
+Matrix<int> triangle_to_full(const TriangleMatrix<int>& matrix) {
+    Matrix<int> result(matrix.n(), matrix.n());
+    for (size_t i = 0; i < matrix.n(); ++i)
+        for (size_t j = 0; j < matrix.n(); ++j)
+            result.at(i, j) = matrix.at(i, j);
+    return result;
+}
+void start_matrix_calculator(int& link_user_choice, int& link_want_to_save, Matrix<int> res) {
+    int isExit = NO;
+    while (!isExit) {
+        print_menu_matrix_calculator();
+        while (!input_user_choice(link_user_choice, START_MENU_MATRIX_CALCULATE_SIZE));
+        system("cls");
+        if (link_user_choice == EXIT_CALCULATE_MATRIX_MENU) { break; }
+        int what_the_first_matrix = 0;
+        int what_the_second_matrix = 0;
+        int inner_exit = NO;
+        what_matrices(what_the_first_matrix, what_the_second_matrix, inner_exit);
+        system("cls");
+        if (inner_exit == YES) { break; }
+
+        size_t size_m1 = 0, size_n1 = 0, size_m2 = 0, size_n2 = 0;
+        size_t size_res_m = 0, size_res_n = 0;
+        if (link_user_choice == ADD || link_user_choice == SUBTRACT) {
+            what_matrix_sizes(size_n1, size_m1);
+            size_m2 = size_m1;
+            size_n2 = size_n1;
+            size_res_m = size_m1;
+            size_res_n = size_n1;
+        }
+        else if (link_user_choice == MULTIPLY) {
+            std::cout << "==================================================" << std::endl;
+            std::cout << "  For the first matrix" << std::endl;
+            what_matrix_sizes(size_n1, size_m1);
+            std::cout << "==================================================" << std::endl;
+            std::cout << "  For the second matrix" << std::endl;
+            what_matrix_sizes(size_n2, size_m2);
+            while (size_n1 != size_m2) {
+                set_color(12, 0);
+                std::cout << "ERROR: ";
+                set_color(7, 0);
+                std::cout << "The parameter N for 1 of the matrix and the parametr M for 2 must be equal" << std::endl;
+                std::cout << "==================================================" << std::endl;
+                std::cout << "  For the first matrix" << std::endl;
+                what_matrix_sizes(size_n1, size_m1);
+                std::cout << "==================================================" << std::endl;
+                std::cout << "  For the second matrix" << std::endl;
+                what_matrix_sizes(size_n2, size_m2);
+            }
+            size_res_m = size_n1;
+            size_res_m = size_m2;
+        }
+        if (what_the_first_matrix == STANDART && what_the_second_matrix == STANDART) {
+            Matrix<int> matrix1(size_m1, size_n1);
+            Matrix<int> matrix2(size_m2, size_n2);
+            Matrix<int> intermediate_res;
+            input_standard_matrix(matrix1, size_m1, size_n1);
+            input_standard_matrix(matrix2, size_m2, size_n2);
+            switch (link_user_choice) {
+            case ADD: intermediate_res = matrix1 + matrix2; break;
+            case SUBTRACT: intermediate_res = matrix1 - matrix2; break;
+            case MULTIPLY: intermediate_res = matrix1 * matrix2; break;
+            }
+            res = intermediate_res;
+            print_res(res, size_res_m, size_res_n);
+            do_user_want_to_save(link_want_to_save);
+        }
+        else if (what_the_first_matrix == TRIANGLE && what_the_second_matrix == TRIANGLE) {
+            TriangleMatrix<int> matrix1(size_m1);
+            TriangleMatrix<int> matrix2(size_m2);
+            TriangleMatrix<int> intermediate_res;
+            input_triangle_matrix(matrix1, size_m1);
+            input_triangle_matrix(matrix2, size_m2);
+
+            switch (link_user_choice) {
+            case ADD: intermediate_res = matrix1 + matrix2; break;
+            case SUBTRACT: intermediate_res = matrix1 - matrix2; break;
+            case MULTIPLY: intermediate_res = matrix1 * matrix2; break;
+            }
+            res = triangle_to_full(intermediate_res);
+            print_res(res, size_res_m, size_res_n);
+            do_user_want_to_save(link_want_to_save);
+        }
+        else {
+            if (what_the_first_matrix == STANDART && what_the_second_matrix == TRIANGLE) {
+                Matrix<int> matrix1(size_m1, size_n1), intermediate_res;
+                TriangleMatrix<int> matrix2(size_m2);
+                input_standard_matrix(matrix1, size_m1, size_n1);
+                input_triangle_matrix(matrix2, size_m2);
+
+                switch (link_user_choice) {
+                case ADD: intermediate_res = matrix1 + matrix2; break;
+                case SUBTRACT: intermediate_res = matrix1 - matrix2; break;
+                case MULTIPLY: intermediate_res = matrix1 * matrix2; break;
+                }
+                res = intermediate_res;
+                print_res(res, size_res_m, size_res_n);
+                do_user_want_to_save(link_want_to_save);
+            }
+            else if (what_the_first_matrix == TRIANGLE && what_the_second_matrix == STANDART) {
+                TriangleMatrix<int> matrix1(size_m1);
+                Matrix<int> matrix2(size_m2, size_n2), intermediate_res;
+                input_triangle_matrix(matrix1, size_m1);
+                input_standard_matrix(matrix2, size_m2, size_n2);
+
+                switch (link_user_choice) {
+                case ADD: intermediate_res = matrix1 + matrix2; break;
+                case SUBTRACT: intermediate_res = matrix1 - matrix2; break;
+                case MULTIPLY: intermediate_res = matrix1 * matrix2; break;
+                }
+                res = intermediate_res;
+                print_res(res, size_res_m, size_res_n);
+                do_user_want_to_save(link_want_to_save);
+            }
+        }
+        std::cout << "Press Enter to continue..." << std::endl;
+        getchar();
+        getchar();
+        system("cls");
+    }
+}
 void deleted_saved_matrix(int& link_user_choice_for_deleted, int& isThereMatrix1, int& isThereMatrix2, int& isThereMatrix3) {
     std::cout << "==================================================" << std::endl;
     std::cout << "  You can store a limited number of matrices" << std::endl;
@@ -319,7 +335,7 @@ void deleted_saved_matrix(int& link_user_choice_for_deleted, int& isThereMatrix1
         break;
     }
 }
-/*void viewing_saved_matrices(int count_of_saved_matrices, TMatrix<int> matrix1, TMatrix<int> matrix2, TMatrix<int> matrix3) {
+void viewing_saved_matrices(int count_of_saved_matrices, Matrix<int> matrix1, Matrix<int> matrix2, Matrix<int> matrix3) {
     std::cout << "==================================================" << std::endl;
     std::cout << "  Which matrix would you like to look at?" << std::endl;
     if (count_of_saved_matrices > 0) {
@@ -356,39 +372,27 @@ void deleted_saved_matrix(int& link_user_choice_for_deleted, int& isThereMatrix1
     getchar();
     getchar();
     system("cls");
-}*/
+}
 void matrix_application() {
-    /*
-    int user_choice;
-    int& link_user_choice = user_choice;
+    int user_choice = 0;
     int isExit = NO;
-
     int want_to_save = NO;
-    int& link_want_to_save = want_to_save;
     int count_of_saved_matrices = 0;
-    TMatrix<int> res;
-    TMatrix<int> matrix1;
-    TMatrix<int> matrix2;
-    TMatrix<int> matrix3;
+    Matrix<int> res, matrix1, matrix2, matrix3;
     int isThereMatrix1 = NO;
     int isThereMatrix2 = NO;
     int isThereMatrix3 = NO;
-    int& link_isThereMatrix1 = isThereMatrix1;
-    int& link_isThereMatrix2 = isThereMatrix2;
-    int& link_isThereMatrix3 = isThereMatrix3;
-
     while (!isExit) {
         start_menu_for_matrix();
-        while (!input_user_choice(link_user_choice, START_MENU_FOR_MATRIX_SIZE));
+        while (!input_user_choice(user_choice, START_MENU_FOR_MATRIX_SIZE));
         system("cls");
         switch (user_choice) {
         case MATRIX_CALCULATOR:
-            start_matrix_calculator(link_user_choice, link_want_to_save, res);
+            start_matrix_calculator(user_choice, want_to_save, res);
             if (want_to_save == YES) {
                 int user_choice_for_deleted;
-                int& link_user_choice_for_deleted = user_choice_for_deleted;
                 while ((count_of_saved_matrices + 1) > MAX_COUNT_OF_SAVED_MATRICES) {
-                    deleted_saved_matrix(link_user_choice_for_deleted, link_isThereMatrix1, link_isThereMatrix2, link_isThereMatrix3);
+                    deleted_saved_matrix(user_choice_for_deleted, isThereMatrix1, isThereMatrix2, isThereMatrix3);
                     if (user_choice_for_deleted == EXIT_DELETED_SAVED_MATRICES_MENU) {
                         break;
                     }
@@ -431,8 +435,4 @@ void matrix_application() {
             break;
         }
     }
-    */
 }
-
-
-

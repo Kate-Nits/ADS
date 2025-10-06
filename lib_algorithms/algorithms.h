@@ -10,7 +10,7 @@
 #include "../lib_triangle_matrix/triangle_matrix.h"
 
 #define START_MENU_MATRIX_SIZE 3
-//#define REALISED_TMATRIX
+#define REALISED_Matrix
 
 enum Location { intersecting, do_not_intersecting, tangent, inside, coinside };
 //tangent - касающиеся, intersecting - пересекающиеся, inside - один в другом, coinside - совпадают
@@ -55,19 +55,19 @@ Location check_position(const T& circle1, const T& circle2) {
 }
 
 void start_menu_for_matrix();
-#ifndef REALISED_TMATRIX
-#else 
-void viewing_saved_matrices(int count_of_saved_matrices, TMatrix<int> matrix1, TMatrix<int> matrix2, TMatrix<int> matrix3);
-void start_matrix_calculator(int& link_user_choice, int& link_want_to_save, TMatrix<int> res);
-void print_res(const TMatrix<int>& matrix, size_t size_M, size_t size_N);
-#endif //REALISED_TMATRIX
+void viewing_saved_matrices(int count_of_saved_matrices, Matrix<int> matrix1, Matrix<int> matrix2, Matrix<int> matrix3);
+void start_matrix_calculator(int& link_user_choice, int& link_want_to_save, Matrix<int> res);
+void print_res(const Matrix<int>& matrix, size_t size_M, size_t size_N);
+void do_user_want_to_save(int& want_to_save);
+void input_standard_matrix(Matrix<int>& matrix, size_t rows, size_t cols);
+void input_triangle_matrix(TriangleMatrix<int>& matrix, size_t n);
+Matrix<int> triangle_to_full(const TriangleMatrix<int>& matrix);
 void check_user_input(int user_choice, int true_number);
 bool input_user_choice(int& user_choice, int true_number);
 void what_matrices(int& what_the_first_matrix, int& what_the_second_matrix, int& isExit);
 void print_menu_matrix_calculator();
 void what_matrix_sizes(size_t& link_sizeN, size_t& link_sizeM);
 void deleted_saved_matrix(int& link_user_choice_for_deleted, int& isThereMatrix1, int& isThereMatrix2, int& isThereMatrix3);
-void do_user_want_to_save(int& want_to_save);
 void matrix_application();
 
 #endif //  LIB_ALGORITHMS_H
