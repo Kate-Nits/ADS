@@ -163,7 +163,7 @@ public:
 		throw std::out_of_range("No busy elements in vector");
 	}
 
-	inline bool is_empty() const noexcept { return _size == 0 || (_size - _deleted == 0); } //ôóíêöèÿ ïðîâåðêè íà ïóñòîòó
+	inline bool is_empty() const noexcept { return _size == 0 || (_size - _deleted == 0); }
 
 	//функции вставки
 	void push_front(const T& value) noexcept {

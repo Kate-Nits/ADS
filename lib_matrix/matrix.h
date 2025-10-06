@@ -28,7 +28,7 @@ public:
         }
     }
     Matrix(const std::initializer_list<MathVector<T>> list) {
-        if (list.size() == 0) { // без это поверки, если размер нулевой по умолчанию получиться list.begin() == list.end() 
+        if (list.size() == 0) { // без этой поверки, если размер нулевой по умолчанию получиться list.begin() == list.end() 
             _rows = 0;
             _cols = 0;
             this->_size = 0;

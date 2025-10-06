@@ -60,7 +60,7 @@ public:
     }
     template <typename U>
     MathVector<std::common_type_t<T, U>> operator+(const MathVector<U>& other) const {
-        using R = std::common_type_t<T, U>; // std::common_type_t<T,U> автоматически выбирает “наибольший” тип
+        using R = std::common_type_t<T, U>; // std::common_type_t<T,U> автоматически выбирает наибольший тип
         if (this->size()!= other.size()) {
             throw std::invalid_argument("Vectors should have same size for addition");
         }
@@ -84,7 +84,7 @@ public:
     }
     template <typename U>
     MathVector<std::common_type_t<T, U>> operator-(const MathVector<U>& other) const {
-        using R = std::common_type_t<T, U>; // std::common_type_t<T,U> автоматически выбирает “наибольший” тип
+        using R = std::common_type_t<T, U>; // std::common_type_t<T,U> автоматически выбирает наибольший тип
         if (this->size()!= other.size()) {
             throw std::invalid_argument("Vectors should have same size for subtraction");
         }
