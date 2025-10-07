@@ -151,7 +151,7 @@ template <class T>
 std::ostream& operator<< <>(std::ostream& out, const TriangleMatrix<T>& matrix) {
     for (size_t i = 0; i < matrix.n(); ++i) {
         out << "[ ";
-        for (size_t j = 0; i < matrix.n(); ++j) {
+        for (size_t j = 0; j < matrix.n(); ++j) {
             out << matrix.at(i, j) << "  ";
         }
         out << "]\n";
