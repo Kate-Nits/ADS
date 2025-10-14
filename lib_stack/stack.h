@@ -29,6 +29,26 @@ public:
 	void clear() noexcept {
 		_data.clear();
 	}
+
+	void push(const T& value) {
+		if (is_full()) {
+			throw std::overflow_error("Stack overflow: cannot push, because stack is full");
+		}
+		_data.push_back(value);
+	}
+
+	T& top() {
+		if (is_empty()) {
+			throw std::underflow_error("Stack is empty (no top element");
+		}
+		return _data.back();
+	}
+	const T& top() const {
+		if (is_empty()) {
+			throw std::underflow_error("Stack is empty (no top element");
+		}
+		return _data.back();
+	}
 };
 
 
