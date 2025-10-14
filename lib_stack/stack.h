@@ -37,9 +37,16 @@ public:
 		_data.push_back(value);
 	}
 
+	void pop() {
+		if (is_empty()) {
+			throw std::underflow_error("Stack is empty (can't pop from empty stack)");
+		}
+		_data.pop_back();
+	}
+
 	T& top() {
 		if (is_empty()) {
-			throw std::underflow_error("Stack is empty (no top element");
+			throw std::underflow_error("Stack is empty (no top element)");
 		}
 		return _data.back();
 	}
