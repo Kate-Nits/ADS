@@ -162,6 +162,12 @@ public:
 				return _data[i];
 		throw std::out_of_range("No busy elements in vector");
 	}
+	inline const T& back() const { //Доступ к последнему элементу, который не deleted и не empty
+		for (size_t i = _size; i-- > 0; )
+			if (_states[i] == busy)
+				return _data[i];
+		throw std::out_of_range("No busy elements in vector");
+	}
 
 	inline bool is_empty() const noexcept { return (_size - _deleted) == 0; }
 
@@ -249,6 +255,12 @@ public:
 
 	//замена значения
 	void emplace(size_t index, T&& value) {
+		size_t real_index = check_index(index);
+		_data[real_index] = value;
+		_states[real_index] = State::busy;
+	}
+
+	void emplace(size_t index, const T& value) {
 		size_t real_index = check_index(index);
 		_data[real_index] = value;
 		_states[real_index] = State::busy;

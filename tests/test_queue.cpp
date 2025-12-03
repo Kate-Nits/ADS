@@ -29,7 +29,7 @@ TEST(TestQueueLib, constructor_with_size) {
 	EXPECT_FALSE(queue.is_full());
 }
 
-TEST(TestQueueLib, copy_constructor) {
+TEST(TestQueueLib, copy_constructor_without_difficulties) {
 	// Arrange
 	size_t size = 10;
 	Queue<int> queue1(size);
@@ -41,6 +41,24 @@ TEST(TestQueueLib, copy_constructor) {
 	EXPECT_EQ(queue1.size(), queue2.size());
 	EXPECT_EQ(queue1.is_empty(), queue2.is_empty());
 	EXPECT_EQ(queue1.is_full(), queue2.is_full());
+}
+
+TEST(TestQueueLib, copy_constructor_with_overflow_head_and_tail) {
+	// Arrange
+	Queue<int> queue1(3);
+
+	// Act
+	queue1.push(1);
+	queue1.push(2);
+	queue1.push(3);
+	queue1.pop();
+	queue1.push(4);
+	Queue<int> queue2(queue1);
+
+	// Assert
+	EXPECT_EQ(queue1.size(), queue2.size());
+	EXPECT_EQ(queue1.head(), queue2.head());
+	EXPECT_EQ(queue1.tail(), queue2.tail());
 }
 
 TEST(TestQueueLib, test_push_and_check_head_and_tail_without_an_overflowing_queue) {
@@ -165,4 +183,39 @@ TEST(TestQueueLib, test_is_empty_checking_for_an_empty_queue) {
 	// Act & Assert
 	EXPECT_TRUE(queue.is_empty());
 	EXPECT_ANY_THROW(queue.pop());
+}
+
+TEST(TestQueueLib, test_push_after_overflow_tail) {
+	// Arrange
+	Queue<int> queue(3);
+
+	// Act
+	queue.push(1);
+	queue.push(2);
+	queue.pop();
+	queue.pop();
+	queue.push(100);
+	queue.push(200);
+
+	// Assert
+	EXPECT_EQ(2, queue.size());
+	EXPECT_EQ(100, queue.head());
+	EXPECT_EQ(200, queue.tail());
+}
+
+TEST(TestQueueLib, test_push_after_overflow_head) {
+	// Arrange
+	Queue<int> queue(3);
+
+	// Act
+	queue.push(1);
+	queue.push(2);
+	queue.push(3);
+	queue.pop();
+	queue.push(555);
+
+	// Assert
+	EXPECT_EQ(3, queue.size());
+	EXPECT_EQ(2, queue.head());
+	EXPECT_EQ(555, queue.tail());
 }
