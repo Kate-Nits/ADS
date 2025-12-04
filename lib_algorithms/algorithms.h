@@ -4,6 +4,7 @@
 #ifndef LIB_ALGORITHMS_H
 #define  LIB_ALGORITHMS_H
 
+#include <cstdlib>
 #include "../lib_circle/circle.h"
 #include "../lib_sphere/sphere.h"
 #include "../lib_tvector/tvector.h"
@@ -91,6 +92,7 @@ int what_number_less(const T& num1, const T& num2, const T& num3, const T& num4)
 }
 template <class T>
 T gradient_descent(const Matrix<T>& matrix) {
+    srand(time(0));
     if (matrix.cols() != matrix.rows()) {
         throw std::invalid_argument("The Matrix should be square");
     }
@@ -99,10 +101,9 @@ T gradient_descent(const Matrix<T>& matrix) {
     }
 
     size_t start_row_pos = 0, start_col_pos = 0;
-    std::cout << "Input start position row: ";
-    std::cin >> start_row_pos;
-    std::cout << "Input start position column: ";
-    std::cin >> start_col_pos;
+    start_row_pos = rand() % matrix.rows() + 0;
+    start_col_pos = rand() % matrix.cols() + 0;
+    
     if (start_row_pos >= matrix.rows() || start_col_pos >= matrix.cols()) {
         throw std::out_of_range("Start position out of matrix bounds");
     }
