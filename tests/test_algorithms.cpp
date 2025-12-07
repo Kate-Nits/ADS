@@ -11,7 +11,7 @@
 #define FALSE 0
 
 TEST(TestAlgorithmsLib, test_gradient_descent_from_example1) {
-    // Arrange (Настройка)
+    // Arrange
     Matrix<int> matrix{ {3, 1, 2}, {5, 8, 4}, {7, 6, 9} };
 
     // Act 
@@ -22,7 +22,7 @@ TEST(TestAlgorithmsLib, test_gradient_descent_from_example1) {
 }
 
 TEST(TestAlgorithmsLib, test_gradient_descent_from_example2) {
-    // Arrange (Настройка)
+    // Arrange
     Matrix<int> matrix{ {11, 15, 10, 9}, {6, 16, 3, 8}, {7, 4, 2, 13}, {14, 12, 1, 5} };
 
     // Act 
