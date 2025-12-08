@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 #include "../lib_list/list.h"
+#include "../lib_tvector/tvector.h"
 
 #define EPSILON 0.000001
 #define TRUE 1
@@ -620,4 +621,124 @@ TEST(TestListLib, test_string_list) {
 
 	// Assert
 	EXPECT_EQ("Hello", list.head()->value);
+}
+
+TEST(TestListLib, iterator_read) {
+	// Arrange
+	List<int> list;
+	for (int i = 0; i < 5; i++) {
+		list.push_back(i);
+	}
+	int i = 0;
+
+	// Act & Assert
+	for (List<int>::Iterator it = list.begin(); it != list.end(); it++) {
+		EXPECT_EQ(i, *it);
+		i++;
+	}
+}
+
+TEST(TestListLib, iterator_write) {
+	// Arrange
+	List<int> list;
+	for (int i = 0; i < 5; i++) {
+		list.push_back(0);
+	}
+	int i = 1;
+	int j = 10;
+
+	// Act
+	for (List<int>::Iterator it = list.begin(); it != list.end(); it++) {
+		*it = i * 10;
+		i++;
+	}
+
+	// Assert
+	for (List<int>::Iterator it = list.begin(); it != list.end(); it++) {
+		EXPECT_EQ(j, *it);
+		j += 10;
+	}
+}
+
+TEST(TestListLib, iterator_in_empty_list) {
+	// Arrange
+	List<int> list;
+
+	// Act
+	int iterator_count = 0;
+	for (List<int>::Iterator it = list.begin(); it != list.end(); it++) {
+		iterator_count++;
+	}
+
+	// Assert
+	EXPECT_EQ(0, iterator_count);
+	EXPECT_TRUE(list.begin() == list.end());
+	EXPECT_FALSE(list.begin() != list.end());
+}
+
+TEST(TestListLib, iterator_operator_assigment) {
+	// Arrange
+	List<int> list;
+	list.push_back(76);
+	list.push_back(32);
+
+	// Act
+	List<int>::Iterator it1 = list.begin();
+	List<int>::Iterator it2 = it1;
+
+	// Assert
+	EXPECT_EQ(*it1, *it2);
+	EXPECT_TRUE(it1 == it2);
+	++it1;
+	EXPECT_EQ(32, *it1);
+	EXPECT_EQ(76, *it2);
+	EXPECT_FALSE(it1 == it2);
+}
+
+TEST(TestListLib, iterator_operator_prefix_plus_plus) {
+	// Arrange
+	List<int> list;
+	list.push_back(765);
+	list.push_back(324);
+	list.push_back(456);
+
+	// Act
+	List<int>::Iterator it = list.begin();
+
+	// Assert
+	EXPECT_EQ(765, *it);
+	EXPECT_EQ(324, *++it);
+	EXPECT_EQ(324, * it);
+	EXPECT_EQ(456, *++it);
+}
+
+TEST(TestListLib, iterator_operator_postfix_plus_plus) {
+	// Arrange
+	List<int> list;
+	list.push_back(765);
+	list.push_back(324);
+	list.push_back(456);
+
+	// Act
+	List<int>::Iterator it = list.begin();
+
+	// Assert
+	EXPECT_EQ(765, *it);
+	EXPECT_EQ(765, *it++);
+	EXPECT_EQ(324, *it);
+}
+
+TEST(TestListLib, iterator_operator_plus_assigment) {
+	// Arrange
+	List<int> list;
+	for (int i = 1; i < 7; i++) {
+		list.push_back(i*10);
+	}
+
+	// Act
+	List<int>::Iterator it = list.begin();
+	it += 3;
+
+	// Assert
+	EXPECT_EQ(40, *it);
 }

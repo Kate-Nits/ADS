@@ -24,6 +24,51 @@ public:
 	~List() {
 		clear();
 	}
+	class Iterator {
+		Node<T>* _current;
+	public:
+		Iterator() : _current(nullptr) {}
+		Iterator(Node<T>* ptr) : _current(ptr) {}
+
+		Iterator& operator=(const Iterator& other) {
+			if (this != &other) {
+				_current = other._current;
+			}
+			return *this;
+		}
+		Iterator operator++(int) { //iterator++
+			Iterator tmp = *this;
+			if (_current != nullptr) {
+				_current = _current->next;
+			}
+			return tmp;
+		}
+		Iterator& operator++() { // ++iterator
+			if (_current != nullptr) {
+				_current = _current->next;
+			}
+			return *this;
+		}
+		bool operator==(const Iterator& other) const {
+			return _current == other._current;
+		}
+		bool operator!=(const Iterator& other) const {
+			return _current != other._current;
+		}
+		T& operator*() {
+			return _current->value;
+		}
+		Iterator& operator+=(size_t n) {
+			while (n > 0 && _current != nullptr) {
+				_current = _current->next;
+				n--;
+			}
+			return *this;
+		}
+	};
+	Iterator begin() { return Iterator(_head); }
+	Iterator end() { return Iterator(nullptr); }
+
 	inline Node<T>* head();
 	inline const Node<T>* head() const;
 	inline Node<T>* tail();
