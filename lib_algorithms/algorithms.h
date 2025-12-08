@@ -189,4 +189,9 @@ void what_matrix_sizes(const int& type_matrix, size_t& size_rows, size_t& size_c
 void deleted_saved_matrix(int& link_user_choice_for_deleted, int& isThereMatrix1, int& isThereMatrix2, int& isThereMatrix3);
 void matrix_application();
 
+inline bool is_open_bracket(char symbol);
+inline bool is_close_bracket(char symbol);
+inline bool matches_pair(char open, char close);
+bool check_brackets(const std::string& str);
+
 #endif //  LIB_ALGORITHMS_H

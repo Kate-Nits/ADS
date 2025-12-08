@@ -4,10 +4,11 @@
 #include <iostream>
 #include <windows.h>
 #include <cmath>
+#include <cstring>
 
 #include "../lib_circle/circle.h"
 #include "../lib_sphere/sphere.h"
-
+#include "../lib_stack/stack.h"
 #include "../lib_matrix/matrix.h"
 #include "../lib_triangle_matrix/triangle_matrix.h"
 
@@ -33,6 +34,8 @@
 
 #define STANDART 1
 #define TRIANGLE 2
+
+#define SIZE_OF_STACK_FOR_CHECK_BRACKETS 150
 
 void set_color(int text_color, int bg_color) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -453,4 +456,43 @@ void matrix_application() {
             break;
         }
     }
+}
+
+
+inline bool is_open_bracket(char symbol) {
+    return symbol == '(' || symbol == '[' || symbol == '{';
+}
+inline bool is_close_bracket(char symbol) {
+    return symbol == ')' || symbol == ']' || symbol == '}';
+}
+inline bool matches_pair(char open, char close) {
+    return (open == '(' && close == ')') ||
+        (open == '[' && close == ']') ||
+        (open == '{' && close == '}');
+}
+bool check_brackets(const std::string& str) {
+    Stack<char> stack(SIZE_OF_STACK_FOR_CHECK_BRACKETS);
+    for (size_t i = 0; i < str.length(); ++i) {
+        char symbol = str[i];
+        if (is_open_bracket(symbol)) {
+            try {
+                stack.push(symbol);
+            }
+            catch (const std::overflow_error&) {
+                std::cout << "Stack is full" << std::endl;
+                return false;
+            }
+        }
+        else if (is_close_bracket(symbol)) {
+            if (stack.is_empty()) {
+                return false;
+            }
+            char top = stack.top();
+            if (!matches_pair(top, symbol)) {
+                return false;
+            }
+            stack.pop();
+        }
+    }
+    return stack.is_empty();
 }
