@@ -32,7 +32,7 @@ public:
 			_states[i] = i < _size ? State::busy : State::empty;
 		}
 	}
-	TVector(T* data, size_t size) { //конструктор созданный на основе переаного массива данных
+	TVector(T* data, size_t size) {
 		_size = size;
 		_capacity = size + RESERVE_MEMORY;
 		_deleted = 0;
@@ -44,7 +44,7 @@ public:
 			_states = new State[_capacity];
 		}
 		catch (const std::bad_alloc&) {
-			delete[] _data; //тк мы же уже под _data выделили
+			delete[] _data;
 			throw;
 		}
 		for (size_t i = 0; i < _capacity; ++i) {
@@ -57,7 +57,7 @@ public:
 			}
 		}
 	}
-	TVector(const TVector<T>& other) { // конструктор копирования
+	TVector(const TVector<T>& other) {
 		_size = other._size;
 		_capacity = other._capacity;
 		_deleted = other._deleted;
@@ -159,380 +159,61 @@ public:
 		}
 		return Iterator(_data, _states, first_busy, _size);
 	}
-
 	Iterator end() {
 		return Iterator(_data, _states, _size, _size);
 	}
 
-	inline T& operator[](size_t index) {
-		return _data[index];
-	}
-	inline const T& operator[](size_t index) const {
-		return _data[index];
-	}
-
-	inline T& at(size_t index) {
-		size_t real_index = check_index(index);
-		return _data[real_index];
-	}
-	inline const T& at(size_t index) const {
-		size_t real_index = check_index(index);
-		return _data[real_index];
-	}
-
-	inline const T* data() const noexcept {
-		return _data;
-	}
-
-	inline const T& data(size_t i) const {
-		size_t real_index = check_index(i);
-		return _data[real_index];
-	}
-
-	inline const State* states() const noexcept {
-		return _states;
-	}
-
-	inline const State state(size_t i) const {
-		return _states[i];
-	}
-
-	inline const size_t size() const noexcept {//get
-		return _size;
-	}
-	inline void size(size_t new_size) noexcept { //set
-		resize(new_size);
-	}
-
-	inline const size_t capacity() const noexcept { //get
-		return _capacity;
-	}
-	inline void capacity(size_t new_capacity) noexcept { //set
-		reserve(new_capacity);
-	}
-
+	inline T& operator[](size_t index);
+	inline const T& operator[](size_t index) const;
+	inline T& at(size_t index);
+	inline const T& at(size_t index) const;
+	inline const T* data() const noexcept;
+	inline const T& data(size_t i) const;
+	inline const State* states() const noexcept;
+	inline const State state(size_t i) const;
+	inline const size_t size() const noexcept;
+	inline void size(size_t new_size) noexcept;
+	inline const size_t capacity() const noexcept;
+	inline void capacity(size_t new_capacity) noexcept;
 	/*
-	inline T* begin() noexcept { // возвращает _data указатель на начало
-		return _data;
-	}
-	inline T* end() noexcept {
-		return _data + _size;
-	}
+	inline T* begin() noexcept; // возвращала _data указатель на начало
+	inline T* end() noexceptж
 	*/
+	inline const size_t deleted() const noexcept;
 
-	inline const size_t deleted() const noexcept {
-		return _deleted;
-	}
+	inline T& front(); //Доступ к первому элементу, который не deleted и не empty
+	inline T& back(); //Доступ к последнему элементу, который не deleted и не empty
+	inline const T& back() const; //Доступ к последнему элементу, который не deleted и не empty
 
-	inline T& front() { //Доступ к первому элементу, который не deleted и не empty
-		for (size_t i = 0; i < _size; ++i)
-			if (_states[i] == busy)
-				return _data[i];
-		throw std::out_of_range("No busy elements in vector");
-	}
+	inline bool is_empty() const noexcept;
 
-	inline T& back() { //Доступ к последнему элементу, который не deleted и не empty
-		for (size_t i = _size; i-- > 0; )
-			if (_states[i] == busy)
-				return _data[i];
-		throw std::out_of_range("No busy elements in vector");
-	}
-	inline const T& back() const { //Доступ к последнему элементу, который не deleted и не empty
-		for (size_t i = _size; i-- > 0; )
-			if (_states[i] == busy)
-				return _data[i];
-		throw std::out_of_range("No busy elements in vector");
-	}
+	void push_front(const T& value) noexcept;
+	void push_back(const T& value) noexcept;
+	void insert(size_t index, const T& value);
 
-	inline bool is_empty() const noexcept { return (_size - _deleted) == 0; }
+	void pop_front();
+	void pop_back();
+	void erase(size_t index);
 
-	//функции вставки
-	void push_front(const T& value) noexcept {
-		if (is_full()) {
-			reserve(_capacity + RESERVE_MEMORY);
-		}
+	void emplace(size_t index, T&& value);
+	void emplace(size_t index, const T& value);
 
-		for (size_t i = _size; i > 0; --i) { // Сдвигаем всё вправо
-			_data[i] = _data[i - 1];
-			_states[i] = _states[i - 1];
-		}
-		_data[0] = value;
-		_states[0] = busy;
-		++_size;
-	}
-	void push_back(const T& value) noexcept {
-		if (is_full()) {
-			reserve(_capacity + RESERVE_MEMORY);
-		}
-		_data[_size] = value;
-		_states[_size] = busy;
-		++_size;
-	}
-	void insert(size_t index, const T& value) {
-		if (index > _size) {
-			throw std::out_of_range("Insert index out of range");
-		}
-		if (is_full()) {
-			reserve(_capacity + RESERVE_MEMORY);
-		}
-		size_t real_index = check_index(index);
-		for (size_t i = _size; i > real_index; --i) { // Сдвигаем вправо
-			_data[i] = _data[i - 1];
-			_states[i] = _states[i - 1];
-		}
-		_data[real_index] = value;
-		_states[real_index] = busy;
-		++_size;
-	}
+	TVector<T>& assign(const TVector<T>& other);
+	TVector<T>& operator=(const TVector<T>& other);
 
-	//функции удаления
-	void pop_front() {
-		if (_data != nullptr && _states != nullptr) {
-			for (size_t i = 0; i < _size; ++i) {
-				if (_states[i] == State::busy) {
-					_states[i] = State::deleted;
-					++_deleted;
-					if (_size > 0 && ((_deleted * 100 / _size) > MAX_PERCENT_DELETED)) {
-						shrink_to_fit();
-					}
-					return;
-				}
-			}
-		}
-		throw std::underflow_error("Vector is empty");
-	}
-	void pop_back() {
-		if (_data != nullptr && _states != nullptr) {
-			for (size_t i = _size - 1; ; --i) {
-				if (_states[i] == State::deleted) {
-					_states[i] = State::empty;
-					--_size;
-					--_deleted;
-				}
-				if (_states[i] == State::busy) {
-					_states[i] = State::empty;
-					--_size;
-					return;
-				}
-				if (i <= 0) break; // иначе уйдём в переполнение
-			}
-		}
-		throw std::underflow_error("Vector is empty");
-	}
-	void erase(size_t index) {
-		size_t real_index = check_index(index);
-		_states[real_index] = State::deleted;
-		++_deleted;
-		if (_size > 0 && ((_deleted * 100 / _size) > MAX_PERCENT_DELETED)) {
-			shrink_to_fit();
-		}
-	}
+	void clear() noexcept;
 
-	//замена значения
-	void emplace(size_t index, T&& value) {
-		size_t real_index = check_index(index);
-		_data[real_index] = value;
-		_states[real_index] = State::busy;
-	}
+	bool operator == (const TVector<T>& other) const noexcept;
+	bool operator != (const TVector<T>& other) const noexcept;
 
-	void emplace(size_t index, const T& value) {
-		size_t real_index = check_index(index);
-		_data[real_index] = value;
-		_states[real_index] = State::busy;
-	}
+	void reserve(size_t new_capacity); // увеличивает _capacity
 
-	TVector<T>& assign(const TVector<T>& other) {
-		if (this != &other) {
-			delete[] _data;
-			delete[] _states;
+	void resize(size_t new_size);
+	void resize(size_t new_size, const T& value);
 
-			_size = other._size;
-			_capacity = other._capacity;
-			_deleted = other._deleted;
+	void shrink_to_fit(); // уменьшение размера, удаляя неиспользуемую память
 
-			_data = new T[_capacity];
-			_states = new State[_capacity];
-			for (size_t i = 0; i < _size; ++i) {
-				_data[i] = other._data[i];
-				_states[i] = other._states[i];
-			}
-			for (size_t i = _size; i < _capacity; ++i)
-				_states[i] = State::empty;
-		}
-		return *this;
-	}
-
-	TVector<T>& operator=(const TVector<T>& other) {
-		if (this != &other) { //проверка на самоприсваивание
-			delete[] _data;
-			delete[] _states;
-
-			_size = other._size;
-			_capacity = other._capacity;
-			_deleted = other._deleted;
-
-			_data = new T[_capacity];
-			_states = new State[_capacity];
-
-			for (size_t i = 0; i < _size; ++i) {
-				_data[i] = other._data[i];
-				_states[i] = other._states[i];
-			}
-			for (size_t i = _size; i < _capacity; ++i)
-				_states[i] = State::empty;
-		}
-		return *this;
-	}
-
-	void clear() noexcept {
-		for (size_t i = 0; i < _size; ++i) {
-			_states[i] = State::empty;
-		}
-		_size = 0;
-		_deleted = 0;
-	}
-
-	bool operator == (const TVector<T>& other) const noexcept {
-		if (_size != other._size) {
-			return false;
-		}
-		for (size_t i = 0; i < _size; ++i) {
-			if (_states[i] == busy && _data[i] != other._data[i]) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	bool operator != (const TVector<T>& other) const noexcept {
-		if (*this == other) {
-			return false;
-		}
-		if (_size != other._size) {
-			return true;
-		}
-		for (size_t i = 0; i < _size; ++i) {
-			if (_states[i] != other._states[i]) {
-				return true;
-			}
-			if (_states[i] == busy && _data[i] != other._data[i]) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	void reserve(size_t new_capacity) { // увеличивает _capacity
-		if (new_capacity <= _capacity) return;
-
-		T* new_data = new T[new_capacity];
-		State* new_states = new State[new_capacity];
-
-		for (size_t i = 0; i < _size; ++i) { // Копируем существующие элементы
-			new_data[i] = _data[i];
-			new_states[i] = _states[i];
-		}
-
-		for (size_t i = _size; i < new_capacity; ++i) { // Помечаем оставшиеся ячейки как пустые
-			new_states[i] = State::empty;
-		}
-
-		delete[] _data;
-		delete[] _states;
-		_data = new_data;
-		_states = new_states;
-		_capacity = new_capacity;
-	}
-
-	void resize(size_t new_size) {
-		if (new_size < _size) {
-			for (size_t i = new_size; i < _size; ++i) {
-				if (_states[i] == State::deleted)
-					--_deleted;
-				_states[i] = State::empty;
-				_data[i].~T();
-			}
-			_size = new_size;
-			return;
-		}
-
-		if (new_size > _capacity) {
-			reserve(new_size + RESERVE_MEMORY);
-		}
-
-		for (size_t i = _size; i < new_size; ++i) {
-			new (_data + i) T(); // размещает результат в уже выделенной памяти по адресу _data + i
-			_states[i] = busy;
-		}
-		_size = new_size;
-	}
-
-	void resize(size_t new_size, const T& value) {
-		if (new_size == _size) { return; }
-		if (new_size < _size) {
-			for (size_t i = new_size; i < _size; ++i) {
-				if (_states[i] == State::deleted)
-					--_deleted;
-				_states[i] = empty;
-				_data[i].~T();
-			}
-			_size = new_size;
-			return;
-		}
-		if (new_size > _capacity) {
-			reserve(new_size + RESERVE_MEMORY);
-		}
-		for (size_t i = _size; i < new_size; ++i) {
-			new (_data + i) T(value); // размещает результат в уже выделенной памяти по адресу _data + i
-			_states[i] = busy;
-		}
-		_size = new_size;
-	}
-
-	void shrink_to_fit() { // уменьшение размера, удаляя неиспользуемую память
-		size_t busy_count = 0;
-		for (size_t i = 0; i < _size; ++i) { // Считаем busy элементы
-			if (_states[i] == busy)
-				++busy_count;
-		}
-		if (busy_count == _size && _capacity == _size) { return; }
-
-		size_t new_capacity = busy_count + RESERVE_MEMORY;
-		T* new_data = new T[new_capacity];
-		State* new_states = new State[new_capacity];
-
-		size_t new_index = 0;
-		for (size_t i = 0; i < _size; ++i) {
-			if (_states[i] == busy) {
-				new_data[new_index] = _data[i];
-				new_states[new_index] = busy;
-				++new_index;
-			}
-		}
-
-		for (size_t i = new_index; i < new_capacity; ++i) {
-			new_states[i] = empty;
-		}
-
-		delete[] _data;
-		delete[] _states;
-
-		_data = new_data;
-		_states = new_states;
-		_capacity = new_capacity;
-		_size = busy_count;
-		_deleted = 0;
-	}
-
-	void print() {
-		std::cout << "[ ";
-		for (size_t i = 0; i < _size; ++i) {
-			if (_states[i] == State::busy) {
-				std::cout << _data[i] << "  ";
-			}
-		}
-		std::cout << "]";
-	}
+	void print();
 
 	template <class U>
 	friend std::ostream& operator<<(std::ostream& out, const TVector<U>& vec);
@@ -559,26 +240,447 @@ public:
 	friend void quick_sort_realisation(TVector<U>& vec, int left, int right);
 
 private:
+	size_t check_index(size_t index) const;
+	inline bool is_full() const noexcept;
+};
 
-	size_t check_index(size_t index) const {
-		if (index >= _size) {
-			throw std::out_of_range("Index out of bounds: index >= size");
-		}
-		size_t count = 0;
-		for (size_t i = 0; i < _size; i++) {
+template <class T>
+inline T& TVector<T>::operator[](size_t index) {
+	return _data[index];
+}
+
+template <class T>
+inline const T& TVector<T>::operator[](size_t index) const {
+	return _data[index];
+}
+
+template <class T>
+inline T& TVector<T>::at(size_t index) {
+	size_t real_index = check_index(index);
+	return _data[real_index];
+}
+
+template <class T>
+inline const T& TVector<T>::at(size_t index) const {
+	size_t real_index = check_index(index);
+	return _data[real_index];
+}
+
+template <class T>
+inline const T* TVector<T>::data() const noexcept {
+	return _data;
+}
+
+template <class T>
+inline const T& TVector<T>::data(size_t i) const {
+	size_t real_index = check_index(i);
+	return _data[real_index];
+}
+
+template <class T>
+inline const State* TVector<T>::states() const noexcept {
+	return _states;
+}
+
+template <class T>
+inline const State TVector<T>::state(size_t i) const {
+	return _states[i];
+}
+
+template <class T>
+inline const size_t TVector<T>::size() const noexcept {
+	return _size;
+}
+
+template <class T>
+inline void TVector<T>::size(size_t new_size) noexcept {
+	resize(new_size);
+}
+
+template <class T>
+inline const size_t TVector<T>::capacity() const noexcept {
+	return _capacity;
+}
+
+template <class T>
+inline void TVector<T>::capacity(size_t new_capacity) noexcept {
+	reserve(new_capacity);
+}
+
+/*
+template <class T>
+inline T* TVector<T>::begin() noexcept { // возвращает _data указатель на начало
+	return _data;
+}
+
+template <class T>
+inline T* TVector<T>::end() noexcept {
+	return _data + _size;
+}
+*/
+
+template <class T>
+inline const size_t TVector<T>::deleted() const noexcept {
+	return _deleted;
+}
+
+template <class T>
+inline T& TVector<T>::front() { //Доступ к первому элементу, который не deleted и не empty
+	for (size_t i = 0; i < _size; ++i)
+		if (_states[i] == busy)
+			return _data[i];
+	throw std::out_of_range("No busy elements in vector");
+}
+
+template <class T>
+inline T& TVector<T>::back() { //Доступ к последнему элементу, который не deleted и не empty
+	for (size_t i = _size; i-- > 0; )
+		if (_states[i] == busy)
+			return _data[i];
+	throw std::out_of_range("No busy elements in vector");
+}
+
+template <class T>
+inline const T& TVector<T>::back() const { //Доступ к последнему элементу, который не deleted и не empty
+	for (size_t i = _size; i-- > 0; )
+		if (_states[i] == busy)
+			return _data[i];
+	throw std::out_of_range("No busy elements in vector");
+}
+
+template <class T>
+inline bool TVector<T>::is_empty() const noexcept { return (_size - _deleted) == 0; }
+
+template <class T>
+void TVector<T>::push_front(const T& value) noexcept {
+	if (is_full()) {
+		reserve(_capacity + RESERVE_MEMORY);
+	}
+
+	for (size_t i = _size; i > 0; --i) { // Сдвигаем всё вправо
+		_data[i] = _data[i - 1];
+		_states[i] = _states[i - 1];
+	}
+	_data[0] = value;
+	_states[0] = busy;
+	++_size;
+}
+
+template <class T>
+void TVector<T>::push_back(const T& value) noexcept {
+	if (is_full()) {
+		reserve(_capacity + RESERVE_MEMORY);
+	}
+	_data[_size] = value;
+	_states[_size] = busy;
+	++_size;
+}
+
+template <class T>
+void TVector<T>::insert(size_t index, const T& value) {
+	if (index > _size) {
+		throw std::out_of_range("Insert index out of range");
+	}
+	if (is_full()) {
+		reserve(_capacity + RESERVE_MEMORY);
+	}
+	size_t real_index = check_index(index);
+	for (size_t i = _size; i > real_index; --i) { // Сдвигаем вправо
+		_data[i] = _data[i - 1];
+		_states[i] = _states[i - 1];
+	}
+	_data[real_index] = value;
+	_states[real_index] = busy;
+	++_size;
+}
+
+template <class T>
+void TVector<T>::pop_front() {
+	if (_data != nullptr && _states != nullptr) {
+		for (size_t i = 0; i < _size; ++i) {
 			if (_states[i] == State::busy) {
-				if (count == index) {
-					return i;
+				_states[i] = State::deleted;
+				++_deleted;
+				if (_size > 0 && ((_deleted * 100 / _size) > MAX_PERCENT_DELETED)) {
+					shrink_to_fit();
 				}
-				count++;
+				return;
 			}
 		}
-		throw std::out_of_range("There no element with this index");
 	}
-	inline bool is_full() const noexcept { // функция проверки на заполненость
-		return _size >= _capacity;
+	throw std::underflow_error("Vector is empty");
+}
+
+template <class T>
+void TVector<T>::pop_back() {
+	if (_data != nullptr && _states != nullptr) {
+		for (size_t i = _size - 1; ; --i) {
+			if (_states[i] == State::deleted) {
+				_states[i] = State::empty;
+				--_size;
+				--_deleted;
+			}
+			if (_states[i] == State::busy) {
+				_states[i] = State::empty;
+				--_size;
+				return;
+			}
+			if (i <= 0) break; // иначе уйдём в переполнение
+		}
 	}
-};
+	throw std::underflow_error("Vector is empty");
+}
+
+template <class T>
+void TVector<T>::erase(size_t index) {
+	size_t real_index = check_index(index);
+	_states[real_index] = State::deleted;
+	++_deleted;
+	if (_size > 0 && ((_deleted * 100 / _size) > MAX_PERCENT_DELETED)) {
+		shrink_to_fit();
+	}
+}
+
+template <class T>
+void TVector<T>::emplace(size_t index, T&& value) {
+	size_t real_index = check_index(index);
+	_data[real_index] = value;
+	_states[real_index] = State::busy;
+}
+
+template <class T>
+void TVector<T>::emplace(size_t index, const T& value) {
+	size_t real_index = check_index(index);
+	_data[real_index] = value;
+	_states[real_index] = State::busy;
+}
+
+template <class T>
+TVector<T>& TVector<T>::assign(const TVector<T>& other) {
+	if (this != &other) {
+		delete[] _data;
+		delete[] _states;
+
+		_size = other._size;
+		_capacity = other._capacity;
+		_deleted = other._deleted;
+
+		_data = new T[_capacity];
+		_states = new State[_capacity];
+		for (size_t i = 0; i < _size; ++i) {
+			_data[i] = other._data[i];
+			_states[i] = other._states[i];
+		}
+		for (size_t i = _size; i < _capacity; ++i)
+			_states[i] = State::empty;
+	}
+	return *this;
+}
+
+template <class T>
+TVector<T>& TVector<T>::operator=(const TVector<T>& other) {
+	if (this != &other) { //проверка на самоприсваивание
+		delete[] _data;
+		delete[] _states;
+
+		_size = other._size;
+		_capacity = other._capacity;
+		_deleted = other._deleted;
+
+		_data = new T[_capacity];
+		_states = new State[_capacity];
+
+		for (size_t i = 0; i < _size; ++i) {
+			_data[i] = other._data[i];
+			_states[i] = other._states[i];
+		}
+		for (size_t i = _size; i < _capacity; ++i)
+			_states[i] = State::empty;
+	}
+	return *this;
+}
+
+template <class T>
+void TVector<T>::clear() noexcept {
+	for (size_t i = 0; i < _size; ++i) {
+		_states[i] = State::empty;
+	}
+	_size = 0;
+	_deleted = 0;
+}
+
+template <class T>
+bool TVector<T>::operator == (const TVector<T>& other) const noexcept {
+	if (_size != other._size) {
+		return false;
+	}
+	for (size_t i = 0; i < _size; ++i) {
+		if (_states[i] == busy && _data[i] != other._data[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+template <class T>
+bool TVector<T>::operator != (const TVector<T>& other) const noexcept {
+	if (*this == other) {
+		return false;
+	}
+	if (_size != other._size) {
+		return true;
+	}
+	for (size_t i = 0; i < _size; ++i) {
+		if (_states[i] != other._states[i]) {
+			return true;
+		}
+		if (_states[i] == busy && _data[i] != other._data[i]) {
+			return true;
+		}
+	}
+	return false;
+}
+
+template <class T>
+void TVector<T>::reserve(size_t new_capacity) { // увеличивает _capacity
+	if (new_capacity <= _capacity) return;
+
+	T* new_data = new T[new_capacity];
+	State* new_states = new State[new_capacity];
+
+	for (size_t i = 0; i < _size; ++i) { // Копируем существующие элементы
+		new_data[i] = _data[i];
+		new_states[i] = _states[i];
+	}
+
+	for (size_t i = _size; i < new_capacity; ++i) { // Помечаем оставшиеся ячейки как пустые
+		new_states[i] = State::empty;
+	}
+
+	delete[] _data;
+	delete[] _states;
+	_data = new_data;
+	_states = new_states;
+	_capacity = new_capacity;
+}
+
+template <class T>
+void TVector<T>::resize(size_t new_size) {
+	if (new_size < _size) {
+		for (size_t i = new_size; i < _size; ++i) {
+			if (_states[i] == State::deleted)
+				--_deleted;
+			_states[i] = State::empty;
+			_data[i].~T();
+		}
+		_size = new_size;
+		return;
+	}
+
+	if (new_size > _capacity) {
+		reserve(new_size + RESERVE_MEMORY);
+	}
+
+	for (size_t i = _size; i < new_size; ++i) {
+		new (_data + i) T(); // размещает результат в уже выделенной памяти по адресу _data + i
+		_states[i] = busy;
+	}
+	_size = new_size;
+}
+
+template <class T>
+void TVector<T>::resize(size_t new_size, const T& value) {
+	if (new_size == _size) { return; }
+	if (new_size < _size) {
+		for (size_t i = new_size; i < _size; ++i) {
+			if (_states[i] == State::deleted)
+				--_deleted;
+			_states[i] = empty;
+			_data[i].~T();
+		}
+		_size = new_size;
+		return;
+	}
+	if (new_size > _capacity) {
+		reserve(new_size + RESERVE_MEMORY);
+	}
+	for (size_t i = _size; i < new_size; ++i) {
+		new (_data + i) T(value); // размещает результат в уже выделенной памяти по адресу _data + i
+		_states[i] = busy;
+	}
+	_size = new_size;
+}
+
+template <class T>
+void TVector<T>::shrink_to_fit() { // уменьшение размера, удаляя неиспользуемую память
+	size_t busy_count = 0;
+	for (size_t i = 0; i < _size; ++i) { // Считаем busy элементы
+		if (_states[i] == busy)
+			++busy_count;
+	}
+	if (busy_count == _size && _capacity == _size) { return; }
+
+	size_t new_capacity = busy_count + RESERVE_MEMORY;
+	T* new_data = new T[new_capacity];
+	State* new_states = new State[new_capacity];
+
+	size_t new_index = 0;
+	for (size_t i = 0; i < _size; ++i) {
+		if (_states[i] == busy) {
+			new_data[new_index] = _data[i];
+			new_states[new_index] = busy;
+			++new_index;
+		}
+	}
+
+	for (size_t i = new_index; i < new_capacity; ++i) {
+		new_states[i] = empty;
+	}
+
+	delete[] _data;
+	delete[] _states;
+
+	_data = new_data;
+	_states = new_states;
+	_capacity = new_capacity;
+	_size = busy_count;
+	_deleted = 0;
+}
+
+template <class T>
+void TVector<T>::print() {
+	std::cout << "[ ";
+	for (size_t i = 0; i < _size; ++i) {
+		if (_states[i] == State::busy) {
+			std::cout << _data[i] << "  ";
+		}
+	}
+	std::cout << "]";
+}
+
+template <class T>
+size_t TVector<T>::check_index(size_t index) const {
+	if (index >= _size) {
+		throw std::out_of_range("Index out of bounds: index >= size");
+	}
+	size_t count = 0;
+	for (size_t i = 0; i < _size; i++) {
+		if (_states[i] == State::busy) {
+			if (count == index) {
+				return i;
+			}
+			count++;
+		}
+	}
+	throw std::out_of_range("There no element with this index");
+}
+
+template <class T>
+inline bool TVector<T>::is_full() const noexcept { // функция проверки на заполненость
+	return _size >= _capacity;
+}
+
+
 
 template <typename T>
 void swap(T& a, T& b) {
