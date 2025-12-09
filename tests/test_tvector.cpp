@@ -195,6 +195,7 @@ TEST(TestTVectorLib, test_capacity_setter) {
     EXPECT_TRUE(vec.capacity() >= old_capacity + 20);
 }
 
+/*
 TEST(TestTVectorLib, test_begin_and_end) {
     // Arrange
     size_t size = 3;
@@ -212,6 +213,7 @@ TEST(TestTVectorLib, test_begin_and_end) {
     // Assert
     EXPECT_EQ(11+22+37, sum);
 }
+*/
 
 TEST(TestTVectorLib, test_deleted_counter) {
     // Arrange
@@ -740,4 +742,72 @@ TEST(TestTVectorLib, test_find_all) {
     // Assert
     EXPECT_TRUE(result[0] == 1 && result[1] == 3 && result[2] == 5);
     delete[] result; //ñïðîñè ÍÓÆÍÎ ëè ÓÄÀËßÒÜ????
+}
+
+TEST(TestTVectorLib, iteration_empty_vector) {
+    // Arrange
+    TVector<int> vec;
+
+    // Act
+    auto it = vec.begin();
+    auto end_it = vec.end();
+
+    // Assert
+    EXPECT_EQ(it, end_it);
+    int count = 0;
+    while (it != end_it) {
+        ++count;
+        ++it;
+    }
+    EXPECT_EQ(0, count);
+}
+
+TEST(TestTVectorLib, write_iterator) {
+    // Arrange
+    TVector<int> vec;
+    vec.push_back(10);
+    vec.push_back(20);
+    vec.push_back(30);
+
+    // Act
+    int k = 2;
+    for (auto it = vec.begin(); it != vec.end(); ++it) {
+        *it = *it * k;
+        k++;
+    }
+
+    // Assert
+    EXPECT_EQ(20, vec.at(0));
+    EXPECT_EQ(60, vec.at(1));
+    EXPECT_EQ(120, vec.at(2));
+    auto it = vec.begin();
+    EXPECT_EQ(*it, 20);
+    ++it;
+    EXPECT_EQ(*it, 60);
+    ++it;
+    EXPECT_EQ(*it, 120);
+    ++it;
+    EXPECT_EQ(it, vec.end());
+}
+
+TEST(TestTVectorLib, read_iterator) {
+    // Arrange
+    TVector<int> vec;
+    vec.push_back(5);
+    vec.push_back(15);
+    vec.push_back(25);
+    vec.push_back(35);
+    vec.erase(1);
+
+    // Act
+    int sum = 0;
+    int count = 0;
+    for (auto it = vec.begin(); it != vec.end(); ++it) {
+        sum += *it;
+        ++count;
+    }
+
+    // Assert
+    EXPECT_EQ(3, count);
+    EXPECT_EQ(65, sum);
 }

@@ -22,7 +22,7 @@ public:
 	static const size_t MAX_PERCENT_DELETED = 15;
 
 	TVector() : _data(nullptr), _states(nullptr), _size(0), _capacity(0), _deleted(0) {}
-	TVector(size_t size) { //конструктор вектора заданного размера
+	TVector(size_t size) {
 		_size = size;
 		_capacity = size + RESERVE_MEMORY;
 		_deleted = 0;
@@ -90,6 +90,79 @@ public:
 		delete[] _data;
 		delete[] _states;
 	}
+	class Iterator {
+		T* _ptr;
+		State* _state_ptr;
+		size_t _index;
+		size_t _size;
+	public:
+		Iterator(T* ptr, State* state_ptr, size_t index, size_t size)
+			: _ptr(ptr), _state_ptr(state_ptr), _index(index), _size(size) {
+		}
+
+		Iterator& operator=(const Iterator& other) {
+			if (this != &other) {
+				_ptr = other._ptr;
+				_state_ptr = other._state_ptr;
+				_index = other._index;
+				_size = other._size;
+			}
+			return *this;
+		}
+
+		Iterator& operator++() { // ++it
+			do {
+				++_index;
+			} while (_index < _size && _state_ptr[_index] != State::busy);
+			return *this;
+		}
+
+		Iterator operator++(int) { // it++
+			Iterator temp = *this;
+			++(*this);
+			return temp;
+		}
+
+		Iterator& operator--() { // --it
+			if (_index == 0) {
+				_index = _size;
+				return *this;
+			}
+			do {
+				--_index;
+			} while (_index > 0 && _state_ptr[_index] != State::busy);
+			return *this;
+		}
+
+		Iterator operator--(int) { // it--
+			Iterator temp = *this;
+			--(*this);
+			return temp;
+		}
+
+		bool operator==(const Iterator& other) const {
+			return _ptr == other._ptr && _index == other._index;
+		}
+
+		bool operator!=(const Iterator& other) const {
+			return !(*this == other);
+		}
+
+		T& operator*() {
+			return _ptr[_index];
+		}
+	};
+	Iterator begin() {
+		size_t first_busy = 0;
+		while (first_busy < _size && _states[first_busy] != State::busy) {
+			++first_busy;
+		}
+		return Iterator(_data, _states, first_busy, _size);
+	}
+
+	Iterator end() {
+		return Iterator(_data, _states, _size, _size);
+	}
 
 	inline T& operator[](size_t index) {
 		return _data[index];
@@ -138,12 +211,14 @@ public:
 		reserve(new_capacity);
 	}
 
+	/*
 	inline T* begin() noexcept { // возвращает _data указатель на начало
 		return _data;
 	}
 	inline T* end() noexcept {
 		return _data + _size;
 	}
+	*/
 
 	inline const size_t deleted() const noexcept {
 		return _deleted;
