@@ -90,20 +90,21 @@ private:
 
 template <class T>
 inline Node<T>* List<T>::head() { return _head; }
+
 template <class T>
-inline const Node<T>* List<T>::head() const {
-	return this->_head;
-}
+inline const Node<T>* List<T>::head() const { return this->_head; }
+
 template <class T>
 inline Node<T>* List<T>::tail() { return _tail; }
+
 template <class T>
-inline const Node<T>* List<T>::tail() const {
-	return this->_tail;
-}
+inline const Node<T>* List<T>::tail() const { return this->_tail; }
+
 template <class T>
 bool List<T>::is_empty() const {
 	return _head == nullptr;
 }
+
 template <class T>
 void List<T>::push_front(const T& value) {
 	Node<T>* node = new Node<T>(value, _head);
@@ -112,6 +113,7 @@ void List<T>::push_front(const T& value) {
 	}
 	_head = node;
 }
+
 template <class T>
 void List<T>::push_back(const T& value) {
 	Node<T>* node = new Node<T>(value, nullptr);
@@ -124,6 +126,7 @@ void List<T>::push_back(const T& value) {
 		_tail = node;
 	}
 }
+
 template <class T>
 void List<T>::insert(size_t pos, const T& value) {
 	if (pos == 0) {
@@ -148,6 +151,7 @@ void List<T>::insert(size_t pos, const T& value) {
 		cur->next = node;
 	}
 }
+
 template <class T>
 void List<T>::insert(Node<T>* node, const T& value) {
 	if (node == nullptr) {
@@ -162,6 +166,7 @@ void List<T>::insert(Node<T>* node, const T& value) {
 		_tail = new_node;
 	}
 }
+
 template <class T>
 void List<T>::pop_front() {
 	if (is_empty()) {
@@ -174,6 +179,7 @@ void List<T>::pop_front() {
 	}
 	delete old_head;
 }
+
 template <class T>
 void List<T>::pop_back() {
 	if (is_empty()) {
@@ -195,6 +201,7 @@ void List<T>::pop_back() {
 	cur->next = nullptr;
 	delete node_to_delete;
 }
+
 template <class T>
 void List<T>::erase(size_t pos) {
 	if (is_empty()) {
@@ -221,6 +228,7 @@ void List<T>::erase(size_t pos) {
 	cur->next = node_to_delete->next;
 	delete node_to_delete;
 }
+
 template <class T>
 void List<T>::erase(Node<T>* node) {
 	if (node == nullptr) {
@@ -244,6 +252,7 @@ void List<T>::erase(Node<T>* node) {
 	cur->next = node_to_delete->next;
 	delete node_to_delete;
 }
+
 template <class T>
 List<T>& List<T>::operator=(const List<T>& other) {
 	if (this == &other) {
@@ -257,6 +266,7 @@ List<T>& List<T>::operator=(const List<T>& other) {
 	}
 	return *this;
 }
+
 template <class T>
 void List<T>::clear() {
 	Node<T>* cur = _head;
@@ -268,6 +278,7 @@ void List<T>::clear() {
 	_head = nullptr;
 	_tail = nullptr;
 }
+
 template <class T>
 bool List<T>::is_node_in_list(Node<T>* node) const {
 	Node<T>* cur = _head;
