@@ -124,13 +124,19 @@ public:
 		}
 
 		Iterator& operator--() { // --it
-			if (_index == 0) {
-				_index = _size;
-				return *this;
-			}
-			do {
+			size_t original_index = _index;
+			while (_index > 0) {
 				--_index;
-			} while (_index > 0 && _state_ptr[_index] != State::busy);
+				if (_state_ptr[_index] == State::busy) {
+					return *this;
+				}
+			}
+			if (original_index == _size) {
+				_index = _size;
+			}
+			else {
+				_index = original_index;
+			}
 			return *this;
 		}
 

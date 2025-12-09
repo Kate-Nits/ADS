@@ -11,6 +11,9 @@
 #include "../lib_mathvector/MathVector.h"
 #include "../lib_matrix/matrix.h"
 #include "../lib_triangle_matrix/triangle_matrix.h"
+#include "../lib_stack/stack.h"
+#include "../lib_node/node.h"
+#include "../lib_list/list.h"
 
 #define START_MENU_MATRIX_SIZE 3
 #define REALISED_Matrix
@@ -193,5 +196,12 @@ inline bool is_open_bracket(char symbol);
 inline bool is_close_bracket(char symbol);
 inline bool matches_pair(char open, char close);
 bool check_brackets(const std::string& str);
+
+template <class T>
+bool is_looped_hare_and_turtle(const List<T>& list);
+template <class T>
+bool is_looped_turn_ptr(List<T>& list);
+template <class T>
+Node<T>* find_loop_node(List<T>& list);
 
 #endif //  LIB_ALGORITHMS_H

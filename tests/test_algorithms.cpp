@@ -104,10 +104,18 @@ TEST(TestAlgorithmsLib, mixed_brackets_incorrect) {
     EXPECT_FALSE(check_brackets(str));
 }
 
-TEST(TestAlgorithmsLib, real_example_with_text) {
+TEST(TestAlgorithmsLib, real_example1_with_text) {
     // Arrange
     std::string str = "[5*(x+8)-9]/[(7/(y*1))*(y*1)]";
 
     // Act & Assert
     EXPECT_TRUE(check_brackets(str));
+}
+
+TEST(TestAlgorithmsLib, real_example2_with_text) {
+    // Arrange
+    std::string str = "[5*(x+(8)-9]/[(7/(y*1))*(y*1)]";
+
+    // Act & Assert
+    EXPECT_FALSE(check_brackets(str));
 }

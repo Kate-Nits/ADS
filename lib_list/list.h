@@ -49,11 +49,11 @@ public:
 			}
 			return *this;
 		}
-		bool operator==(const Iterator& other) const {
-			return _current == other._current;
-		}
 		bool operator!=(const Iterator& other) const {
 			return _current != other._current;
+		}
+		bool operator==(const Iterator& other) const {
+			return !(*this != other);
 		}
 		T& operator*() {
 			return _current->value;
