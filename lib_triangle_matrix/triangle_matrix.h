@@ -83,12 +83,13 @@ public:
         if (_n != other._n) {
             throw std::invalid_argument("Triangle Matrix should have the same size for addition");
         }
-        TriangleMatrix<T> result(_n);
-        for (size_t i = 0; i < _n; ++i) {
+        TriangleMatrix<T> result(*this);
+        result.Matrix<T>::operator+=(other);
+        /*for (size_t i = 0; i < _n; ++i) {
             for (size_t j = i; j < _n; ++j) {
                 result.at(i, j) = this->at(i, j) + other.at(i, j);
             }
-        }
+        }*/
         return result;
     }
     TriangleMatrix<T> operator-(const TriangleMatrix<T>& other) const {

@@ -4,6 +4,8 @@
 #include "../lib_tvector/tvector.h"
 #include "../lib_mathvector/MathVector.h"
 #include "../lib_matrix/matrix.h"
+#include "../lib_node/node.h"
+#include "../lib_list/list.h"
 #include "../lib_algorithms/algorithms.h"
 
 #define EPSILON 0.000001
@@ -118,4 +120,198 @@ TEST(TestAlgorithmsLib, real_example2_with_text) {
 
     // Act & Assert
     EXPECT_FALSE(check_brackets(str));
+}
+
+TEST(TestAlgorithmsLib, is_looped_hare_and_turtle_on_empty_list) {
+    // Arrange
+    List<int> list;
+
+    // Act & Assert
+    EXPECT_FALSE(is_looped_hare_and_turtle(list));
+}
+
+TEST(TestAlgorithmsLib, is_looped_hare_and_turtle_on_list_with_one_elem_no_loop) {
+    // Arrange
+    List<int> list;
+    list.push_back(7654);
+
+    // Act & Assert
+    EXPECT_FALSE(is_looped_hare_and_turtle(list));
+}
+
+TEST(TestAlgorithmsLib, is_looped_hare_and_turtle_on_list_with_one_elem_with_loop) {
+    // Arrange
+    List<int> list;
+    list.push_back(8765);
+    list.head()->next = list.head();
+
+    // Act & Assert
+    EXPECT_TRUE(is_looped_hare_and_turtle(list));
+    list.head()->next = nullptr;
+}
+
+TEST(TestAlgorithmsLib, is_looped_hare_and_turtle_on_large_list_with_no_loop) {
+    // Arrange
+    List<int> list;
+    for (int i = 0; i < 100; ++i) {
+        list.push_back(i);
+    }
+
+    // Act & Assert
+    EXPECT_FALSE(is_looped_hare_and_turtle(list));
+}
+
+TEST(TestAlgorithmsLib, is_looped_hare_and_turtle_on_large_list_with_loop_in_middle) {
+    // Arrange
+    List<int> list;
+    for (int i = 0; i < 100; ++i) {
+        list.push_back(i);
+    }
+    Node<int>* middle = list.head();
+    for (int i = 0; i < 50; ++i) {
+        middle = middle->next;
+    }
+    list.tail()->next = middle;
+
+    // Act & Assert
+    EXPECT_TRUE(is_looped_hare_and_turtle(list));
+    list.tail()->next = nullptr;
+}
+
+TEST(TestAlgorithmsLib, is_looped_turn_ptr_on_empty_list) {
+    // Arrange
+    List<int> list;
+
+    // Act & Assert
+    EXPECT_FALSE(is_looped_turn_ptr(list));
+}
+
+TEST(TestAlgorithmsLib, is_looped_turn_ptr_on_list_with_one_elem_no_loop) {
+    // Arrange
+    List<int> list;
+    list.push_back(7654);
+
+    // Act & Assert
+    EXPECT_FALSE(is_looped_turn_ptr(list));
+}
+
+TEST(TestAlgorithmsLib, is_looped_turn_ptr_on_list_with_one_elem_with_loop) {
+    // Arrange
+    List<int> list;
+    list.push_back(8765);
+    list.head()->next = list.head();
+
+    // Act & Assert
+    EXPECT_TRUE(is_looped_turn_ptr(list));
+    list.head()->next = nullptr;
+}
+
+TEST(TestAlgorithmsLib, is_looped_turn_ptr_on_large_list_with_no_loop) {
+    // Arrange
+    List<int> list;
+    for (int i = 0; i < 100; ++i) {
+        list.push_back(i);
+    }
+
+    // Act & Assert
+    EXPECT_FALSE(is_looped_turn_ptr(list));
+}
+
+TEST(TestAlgorithmsLib, is_looped_turn_ptr_on_large_list_with_loop_in_middle) {
+    // Arrange
+    List<int> list;
+    for (int i = 0; i < 100; ++i) {
+        list.push_back(i);
+    }
+    Node<int>* middle = list.head();
+    for (int i = 0; i < 50; ++i) {
+        middle = middle->next;
+    }
+    list.tail()->next = middle;
+
+    // Act & Assert
+    EXPECT_TRUE(is_looped_turn_ptr(list));
+    list.tail()->next = nullptr;
+}
+
+TEST(TestAlgorithmsLib, find_loop_node_in_empty_list) {
+    // Arrange
+    List<int> list;
+
+    // Act & Assert
+    EXPECT_EQ(nullptr, find_loop_node(list));
+}
+
+TEST(TestAlgorithmsLib, find_loop_node_no_loop) {
+    // Arrange
+    List<int> list;
+    for (int i = 1; i < 5; ++i) {
+        list.push_back(i);
+    }
+
+    // Act & Assert
+    EXPECT_EQ(nullptr, find_loop_node(list));
+}
+
+TEST(TestAlgorithmsLib, find_loop_node_with_loop_in_list_with_one_elem) {
+    // Arrange
+    List<int> list;
+    list.push_back(1);
+    list.head()->next = list.head();
+
+    // Act & Assert
+    EXPECT_EQ(list.head(), find_loop_node(list));
+    list.head()->next = nullptr;
+}
+
+TEST(TestAlgorithmsLib, find_loop_node_with_loop_at_beginning) {
+    // Arrange
+    List<int> list;
+    for (int i = 1; i < 5; ++i) {
+        list.push_back(i);
+    }
+
+    // Act
+    list.tail()->next = list.head();
+
+    // Act & Assert
+    EXPECT_EQ(list.head(), find_loop_node(list));
+    list.tail()->next = nullptr;
+}
+
+TEST(TestAlgorithmsLib, find_loop_node_with_loop_in_middle) {
+    // Arrange
+    List<int> list;
+    for (int i = 1; i < 6; ++i) {
+        list.push_back(i);
+    }
+
+    // Act
+    Node<int>* third_node = list.head()->next->next;
+    list.tail()->next = third_node;
+
+    // Act & Assert
+    EXPECT_EQ(third_node, find_loop_node(list));
+    EXPECT_EQ(3, find_loop_node(list)->value);
+    list.tail()->next = nullptr;
+}
+
+TEST(TestAlgorithmsLib, find_loop_node_with_loop_in_large_list) {
+    // Arrange
+    List<int> list;
+    for (int i = 0; i < 100; ++i) {
+        list.push_back(i);
+    }
+    Node<int>* loop_node = list.head();
+    for (int i = 0; i < 75; ++i) {
+        loop_node = loop_node->next;
+    }
+    list.tail()->next = loop_node;
+
+    // Act & Assert
+    EXPECT_EQ(loop_node, find_loop_node(list));
+    EXPECT_EQ(75, find_loop_node(list)->value);
+
+    // Восстанавливаем
+    list.tail()->next = nullptr;
 }

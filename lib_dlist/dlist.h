@@ -88,6 +88,8 @@ public:
 	};
 	Iterator begin() { return Iterator(_head); }
 	Iterator end() { return Iterator(nullptr); }
+	Iterator rbegin() { return Iterator(_tail); }
+	Iterator rend() { return Iterator(nullptr); }
 
 	inline NodeD<T>* head();
 	inline const NodeD<T>* head() const;

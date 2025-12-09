@@ -158,6 +158,7 @@ public:
 			return _ptr[_index];
 		}
 	};
+
 	Iterator begin() {
 		size_t first_busy = 0;
 		while (first_busy < _size && _states[first_busy] != State::busy) {

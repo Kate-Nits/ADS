@@ -16,19 +16,19 @@ protected:
     size_t _rows; // строки
     size_t _cols; // столбцы
 public:
-    using MathVector<MathVector<T>>::MathVector; // наследую конструкторы
+    using MathVector<MathVector<T>>::MathVector;
     Matrix() : MathVector<MathVector<T>>(), _rows(0), _cols(0) {}
     Matrix(size_t value_rows, size_t value_cols) : MathVector<MathVector<T>>(value_rows), _rows(value_rows), _cols(value_cols) {
         for (size_t i = 0; i < value_rows; ++i) {
             this->_data[i] = MathVector<T>(value_cols);
             this->_states[i] = busy;
             for (size_t j = 0; j < value_cols; ++j) {
-                this->_data[i][j] = T{}; // {} нужны чтобы проинициализировался автоматом 0 и подстроился под тип
+                this->_data[i][j] = T{};
             }
         }
     }
     Matrix(const std::initializer_list<MathVector<T>> list) {
-        if (list.size() == 0) { // без этой поверки, если размер нулевой по умолчанию получиться list.begin() == list.end() 
+        if (list.size() == 0) { 
             _rows = 0;
             _cols = 0;
             this->_size = 0;
@@ -53,7 +53,7 @@ public:
         this->_states = new State[this->_capacity];
 
         size_t i = 0;
-        for (const auto& row : list) { //auto автоматически определяет тип из list
+        for (const auto& row : list) {
             if (row.size() != _cols) {
                 throw std::invalid_argument("All rows must have the same size");
             }
@@ -89,7 +89,6 @@ public:
     }
     MathVector<T>& operator[](size_t row) { return this->_data[row]; }
     const MathVector<T>& operator[](size_t row) const { return this->_data[row]; } 
-    // для столбцов должен вызваться [] от TVector
 
     Matrix<T>& operator=(const Matrix<T>& other) {
         if (this != &other) {
@@ -118,12 +117,13 @@ public:
         if (_cols != other._cols) {
             throw std::invalid_argument("Cols should have same size for addition");
         }
-        Matrix<T> result(_rows, _cols);
-        for (size_t i = 0; i < _rows; ++i) {
+        Matrix<T> result(*this);
+        result.MathVector<MathVector<T>>::operator+=(other);
+        /*for (size_t i = 0; i < _rows; ++i) {
             for (size_t j = 0; j < _cols; ++j) {
                 result[i][j] = this->at(i, j) + other.at(i, j);
             }
-        }
+        }*/
         return result;
     }
     Matrix<T> operator-(const Matrix<T>& other) const {

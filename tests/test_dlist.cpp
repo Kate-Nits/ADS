@@ -764,6 +764,26 @@ TEST(TestDListLib, iterator_write) {
 	}
 }
 
+TEST(TestDListLib, back_iterator_write) {
+	// Arrange
+	DList<int> list;
+	for (int i = 0; i < 5; i++) {
+		list.push_back(0);
+	}
+	int i = 1;
+
+	// Act
+	for (DList<int>::Iterator it = list.rbegin(); it != list.rend(); it--) {
+		*it = i;
+		i++;
+	}
+
+	// Assert
+	for (DList<int>::Iterator it = list.begin(); it != list.end(); it++) {
+		EXPECT_EQ(--i, *it);
+	}
+}
+
 TEST(TestDListLib, iterator_in_empty_list) {
 	// Arrange
 	DList<int> list;

@@ -198,10 +198,91 @@ inline bool matches_pair(char open, char close);
 bool check_brackets(const std::string& str);
 
 template <class T>
-bool is_looped_hare_and_turtle(const List<T>& list);
-template <class T>
-bool is_looped_turn_ptr(List<T>& list);
-template <class T>
-Node<T>* find_loop_node(List<T>& list);
+bool is_looped_hare_and_turtle(List<T>& list) {
+    Node<T>* head = list.head();
+    if (head == nullptr) {
+        return false;
+    }
+    Node<T>* fast = head;
+    Node<T>* slow = head;
+    while (fast != nullptr && fast->next != nullptr) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast) {
+            return true;
+        }
+    }
+    return false;
+}
 
+template <class T>
+bool is_looped_turn_ptr(List<T>& list) {
+    Node<T>* head = list.head();
+    if (head == nullptr || head->next == nullptr) {
+        return false;
+    }
+
+    Node<T>* cur = head;
+    Node<T>* prev = nullptr;
+    Node<T>* next = nullptr;
+
+    while (cur != nullptr) {
+        next = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = next;
+
+        if (cur == head) {
+            cur = prev;
+            prev = nullptr;
+            while (cur != nullptr) {
+                next = cur->next;
+                cur->next = prev;
+                prev = cur;
+                cur = next;
+            }
+            return true;
+        }
+    }
+    cur = prev;
+    prev = nullptr;
+    while (cur != nullptr) {
+        next = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = next;
+    }
+    return false;
+}
+
+template <class T>
+Node<T>* find_loop_node(List<T>& list) {
+    Node<T>* head = list.head();
+    if (head == nullptr) {
+        return nullptr;
+    }
+    Node<T>* slow = head;
+    Node<T>* fast = head;
+    bool has_loop = false;
+    while (fast != nullptr && fast->next != nullptr) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast) {
+            has_loop = true;
+            break;
+        }
+    }
+    if (!has_loop) {
+        return nullptr;
+    }
+    if (slow == fast) {
+        slow = head;
+        while (slow != fast) {
+            slow = slow->next;
+            fast = fast->next;
+        }
+        return slow;
+    }
+    return nullptr;
+}
 #endif //  LIB_ALGORITHMS_H
