@@ -96,12 +96,14 @@ public:
         if (_n != other._n) {
             throw std::invalid_argument("Triangle Matrix should have the same size for subtraction");
         }
-        TriangleMatrix<T> result(_n);
+        TriangleMatrix<T> result(*this);
+        result.Matrix<T>::operator-=(other);
+       /* TriangleMatrix<T> result(_n);
         for (size_t i = 0; i < _n; ++i) {
             for (size_t j = i; j < _n; ++j) {
                 result.at(i, j) = this->at(i, j) - other.at(i, j);
             }
-        }
+        }*/
         return result;
     }
     TriangleMatrix<T> operator*(const T scalar) const {
@@ -119,6 +121,13 @@ public:
         }
         MathVector<T> result(_n);
         for (size_t i = 0; i < _n; ++i) {
+            T sum{};
+            for (size_t j = i; j < _n; ++j) {
+                sum += this->at(i, j) * vec[j];
+            }
+            result[i] = sum;
+        }
+        /*for (size_t i = 0; i < _n; ++i) {
             for (size_t j = i; j < _n; ++j) {
                 T sum{};
                 for (size_t k = i; k <= j; ++k) {
@@ -126,7 +135,7 @@ public:
                 }
                 result[i] = sum;
             }
-        }
+        }*/
         return result;
     }
     TriangleMatrix<T> operator*(const TriangleMatrix<T>& other) const {
@@ -178,13 +187,13 @@ Matrix<T> operator+(const TriangleMatrix<T>& triangle_matrix, const Matrix<T>& m
     if (matrix.rows() != triangle_matrix.n() || matrix.cols() != triangle_matrix.n()) {
         throw std::invalid_argument("Matrixes should have the same size for addition");
     }
-    Matrix<T> result(matrix.rows(), matrix.cols());
+    /*Matrix<T> result(matrix.rows(), matrix.cols());
     for (size_t i = 0; i < matrix.rows(); ++i) {
         for (size_t j = 0; j < matrix.cols(); ++j) {
             result[i][j] = matrix.at(i, j) + triangle_matrix.at(i, j);
         }
-    }
-    return result;
+    }*/
+    return matrix + triangle_matrix;
 }
 template <class T>
 Matrix<T> operator-(const Matrix<T>& matrix, const TriangleMatrix<T>& triangle_matrix) {

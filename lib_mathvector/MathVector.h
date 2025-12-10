@@ -91,7 +91,7 @@ MathVector<std::common_type_t<T, U>> MathVector<T>::operator+(const MathVector<U
     }
     MathVector<R> result(this->_size);
     for (size_t i = 0; i < this->_size; ++i) {
-        result[i] = static_cast<R>(this->data(i)) + static_cast<R>(other.data(i));
+        result[i] = static_cast<R>(this->_data[i]) + static_cast<R>(other.data(i));
     }
     return result;
 }
@@ -103,7 +103,7 @@ MathVector<T> MathVector<T>::operator-(const MathVector<T>& other) const {
     }
     MathVector<T> result(this->_size);
     for (size_t i = 0; i < this->_size; ++i) {
-        result[i] = this->data(i) - other._data[i];
+        result[i] = this->_data[i] - other._data[i];
         result._states[i] = busy;
     }
     return result;
@@ -118,7 +118,7 @@ MathVector<std::common_type_t<T, U>> MathVector<T>::operator-(const MathVector<U
     }
     MathVector<R> result(this->_size);
     for (size_t i = 0; i < this->_size; ++i) {
-        result[i] = static_cast<R>(this->data(i)) - static_cast<R>(other.data(i));
+        result[i] = static_cast<R>(this->_data[i]) - static_cast<R>(other.data(i));
     }
     return result;
 }
@@ -127,7 +127,7 @@ template <class T>
 MathVector<T> MathVector<T>::operator*(const T& scalar) const {
     MathVector<T> result(this->_size);
     for (size_t i = 0; i < this->_size; ++i) {
-        result[i] = this->data(i) * scalar;
+        result._data[i] = this->_data[i] * scalar;
         result._states[i] = busy;
     }
     return result;
@@ -139,7 +139,7 @@ MathVector<std::common_type_t<T, U>> MathVector<T>::operator*(const U& scalar) c
     using R = std::common_type_t<T, U>;
     MathVector<R> result(this->_size);
     for (size_t i = 0; i < this->_size; ++i) {
-        result[i] = static_cast<R>(this->data(i)) * static_cast<R>(scalar);
+        result[i] = static_cast<R>(this->_data[i]) * static_cast<R>(scalar);
     }
     return result;
 }
@@ -151,7 +151,7 @@ T MathVector<T>::operator*(const MathVector& other_vec) const {
     }
     T result = 0;
     for (size_t i = 0; i < this->_size; ++i) {
-        result += this->data(i) * other_vec.data(i);
+        result += this->_data[i] * other_vec._data[i];
     }
     return result;
 }
@@ -165,7 +165,7 @@ std::common_type_t<T, U> MathVector<T>::operator*(const MathVector<U>& other) co
     }
     R result = 0;
     for (size_t i = 0; i < this->_size; ++i) {
-        result += static_cast<R>(this->data(i)) * static_cast<R>(other.data(i));
+        result += static_cast<R>(this->_data[i]) * static_cast<R>(other.data(i));
     }
     return result;
 }
@@ -176,7 +176,7 @@ MathVector<T>& MathVector<T>::operator+=(const MathVector<T>& other) {
         throw std::invalid_argument("Vectors should have same size for addition");
     }
     for (size_t i = 0; i < this->_size; ++i) {
-        this->_data[i] = this->data(i) + other._data[i];
+        this->_data[i] = this->_data[i] + other._data[i];
     }
     return *this;
 }
@@ -187,7 +187,7 @@ MathVector<T>& MathVector<T>::operator-=(const MathVector<T>& other) {
         throw std::invalid_argument("Vectors should have same size for subtraction");
     }
     for (size_t i = 0; i < this->_size; ++i) {
-        this->_data[i] = this->data(i) - other._data[i];
+        this->_data[i] = this->_data[i] - other._data[i];
     }
     return *this;
 }
@@ -195,7 +195,7 @@ MathVector<T>& MathVector<T>::operator-=(const MathVector<T>& other) {
 template <class T>
 MathVector<T>& MathVector<T>::operator*=(const T& scalar) {
     for (size_t i = 0; i < this->_size; ++i) {
-        this->_data[i] = this->data(i) * scalar;
+        this->_data[i] = this->_data[i] * scalar;
     }
     return *this;
 }
@@ -204,7 +204,7 @@ template <class T>
 auto MathVector<T>::length() const { // длинна вектора
     T sum = 0;
     for (size_t i = 0; i < this->_size; i++) {
-        sum += this->data(i) * this->data(i);
+        sum += this->_data[i] * this->_data[i];
     }
     return std::sqrt(sum);
 }
