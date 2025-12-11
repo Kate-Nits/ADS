@@ -83,8 +83,8 @@ public:
 	void erase(size_t pos);
 	void erase(Node<T>* node);
 	List<T>& operator=(const List<T>& other);
-private:
 	void clear();
+private:
 	bool is_node_in_list(Node<T>* node) const;
 };
 
