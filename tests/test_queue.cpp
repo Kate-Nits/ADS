@@ -14,7 +14,7 @@ TEST(TestQueueLib, default_constructor_creates_empty_queue) {
 	// Act & Assert
 	EXPECT_TRUE(queue.is_empty());
 	EXPECT_FALSE(queue.is_full());
-	EXPECT_EQ(0, queue.size());
+	EXPECT_EQ(0, queue.count());
 	EXPECT_EQ(Queue<int>::RESERVE_MEMORY, queue.capacity());
 }
 
@@ -38,7 +38,7 @@ TEST(TestQueueLib, copy_constructor_without_difficulties) {
 	Queue<int> queue2(queue1);
 
 	// Assert
-	EXPECT_EQ(queue1.size(), queue2.size());
+	EXPECT_EQ(queue1.count(), queue2.count());
 	EXPECT_EQ(queue1.is_empty(), queue2.is_empty());
 	EXPECT_EQ(queue1.is_full(), queue2.is_full());
 }
@@ -56,7 +56,7 @@ TEST(TestQueueLib, copy_constructor_with_overflow_head_and_tail) {
 	Queue<int> queue2(queue1);
 
 	// Assert
-	EXPECT_EQ(queue1.size(), queue2.size());
+	EXPECT_EQ(queue1.count(), queue2.count());
 	EXPECT_EQ(queue1.head(), queue2.head());
 	EXPECT_EQ(queue1.tail(), queue2.tail());
 }
@@ -71,7 +71,7 @@ TEST(TestQueueLib, test_push_and_check_head_and_tail_without_an_overflowing_queu
 	queue.push(30);
 
 	// Assert
-	EXPECT_EQ(3, queue.size());
+	EXPECT_EQ(3, queue.count());
 	EXPECT_EQ(10, queue.head());
 	EXPECT_EQ(30, queue.tail());
 	EXPECT_FALSE(queue.is_empty());
@@ -102,7 +102,7 @@ TEST(TestQueueLib, test_pop_without_an_underflowing_queue) {
 
 	// Assert
 	EXPECT_FALSE(queue.is_empty());
-	EXPECT_EQ(2, queue.size());
+	EXPECT_EQ(2, queue.count());
 	EXPECT_EQ(2, queue.head());
 	EXPECT_EQ(3, queue.tail());
 }
@@ -117,7 +117,7 @@ TEST(TestQueueLib, test_pop_all_elements_in_queue_without_an_underflowing_stack)
 
 	// Assert
 	EXPECT_TRUE(queue.is_empty());
-	EXPECT_EQ(0, queue.size());
+	EXPECT_EQ(0, queue.count());
 }
 
 TEST(TestQueueLib, test_pop_with_an_underflowing_queue) {
@@ -140,7 +140,7 @@ TEST(TestQueueLib, test_clear) {
 
 	// Assert
 	EXPECT_TRUE(queue.is_empty());
-	EXPECT_EQ(0, queue.size());
+	EXPECT_EQ(0, queue.count());
 }
 
 TEST(TestQueueLib, test_is_full_checking_for_a_full_queue) {
@@ -198,7 +198,7 @@ TEST(TestQueueLib, test_push_after_overflow_tail) {
 	queue.push(200);
 
 	// Assert
-	EXPECT_EQ(2, queue.size());
+	EXPECT_EQ(2, queue.count());
 	EXPECT_EQ(100, queue.head());
 	EXPECT_EQ(200, queue.tail());
 }
@@ -215,7 +215,7 @@ TEST(TestQueueLib, test_push_after_overflow_head) {
 	queue.push(555);
 
 	// Assert
-	EXPECT_EQ(3, queue.size());
+	EXPECT_EQ(3, queue.count());
 	EXPECT_EQ(2, queue.head());
 	EXPECT_EQ(555, queue.tail());
 }

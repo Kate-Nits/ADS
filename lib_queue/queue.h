@@ -30,7 +30,7 @@ public:
 	T& head();
 	const T& head() const;
 	inline size_t capacity() const noexcept;
-	inline size_t size() const noexcept;
+	inline size_t count() const noexcept;
 	bool is_empty() const noexcept;
 	bool is_full() const noexcept;
 	void clear() noexcept;
@@ -87,7 +87,7 @@ inline size_t Queue<T>::capacity() const noexcept {
 	return _size;
 }
 template <class T>
-inline size_t Queue<T>::size() const noexcept {
+inline size_t Queue<T>::count() const noexcept {
 	return _count;
 }
 template <class T>
