@@ -1,0 +1,2 @@
+create_project_lib(Parser)
+add_depend(Parser Algorithms lib_algoritms)
