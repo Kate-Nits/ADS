@@ -6,13 +6,14 @@
 #include <cmath>
 #include <cstring>
 
-#include "../lib_circle/circle.h"
-#include "../lib_sphere/sphere.h"
-#include "../lib_stack/stack.h"
-#include "../lib_matrix/matrix.h"
-#include "../lib_triangle_matrix/triangle_matrix.h"
-#include "../lib_node/node.h"
-#include "../lib_list/list.h"
+#include "../lib_algorithms/algorithms.h"
+//#include "../lib_circle/circle.h"
+//#include "../lib_sphere/sphere.h"
+//#include "../lib_stack/stack.h"
+//#include "../lib_matrix/matrix.h"
+//#include "../lib_triangle_matrix/triangle_matrix.h"
+//#include "../lib_node/node.h"
+//#include "../lib_list/list.h"
 
 #define START_MENU_FOR_MATRIX_SIZE 3
 #define START_MENU_MATRIX_CALCULATE_SIZE 4
@@ -498,3 +499,4 @@ bool check_brackets(const std::string& str) {
     }
     return stack.is_empty();
 }
+

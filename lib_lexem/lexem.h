@@ -15,7 +15,9 @@ struct Lexem {
 	int priority; // приоритет оператора
 	double (*function)(double); // указатель на функцию (для sin, cos и т.д.)
 
+	Lexem() : name(""), type(Constant), value(0.0), priority(-1), function(nullptr) {}
 	Lexem(const std::string& _name, TypeLexem _type, double _value = DBL_MAX, int _priority = -1, double (*_function)(double) = nullptr) :
 		name(_name), type(_type), value(_value), priority(_priority), function(_function) {}
+	
 };
 #endif // LIB_LEXEM_LEXEM_H

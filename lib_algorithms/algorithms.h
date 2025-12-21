@@ -4,6 +4,7 @@
 #ifndef LIB_ALGORITHMS_H
 #define  LIB_ALGORITHMS_H
 
+#include <iostream>
 #include <cstdlib>
 #include "../lib_circle/circle.h"
 #include "../lib_sphere/sphere.h"
@@ -14,6 +15,8 @@
 #include "../lib_stack/stack.h"
 #include "../lib_node/node.h"
 #include "../lib_list/list.h"
+#include "../lib_parser/parser.h"
+#include "../lib_expression/expression.h"
 
 #define START_MENU_MATRIX_SIZE 3
 #define REALISED_Matrix
@@ -285,4 +288,6 @@ Node<T>* find_loop_node(List<T>& list) {
     }
     return nullptr;
 }
+
+
 #endif //  LIB_ALGORITHMS_H

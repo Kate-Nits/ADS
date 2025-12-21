@@ -203,10 +203,11 @@ int main() {
 
 #endif // POSITION_OF_TWO_SPHERE
 
-#ifdef WORKING_WITH_MATRIX
 int main() {
+#ifdef WORKING_WITH_MATRIX
     matrix_application();
+#endif // WORKING_WITH_MATRIX
     return 0;
 }
-#endif // WORKING_WITH_MATRIX
+
 
