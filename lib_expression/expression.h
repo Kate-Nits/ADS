@@ -15,11 +15,14 @@ class Expression {
 	TVector<double> _values;
 public:
 	explicit Expression(const List<Lexem>& lexems);
-	TVector<std::string> get_variables() {
-		return _variables;
-	}
 	List<Lexem> get_lexems() {
 		return _lexems;
+	}
+	List<Lexem> get_polish_record() {
+		return _polish_record;
+	}
+	TVector<std::string> get_variables() {
+		return _variables;
 	}
 	TVector<double> get_values() {
 		return _values;
