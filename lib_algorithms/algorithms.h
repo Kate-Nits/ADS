@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <limits>
 #include "../lib_circle/circle.h"
 #include "../lib_sphere/sphere.h"
 #include "../lib_tvector/tvector.h"
@@ -289,5 +290,18 @@ Node<T>* find_loop_node(List<T>& list) {
     return nullptr;
 }
 
+std::string double_to_string(double x);
+
+double my_abs(double x);
+double my_sin(double x);
+double my_cos(double x);
+double my_tg(double x);
+
+void print_menu_arithmetic_calculator();
+void print_expression_table(TVector<Expression*> expressions);
+void create_expression(TVector<Expression*>& expressions);
+void delete_expression(TVector<Expression*>& expressions);
+void arithmetic_calculator();
+void set_variables(TVector<Expression*>& expressions);
 
 #endif //  LIB_ALGORITHMS_H

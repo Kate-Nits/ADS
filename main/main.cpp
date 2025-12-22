@@ -16,8 +16,11 @@
 //
 //#define USER_INPUT
 
-//Приложение для работы с матрицами
-#define WORKING_WITH_MATRIX
+// Приложение для работы с матрицами
+//#define WORKING_WITH_MATRIX
+
+// Калькулятор Арифметических выражений
+#define ARITHMETIC_CALCULATOR
 
 #ifdef EASY_EXAMPLE
 
@@ -207,6 +210,10 @@ int main() {
 #ifdef WORKING_WITH_MATRIX
     matrix_application();
 #endif // WORKING_WITH_MATRIX
+#ifdef ARITHMETIC_CALCULATOR
+    arithmetic_calculator();
+#endif // ARITHMETIC_CALCULATOR
+
     return 0;
 }
 

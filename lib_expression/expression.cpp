@@ -2,7 +2,31 @@
 
 #include "../lib_expression/expression.h"
 
-Expression::Expression(const List<Lexem>& lexems) : _lexems(lexems) {}
+Expression::Expression(const List<Lexem>& lexems) : _lexems(lexems) {
+	for (auto it = _lexems.begin(); it != _lexems.end(); ++it) {
+		Lexem lexem = *it;
+		if (lexem.type == Variable) {
+			bool exists = false;
+			for (size_t i = 0; i < _variables.size(); ++i) {
+				if (_variables[i] == lexem.name) {
+					exists = true;
+					break;
+				}
+			}
+			if (!exists) {
+				_variables.push_back(lexem.name);
+				_values.push_back(DBL_MAX);
+			}
+		}
+	}
+}
+
+void Expression::set_values(size_t variable, double value) {
+	if (variable < 0 || variable >= _variables.size()) {
+		throw std::invalid_argument("There is no such variable");
+	}
+	_values[variable] = value;
+}
 
 void Expression::build_polish_record() {
 	Stack<Lexem> stack;
@@ -16,11 +40,14 @@ void Expression::build_polish_record() {
 		else if (lexem.type == Function) {
 			stack.push(lexem);
 		}
-		else if (lexem.type == Operator || lexem.type == UnOperator) {
+		else if (lexem.type == Operator) {
 			while (!stack.is_empty() && stack.top().priority >= lexem.priority) {
 				_polish_record.push_back(stack.top());
 				stack.pop();
 			}
+			stack.push(lexem);
+		}
+		else if (lexem.type == UnOperator) {
 			stack.push(lexem);
 		}
 		else if (lexem.type == OpenBracket) {
@@ -31,7 +58,14 @@ void Expression::build_polish_record() {
 				_polish_record.push_back(stack.top());
 				stack.pop();
 			}
+			if (stack.is_empty()) {
+				throw std::logic_error("A lot of brackets (Unmatched brackets)");
+			}
 			stack.pop();
+			if (!stack.is_empty() && stack.top().type == Function) {
+				_polish_record.push_back(stack.top());
+				stack.pop();
+			}
 		}
 	}
 	while (!stack.is_empty()) {
@@ -39,7 +73,7 @@ void Expression::build_polish_record() {
 		stack.pop();
 	}
 }
-
+/*
 void Expression::set_variable(const std::string& name, double value) {
 	for (size_t i = 0; i < _variables.size(); ++i) {
 		if (_variables[i] == name) {
@@ -50,7 +84,7 @@ void Expression::set_variable(const std::string& name, double value) {
 	_variables.push_back(name);
 	_values.push_back(value);
 }
-
+*/
 double Expression::calculate() const {
 	Stack<double> stack;
 
@@ -73,6 +107,9 @@ double Expression::calculate() const {
 			}
 		}
 		else if (lexem.type == Operator) {
+			if (stack.count() < 2) {
+				throw std::logic_error("Invalid expression");
+			}
 			double b = stack.top();
 			stack.pop();
 			double a = stack.top();
@@ -81,8 +118,17 @@ double Expression::calculate() const {
 			if (lexem.name == "+") { stack.push(a + b); }
 			if (lexem.name == "-") { stack.push(a - b); }
 			if (lexem.name == "*") { stack.push(a * b); }
-			if (lexem.name == "/") { stack.push(a / b); }
-			if (lexem.name == "^") { stack.push(std::pow(a, b)); }
+			if (lexem.name == "/") { 
+				if (b == 0.0) { throw std::logic_error("Division by zero"); }
+				stack.push(a / b); 
+			}
+			if (lexem.name == "^") { 
+				double res = 1.0;
+				for (int i = 0; i < (int)b; ++i) {
+					res *= a;
+				}
+				stack.push(res); 
+			}
 		}
 		else if (lexem.type == UnOperator) {
 			double a = stack.top();
@@ -90,10 +136,16 @@ double Expression::calculate() const {
 			stack.push((-1.0)*a);
 		}
 		else if (lexem.type == Function) {
+			if (stack.is_empty()) {
+				throw std::logic_error("Invalid function usage");
+			}
 			double a = stack.top();
 			stack.pop();
 			stack.push(lexem.function(a));
 		}
+	}
+	if (stack.count() != 1) {
+		throw std::logic_error("Invalid expression");
 	}
 	return stack.top();
 }

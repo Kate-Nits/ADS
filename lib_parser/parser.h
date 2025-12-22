@@ -4,6 +4,7 @@
 #define LIB_PARSER_PARSER_H
 
 #include <iostream>
+#include "../lib_algorithms/algorithms.h"
 #include "../lib_list/list.h"
 #include "../lib_lexem/lexem.h"
 

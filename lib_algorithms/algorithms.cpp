@@ -5,6 +5,8 @@
 #include <windows.h>
 #include <cmath>
 #include <cstring>
+#include <limits>
+#include <string>
 
 #include "../lib_algorithms/algorithms.h"
 //#include "../lib_circle/circle.h"
@@ -39,6 +41,17 @@
 #define TRIANGLE 2
 
 #define SIZE_OF_STACK_FOR_CHECK_BRACKETS 150
+static const double PI = 3.141592653589793;
+static const double EPSILON = 1e-10;
+#define PRECISION 15
+
+#define START_MENU_FOR_ARITHMETIC_CALCULATOR 6
+#define CREATE_EXPRESSION 1
+#define DELETE_EXPRESSION 2
+#define SET_VARIABLES 3
+#define CALCULATE_EXPRESSION 4
+#define SHOW_EXPRESSION 5
+#define EXIT_ARITHMETIC_CALCULATOR 6
 
 void set_color(int text_color, int bg_color) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -500,3 +513,315 @@ bool check_brackets(const std::string& str) {
     return stack.is_empty();
 }
 
+std::string double_to_string(double number) {
+    if (number == 0.0) return "0";
+    std::string result;
+    bool is_minus = number < 0.0;
+    if (is_minus) {
+        result = "-";
+        number = (-1.0) * number;
+    }
+    int int_part = static_cast<int>(number);
+    double frac_part = number - (double)int_part;
+    if (int_part == 0) { result += "0"; }
+    else {
+        std::string str_int;
+        while (int_part > 0) {
+            str_int = char('0' + (int_part % 10)) + str_int;
+            int_part /= 10;
+        }
+        result += str_int;
+    } 
+    if (frac_part > 0) {
+        result += ".";
+        int precision = PRECISION;
+        while (frac_part > 0 && precision > 0) {
+            frac_part *= 10;
+            int digit = static_cast<int>(frac_part);
+            result += char('0' + digit);
+            frac_part -= digit;
+            precision--;
+        }
+        while (result.back() == '0') {
+            result.pop_back();
+        }
+        if (result.back() == '.') {
+            result.pop_back();
+        }
+    }
+    return result;
+}
+
+double my_abs(double x) { return x < 0 ? (-1.0) * x : x; }
+double my_sin(double x) { // через ряд Тейлора
+    while (x > PI) { x -= 2 * PI; }
+    while (x < PI) { x += 2 * PI; }
+    double tmp = x;
+    double sum = x;
+    int n = 1;
+    while (my_abs(tmp) > EPSILON) {
+        tmp *= -x * x / ((2 * n) * (2 * n + 1));
+        sum += tmp;
+        ++n;
+    }
+    return sum;
+}
+double my_cos(double x) {
+    while (x > PI) { x -= 2 * PI; }
+    while (x < PI) { x += 2 * PI; }
+    double tmp = 1.0;
+    double sum = 1.0;
+    int n = 1;
+    while (my_abs(tmp) > EPSILON) {
+        tmp *= -x * x / ((2 * n - 1) * (2 * n));
+        sum += tmp;
+        ++n;
+    }
+    return sum;
+}
+double my_tg(double x) {
+    double value_cos = my_cos(x);
+    if (my_abs(value_cos) < EPSILON) {
+        throw std::logic_error("tg undefined");
+    }
+    return my_sin(x) / value_cos;
+}
+
+void print_menu_arithmetic_calculator() {
+    std::cout << std::endl;
+    std::cout << "=================================== CALCULATOR ====================================" << std::endl;
+    std::cout << "  1. Create new expression" << std::endl;
+    std::cout << "  2. Delete expression" << std::endl;
+    std::cout << "  3. Set variable" << std::endl;
+    std::cout << "  4. Calculate expression" << std::endl;
+    std::cout << "  5. Show expressions" << std::endl;
+    std::cout << "  6. Exit" << std::endl;
+    std::cout << "===================================================================================" << std::endl;
+}
+
+void print_expression_table(TVector<Expression*> expressions) {
+    std::cout << "===================================================================================" << std::endl;
+    std::cout << "| ID  | EXPRESSION                               | VARIABLES VALUES               |" << std::endl;
+    std::cout << "===================================================================================" << std::endl;
+    if (expressions.is_empty()) {
+        std::cout << "No expressions available." << std::endl;
+        return;
+    }
+    for (size_t i = 0; i < expressions.size(); ++i) {
+        Expression* expression = expressions[i];
+
+        std::cout << "| ";
+        std::cout.width(3);
+        std::cout << std::left << (i + 1) << " | ";
+
+        std::string expr_str;
+        const List<Lexem>& lexems = expression->get_lexems();
+        for (auto it = lexems.begin(); it != lexems.end(); ++it) {
+            const Lexem& lexem = *it;
+            expr_str += lexem.name;
+        }
+        std::cout.width(40);
+        std::cout << std::left << expr_str << " | ";
+
+        std::string variables_string;
+        const TVector<std::string>& variables = expression->get_variables();
+        const TVector<double>& values = expression->get_values();
+        std::cout.width(30);
+        for (size_t j = 0; j < variables.size(); ++j) {
+            variables_string += variables.at(j);
+            variables_string += " = ";
+            if (values.at(j) == DBL_MAX) {
+                variables_string += "? ";
+            }
+            else {
+                variables_string += double_to_string(values.at(j));
+            }
+            variables_string += "   ";
+        }
+        std::cout.width(30);
+        std::cout << std::left << variables_string << " | ";
+        std::cout << std::endl;
+        std::cout << "===================================================================================" << std::endl;
+    }
+}
+
+void create_expression(TVector<Expression*>& expressions) {
+    system("cls");
+    std::cout << "===================================================================================" << std::endl;
+    std::cout << "                             CREATE NEW EXPRESSION                 " << std::endl;
+    std::cout << "===================================================================================" << std::endl;
+    std::string expression_str;
+    std::cout << "Supported: + - * / ^ ( ) sin cos tg abs | |" << std::endl;
+    std::cout << "Variables can contain letters, numbers, and _." << std::endl << "Must begin with a letter or _" << std::endl;
+    std::cout << "Enter arithmetic expression: " << std::endl;
+    std::cin.ignore(10000, '\n');
+    std::getline(std::cin, expression_str);
+    if (expression_str.empty()) {
+        std::cout << "Expression cannot be empty!" << std::endl;
+        std::cout << "Press Enter to exit " << std::endl;
+        getchar();
+        getchar();
+        return;
+    }
+    try {
+        List<Lexem> lexems = Parser::parse(expression_str);
+        Expression* expression = new Expression(lexems);
+        expression->build_polish_record();
+        expressions.push_back(expression);
+        set_color(10, 0);
+        std::cout << "SUCCESS: ";
+        set_color(7, 0);
+        std::cout << "Expression created successfully!" << std::endl;
+
+        std::cout << "Found variables: " << std::endl;
+        for (size_t i = 0; i < expression->get_variables().size(); ++i) {
+            std::cout << expression->get_variables().at(i) << std::endl;
+        }
+    }
+    catch (const std::exception& ex) {
+        set_color(12, 0);
+        std::cout << "ERROR: ";
+        set_color(7, 0);
+        std::cerr << ex.what();
+        std::cout << std::endl;
+    }
+    std::cout << "Press Enter to continue " << std::endl;
+    getchar();
+}
+
+void delete_expression(TVector<Expression*>& expressions) {
+    system("cls");
+    std::cout << "===================================================================================" << std::endl;
+    std::cout << "                                  DELETE EXPRESSION                   " << std::endl;
+    std::cout << "===================================================================================" << std::endl;
+    if (expressions.is_empty()) {
+        std::cout << "No expressions to delete" << std::endl;
+        std::cout << "Press Enter to continue " << std::endl;
+        getchar();
+        getchar();
+        return;
+    }
+    print_expression_table(expressions);
+    std::cout << std::endl << "Enter ID of expression to delete: ";
+    int id_to_delete;
+    std::cin >> id_to_delete;
+    if (id_to_delete == 0) {
+        return;
+    }
+    if (id_to_delete < 1 || id_to_delete >(int)expressions.size()) {
+        set_color(12, 0);
+        std::cout << "ERROR: ";
+        set_color(7, 0);
+        std::cout << "Invalid ID!" << std::endl;
+        std::cout << "Press Enter to continue..." << std::endl;
+        getchar();
+        getchar();
+        return;
+    }
+    delete expressions[id_to_delete - 1];
+    for (size_t i = id_to_delete - 1; i < expressions.size() - 1; ++i) {
+        expressions[i] = expressions[i + 1];
+    }
+    expressions.pop_back();
+    set_color(10, 0);
+    std::cout << "SUCCESS: ";
+    set_color(7, 0);
+    std::cout << "Expression deleted successfully!" << std::endl;
+
+    std::cout << "Press Enter to continue" << std::endl;
+    getchar();
+}
+
+void set_variables(TVector<Expression*>& expressions) {
+    system("cls");
+    std::cout << "===================================================================================" << std::endl;
+    std::cout << "                                  SET VARIABLES                   " << std::endl;
+    std::cout << "===================================================================================" << std::endl;
+    if (expressions.is_empty()) {
+        std::cout << "No expressions available" << std::endl;
+        std::cout << "Press Enter to continue" << std::endl;
+        getchar();
+        getchar();
+        return;
+    }
+    print_expression_table(expressions);
+    std::cout << "Enter ID of expression: ";
+    int id_to_set_variables;
+    std::cin >> id_to_set_variables;
+    std::cin.ignore(10000, '\n');
+    if (id_to_set_variables < 1 || id_to_set_variables >(int)expressions.size()) {
+        set_color(12, 0);
+        std::cout << "ERROR: ";
+        set_color(7, 0);
+        std::cout << "Invalid ID!" << std::endl;
+        std::cout << "Press Enter to continue..." << std::endl;
+        getchar();
+        getchar();
+        return;
+    }
+    Expression* expression = expressions[id_to_set_variables - 1];
+    const TVector<std::string>& variables = expression->get_variables();
+    if (variables.size() == 0) {
+        std::cout << "This expression has no variables" << std::endl;
+        std::cout << "Press Enter to continue" << std::endl;
+        std::cin.get();
+        return;
+    }
+    std::cout << "Enter the value of the variable:" << std::endl;
+    for (size_t i = 0; i < variables.size(); ++i) {
+        std::cout << variables.at(i) << " = ";
+        std::string str_value;
+        std::getline(std::cin, str_value);
+        try {
+            double value = Parser::string_to_double(str_value);
+            expression->set_values(i, value);
+        }
+        catch (const std::exception& ex) {
+            set_color(12, 0);
+            std::cout << "ERROR: ";
+            set_color(7, 0);
+            std::cout << "Invalid number format: " << ex.what() << std::endl;
+            return;
+        }
+    }
+    set_color(10, 0);
+    std::cout << "SUCCESS: ";
+    set_color(7, 0);
+    std::cout << "the values of the variables are set!" << std::endl;
+
+    std::cout << "Press Enter to continue" << std::endl;
+    getchar();
+}
+
+void arithmetic_calculator() {
+    int user_choice = 0;
+    int isExit = NO;
+    TVector<Expression*> expressions;
+
+    while (!isExit) {
+        system("cls");
+        print_menu_arithmetic_calculator();
+        while (!input_user_choice(user_choice, START_MENU_FOR_ARITHMETIC_CALCULATOR));
+        system("cls");
+        switch (user_choice) {
+        case CREATE_EXPRESSION:
+            create_expression(expressions);
+            break;
+        case DELETE_EXPRESSION:
+            delete_expression(expressions);
+            break;
+        case SET_VARIABLES:
+            set_variables(expressions);
+            break;
+        case CALCULATE_EXPRESSION:
+            in_development();
+            break;
+        case SHOW_EXPRESSION:
+            in_development();
+            break;
+        case EXIT_ARITHMETIC_CALCULATOR:
+            isExit = YES;
+            break;
+        }
+    }
+}

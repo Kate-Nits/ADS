@@ -15,9 +15,18 @@ class Expression {
 	TVector<double> _values;
 public:
 	explicit Expression(const List<Lexem>& lexems);
-
+	TVector<std::string> get_variables() {
+		return _variables;
+	}
+	List<Lexem> get_lexems() {
+		return _lexems;
+	}
+	TVector<double> get_values() {
+		return _values;
+	}
+	void set_values(size_t variable, double value);
 	void build_polish_record();
-	void set_variable(const std::string& name, double value);
+	//void set_variable(const std::string& name, double value);
 	double calculate() const;
 };
 

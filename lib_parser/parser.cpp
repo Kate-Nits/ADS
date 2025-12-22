@@ -3,7 +3,6 @@
 #include <sstream> // std::ostringstream
 
 #include "../lib_parser/parser.h"
-#include "../lib_algorithms/algorithms.h"
 
 bool Parser::is_digit(char symbol) {
 	return symbol >= '0' && symbol <= '9';
@@ -89,6 +88,7 @@ List<Lexem> Parser::parse(const std::string& expression) {
 	List<Lexem> lexems;
 	size_t i = 0;
 	Lexem* prev = nullptr;
+	int abs_count = 0;
 	while (i < expression.length()) {
 		if (is_space(expression[i])) {
 			++i;
@@ -113,13 +113,16 @@ List<Lexem> Parser::parse(const std::string& expression) {
 			}
 
 			if (name == "sin") {
-				lexems.push_back(Lexem(name, TypeLexem::Function, DBL_MAX, 3, std::sin));
+				lexems.push_back(Lexem(name, TypeLexem::Function, DBL_MAX, 4, my_sin));
 			}
 			else if (name == "cos") {
-				lexems.push_back(Lexem(name, TypeLexem::Function, DBL_MAX, 3, std::cos));
+				lexems.push_back(Lexem(name, TypeLexem::Function, DBL_MAX, 4, my_cos));
 			}
 			else if (name == "tg") {
-				lexems.push_back(Lexem(name, TypeLexem::Function, DBL_MAX, 3, std::tan));
+				lexems.push_back(Lexem(name, TypeLexem::Function, DBL_MAX, 4, my_tg));
+			}
+			else if (name == "abs") {
+				lexems.push_back(Lexem(name, TypeLexem::Function, DBL_MAX, 4, my_abs));
 			}
 			else {
 				lexems.push_back(Lexem(name, TypeLexem::Variable));
@@ -128,14 +131,33 @@ List<Lexem> Parser::parse(const std::string& expression) {
 			continue;
 		}
 
+		if (expression[i] == '|') {
+			bool open_abs = (prev == nullptr || prev->type == Operator || prev->type == OpenBracket);
+			if (open_abs) {
+				lexems.push_back(Lexem("abs", Function, 0, 4, my_abs));
+				lexems.push_back(Lexem("(", OpenBracket));
+				abs_count++;
+			}
+			else {
+				lexems.push_back(Lexem(")", CloseBracket));
+				abs_count--;
+				if (abs_count < 0) {
+					throw std::logic_error("A lot of closing |");
+				}
+			}
+			prev = &lexems.tail()->value;
+			++i;
+			continue;
+		}
+
 		if (is_open_bracket(expression[i])) {
-			lexems.push_back(Lexem(std::string(1, expression[1]), TypeLexem::OpenBracket));
+			lexems.push_back(Lexem(std::string(1, expression[i]), TypeLexem::OpenBracket));
 			prev = &lexems.tail()->value;
 			++i;
 			continue;
 		}
 		if (is_close_bracket(expression[i])) {
-			lexems.push_back(Lexem(std::string(1, expression[1]), TypeLexem::CloseBracket));
+			lexems.push_back(Lexem(std::string(1, expression[i]), TypeLexem::CloseBracket));
 			prev = &lexems.tail()->value;
 			++i;
 			continue;
