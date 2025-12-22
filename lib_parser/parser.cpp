@@ -81,6 +81,21 @@ double Parser::string_to_double(const std::string& str) {
 		return result;
 	}
 }
+
+bool Parser::is_valid_variable_name(const std::string& name) {
+	if (name.empty()) { return false; }
+	if (!is_alphabet(name[0]) && name[0] != '_') { return false; }
+	for (char c : name) {
+		if (!is_identified_symbol(c)) {
+			return false;
+		}
+	}
+	if (name == "sin" || name == "cos" || name == "tg" || name == "abs") {
+		return false;
+	}
+	return true;
+}
+
 List<Lexem> Parser::parse(const std::string& expression) {
 	if (!check_brackets(expression)) {
 		throw std::logic_error("Incorrect brackets in expression");
@@ -97,10 +112,18 @@ List<Lexem> Parser::parse(const std::string& expression) {
 
 		if (is_digit(expression[i])) {
 			std::string number;
+			bool has_digit = false;
 			while (i < expression.length() && 
 				(is_digit(expression[i]) || expression[i] == '.')) {
 				number += expression[i++];
+				has_digit = true;
 			}
+			if (i < expression.length() && (is_alphabet(expression[i]) || expression[i] == '_')) {
+				std::ostringstream error;
+				error << "Invalid number format: number cannot be immediately followed by letter or underscore at position " << i;
+				throw std::logic_error(error.str());
+			}
+			if (!has_digit) { throw std::invalid_argument("No digits in number"); }
 			lexems.push_back(Lexem(number, TypeLexem::Constant, string_to_double(number)));
 			prev = &lexems.tail()->value;
 			continue;
@@ -114,25 +137,59 @@ List<Lexem> Parser::parse(const std::string& expression) {
 
 			if (name == "sin") {
 				lexems.push_back(Lexem(name, TypeLexem::Function, DBL_MAX, 4, my_sin));
+				prev = &lexems.tail()->value;
+				continue;
 			}
 			else if (name == "cos") {
 				lexems.push_back(Lexem(name, TypeLexem::Function, DBL_MAX, 4, my_cos));
+				prev = &lexems.tail()->value;
+				continue;
 			}
 			else if (name == "tg") {
 				lexems.push_back(Lexem(name, TypeLexem::Function, DBL_MAX, 4, my_tg));
+				prev = &lexems.tail()->value;
+				continue;
 			}
 			else if (name == "abs") {
 				lexems.push_back(Lexem(name, TypeLexem::Function, DBL_MAX, 4, my_abs));
+				prev = &lexems.tail()->value;
+				continue;
 			}
 			else {
+				if (!is_valid_variable_name(name)) {
+					std::ostringstream error;
+					error << "Invalid variable name '" << name << "' at position " << (i - name.length());
+					throw std::logic_error(error.str());
+				}
 				lexems.push_back(Lexem(name, TypeLexem::Variable));
+				prev = &lexems.tail()->value;
+				continue;
 			}
-			prev = &lexems.tail()->value;
-			continue;
 		}
 
 		if (expression[i] == '|') {
-			bool open_abs = (prev == nullptr || prev->type == Operator || prev->type == OpenBracket);
+			bool is_open = true;
+			if (prev != nullptr) {
+				if (prev->type == TypeLexem::Constant ||
+					prev->type == TypeLexem::Variable ||
+					prev->type == TypeLexem::CloseBracket) {
+					is_open = false;
+				}
+			}
+			if (is_open) {
+				lexems.push_back(Lexem("abs", TypeLexem::Function, DBL_MAX, 4, my_abs));
+				lexems.push_back(Lexem("(", TypeLexem::OpenBracket));
+				abs_count++;
+			}
+			else {
+				lexems.push_back(Lexem(")", TypeLexem::CloseBracket));
+				abs_count--;
+				if (abs_count < 0) { throw std::logic_error("Too many closing |"); }
+			}
+			prev = &lexems.tail()->value;
+			++i;
+			continue;
+			/*bool open_abs = (prev == nullptr || prev->type == Operator || prev->type == OpenBracket);
 			if (open_abs) {
 				lexems.push_back(Lexem("abs", Function, 0, 4, my_abs));
 				lexems.push_back(Lexem("(", OpenBracket));
@@ -147,7 +204,7 @@ List<Lexem> Parser::parse(const std::string& expression) {
 			}
 			prev = &lexems.tail()->value;
 			++i;
-			continue;
+			continue;*/
 		}
 
 		if (is_open_bracket(expression[i])) {
@@ -166,7 +223,9 @@ List<Lexem> Parser::parse(const std::string& expression) {
 		if (expression[i] == '-') {
 			bool unar = false;
 			if (prev == nullptr || prev->type == TypeLexem::Operator
-				|| prev->type == TypeLexem::OpenBracket) {
+				|| prev->type == TypeLexem::OpenBracket ||
+				prev->type == TypeLexem::Function ||
+				prev->type == TypeLexem::UnOperator) {
 				unar = true;
 			}
 			if (unar) {
@@ -191,5 +250,6 @@ List<Lexem> Parser::parse(const std::string& expression) {
 		error << "Unknown symbol '" << expression[i] << "' at position " << i;
 		throw std::logic_error(error.str());
 	}
+	if (abs_count > 0) { throw std::logic_error("Unclosed | (missing closing |)"); }
 	return lexems;
 }

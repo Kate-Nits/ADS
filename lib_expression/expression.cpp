@@ -73,18 +73,7 @@ void Expression::build_polish_record() {
 		stack.pop();
 	}
 }
-/*
-void Expression::set_variable(const std::string& name, double value) {
-	for (size_t i = 0; i < _variables.size(); ++i) {
-		if (_variables[i] == name) {
-			_values[i] = value;
-			return;
-		}
-	}
-	_variables.push_back(name);
-	_values.push_back(value);
-}
-*/
+
 double Expression::calculate() const {
 	Stack<double> stack;
 
@@ -131,6 +120,7 @@ double Expression::calculate() const {
 			}
 		}
 		else if (lexem.type == UnOperator) {
+			if (stack.is_empty()) { throw std::logic_error("Invalid expression (unary operator without operand)"); }
 			double a = stack.top();
 			stack.pop();
 			stack.push((-1.0)*a);

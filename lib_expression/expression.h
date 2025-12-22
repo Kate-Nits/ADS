@@ -26,7 +26,6 @@ public:
 	}
 	void set_values(size_t variable, double value);
 	void build_polish_record();
-	//void set_variable(const std::string& name, double value);
 	double calculate() const;
 };
 

@@ -18,6 +18,7 @@ namespace Parser {
 	int priority(char operation);
 	bool is_identified_symbol(char c);
 	double string_to_double(const std::string& str);
+	bool is_valid_variable_name(const std::string& name);
 }
 
 #endif // LIB_PARSER_PARSER_H
