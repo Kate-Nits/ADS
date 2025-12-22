@@ -301,7 +301,8 @@ void print_menu_arithmetic_calculator();
 void print_expression_table(TVector<Expression*> expressions);
 void create_expression(TVector<Expression*>& expressions);
 void delete_expression(TVector<Expression*>& expressions);
-void arithmetic_calculator();
 void set_variables(TVector<Expression*>& expressions);
-
+void calculate_expression(TVector<Expression*>& expressions);
+void show_expressions(TVector<Expression*>& expressions);
+void arithmetic_calculator();
 #endif //  LIB_ALGORITHMS_H

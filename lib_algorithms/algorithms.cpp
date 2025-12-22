@@ -50,7 +50,7 @@ static const double EPSILON = 1e-10;
 #define DELETE_EXPRESSION 2
 #define SET_VARIABLES 3
 #define CALCULATE_EXPRESSION 4
-#define SHOW_EXPRESSION 5
+#define SHOW_EXPRESSIONS 5
 #define EXIT_ARITHMETIC_CALCULATOR 6
 
 void set_color(int text_color, int bg_color) {
@@ -793,6 +793,73 @@ void set_variables(TVector<Expression*>& expressions) {
     getchar();
 }
 
+void calculate_expression(TVector<Expression*>& expressions) {
+    system("cls");
+    std::cout << "===================================================================================" << std::endl;
+    std::cout << "                                  CALCULATE EXPRESSION                   " << std::endl;
+    std::cout << "===================================================================================" << std::endl;
+    if (expressions.is_empty()) {
+        std::cout << "No expressions available" << std::endl;
+        std::cout << "Press Enter to continue" << std::endl;
+        getchar();
+        getchar();
+        return;
+    }
+    print_expression_table(expressions);
+    std::cout << std::endl << "Enter ID of expression: ";
+    int id_to_calculate;
+    std::cin >> id_to_calculate;
+    if (id_to_calculate < 1 || id_to_calculate >(int)expressions.size()) {
+        set_color(12, 0);
+        std::cout << "ERROR: ";
+        set_color(7, 0);
+        std::cout << "Invalid ID!" << std::endl;
+        std::cout << "Press Enter to continue" << std::endl;
+        getchar();
+        getchar();
+        return;
+    }
+    Expression* expression = expressions[id_to_calculate - 1];
+    const TVector<std::string>& variables = expression->get_variables();
+    const TVector<double>& values = expression->get_values();
+    if (variables.size() > 0) {
+        for (size_t j = 0; j < variables.size(); ++j) {
+            if (values.at(j) == DBL_MAX) {
+                std::cout << "Please enter the values of all variables" << std::endl;
+                std::cout << "Press Enter to continue" << std::endl;
+                getchar();
+                getchar();
+                return;
+            }
+        }
+    }
+    try {
+        double result = expression->calculate();
+        set_color(10, 0);
+        std::cout << "RESULT: ";
+        set_color(7, 0);
+        std::cout << result << std::endl;
+    }
+    catch (const std::exception& ex) {
+        set_color(12, 0);
+        std::cout << "ERROR: ";
+        set_color(7, 0);
+        std::cout << ex.what() << std::endl;
+    }
+    std::cout << "Press Enter to continue" << std::endl;
+    getchar();
+    getchar();
+    return;
+}
+
+void show_expressions(TVector<Expression*>& expressions) {
+    system("cls");
+    print_expression_table(expressions);
+    getchar();
+    getchar();
+    return;
+}
+
 void arithmetic_calculator() {
     int user_choice = 0;
     int isExit = NO;
@@ -800,6 +867,7 @@ void arithmetic_calculator() {
 
     while (!isExit) {
         system("cls");
+        print_expression_table(expressions);
         print_menu_arithmetic_calculator();
         while (!input_user_choice(user_choice, START_MENU_FOR_ARITHMETIC_CALCULATOR));
         system("cls");
@@ -814,10 +882,10 @@ void arithmetic_calculator() {
             set_variables(expressions);
             break;
         case CALCULATE_EXPRESSION:
-            in_development();
+            calculate_expression(expressions);
             break;
-        case SHOW_EXPRESSION:
-            in_development();
+        case SHOW_EXPRESSIONS:
+            show_expressions(expressions);
             break;
         case EXIT_ARITHMETIC_CALCULATOR:
             isExit = YES;
