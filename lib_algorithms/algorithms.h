@@ -18,6 +18,7 @@
 #include "../lib_list/list.h"
 #include "../lib_parser/parser.h"
 #include "../lib_expression/expression.h"
+#include "../lib_dsu/dsu.h"
 
 #define START_MENU_MATRIX_SIZE 3
 #define REALISED_Matrix
@@ -305,4 +306,50 @@ void set_variables(TVector<Expression*>& expressions);
 void calculate_expression(TVector<Expression*>& expressions);
 void show_expressions(TVector<Expression*>& expressions);
 void arithmetic_calculator();
+
+template<class T>
+int count_of_island(const Matrix<T>& grid) {
+    if (grid.rows() == 0 || grid.cols() == 0) { return 0; }
+    int rows = static_cast<int>(grid.rows());
+    int cols = static_cast<int>(grid.cols());
+
+    DSU dsu(rows * cols);
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            if (grid[i][j] == 1) {
+                int current_index = i * cols + j;
+
+                if (j + 1 < cols && grid[i][j + 1] == 1) {
+                    int right_index = i * cols + (j + 1);
+                    dsu.my_union(current_index, right_index);
+                }
+
+                if (i + 1 < rows && grid[i + 1][j] == 1) {
+                    int bottom_index = (i + 1) * cols + j;
+                    dsu.my_union(current_index, bottom_index);
+                }
+            }
+        }
+    }
+    TVector<int> unique_parents;
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            if (grid[i][j] == 1) {
+                int parent = dsu.find(i * cols + j);
+
+                bool is_have = false;
+                for (size_t k = 0; k < unique_parents.size(); ++k) {
+                    if (unique_parents.at(k) == parent) {
+                        is_have = true;
+                        break;
+                    }
+                }
+                if (!is_have) {
+                    unique_parents.push_back(parent);
+                }
+            }
+        }
+    }
+    return unique_parents.size();
+}
 #endif //  LIB_ALGORITHMS_H

@@ -312,6 +312,16 @@ TEST(TestAlgorithmsLib, find_loop_node_with_loop_in_large_list) {
     EXPECT_EQ(loop_node, find_loop_node(list));
     EXPECT_EQ(75, find_loop_node(list)->value);
 
-    // Восстанавливаем
     list.tail()->next = nullptr;
+}
+
+TEST(TestAlgorithmsLib, dsu_find_islands_example_from_Marina_Andreevna) {
+    // Arrange
+    Matrix<int> m{ { 0, 1, 0, 0, 1 }, { 0, 1, 1, 0, 1 }, { 1, 1, 0, 1, 1 }, { 0, 0, 0, 0, 1 }, { 1, 0, 1, 1, 1 } };
+
+    // Act & 
+    int result = count_of_island(m);
+
+    // Assert
+    EXPECT_EQ(3, result);
 }
