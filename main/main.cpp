@@ -20,7 +20,10 @@
 //#define WORKING_WITH_MATRIX
 
 // Калькулятор Арифметических выражений
-#define ARITHMETIC_CALCULATOR
+//#define ARITHMETIC_CALCULATOR
+
+// Приложение для лабиринта из DSU и Matrix
+#define LABIRINT_APPLICATION
 
 #ifdef EASY_EXAMPLE
 
@@ -213,7 +216,9 @@ int main() {
 #ifdef ARITHMETIC_CALCULATOR
     arithmetic_calculator();
 #endif // ARITHMETIC_CALCULATOR
-
+#ifdef LABIRINT_APPLICATION
+    labirint_application();
+#endif // LABIRINT_APPLICATION
     return 0;
 }
 

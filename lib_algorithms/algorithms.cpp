@@ -893,3 +893,187 @@ void arithmetic_calculator() {
         }
     }
 }
+
+void user_input_data(int& N, int& M, int& entry_labirint, int& exit_labirint) {
+    system("cls");
+    std::cout << "===================================================================================" << std::endl;
+    std::cout << "                                    LABIRINT                   " << std::endl;
+    std::cout << "===================================================================================" << std::endl;
+    std::cout << "Input the number of rows: ";
+    std::cin >> N;
+    std::cout << "Input the number of columns: ";
+    std::cin >> M;
+    std::cout << "Input the entry in labirint: ";
+    std::cin >> entry_labirint;
+    std::cout << "Input the exit from labirint: ";
+    std::cin >> exit_labirint;
+    std::cout << "===================================================================================" << std::endl;
+
+}
+/*struct Labirint {
+    Matrix<bool> horizontal_walls;
+    Matrix<bool> vertical_walls;
+
+    Labirint(int N, int M) {
+        horizontal_walls = Matrix<bool>(N + 1, M);
+        vertical_walls = Matrix<bool>(N, M + 1);
+
+        for (int i = 0; i < N + 1; ++i) {
+            for (int j = 0; j < M; ++j) {
+                horizontal_walls[i][j] = true;
+            }
+        }
+        for (int i = 0; i < N; ++i) {
+            for (int j = 0; j < M + 1; ++j) {
+                vertical_walls[i][j] = true;
+            }
+        }
+    }
+};*/
+Labirint generate(int& N, int& M, int& entry_labirint, int& exit_labirint) {
+    Labirint labirint(N, M);
+    DSU dsu(N * M);
+    struct Wall {
+        int cell_now;
+        int cell_near;
+        bool is_horizontal;
+        int row;
+        int col;
+    };
+    TVector<Wall> walls;
+    for (int r = 0; r < N; ++r) {
+        for (int c = 0; c < M; ++c) {
+            int id_cell = r * M + c;
+
+            if (c + 1 < M) {
+                Wall wall;
+                wall.cell_now = id_cell;
+                wall.cell_near = id_cell + 1;
+                wall.is_horizontal = false;
+                wall.row = r;
+                wall.col = c + 1;
+                walls.push_back(wall);
+            }
+            if (r + 1 < N) {
+                Wall wall;
+                wall.cell_now = id_cell;
+                wall.cell_near = id_cell + M;
+                wall.is_horizontal = true;
+                wall.row = r + 1;
+                wall.col = c;
+                walls.push_back(wall);
+            }
+        }
+    }
+    shuffle(walls);
+
+    int walls_deleted = 0;
+    int total_cells = N * M;
+    int walls_needed_to_delete = total_cells - 1;
+
+    for (size_t i = 0; i < walls.size() && walls_deleted < walls_needed_to_delete; ++i) {
+        const Wall& wall = walls[i];
+        if (dsu.find(wall.cell_now) != dsu.find(wall.cell_near)) {
+            dsu.my_union(wall.cell_now, wall.cell_near);
+            if (wall.is_horizontal) {
+                labirint.horizontal_walls[wall.row][wall.col] = false;
+            }
+            else {
+                labirint.vertical_walls[wall.row][wall.col] = false;
+            }
+            walls_deleted++;
+        }
+    }
+
+    labirint.horizontal_walls[0][entry_labirint] = false;
+    labirint.horizontal_walls[N][exit_labirint] = false;
+
+    int root = dsu.find(0);
+    for (int i = 1; i < total_cells; ++i) {
+        if (dsu.find(i) != root) {
+            throw std::logic_error("ERROR: Not all cells are connected");
+        }
+    }
+    return labirint;
+}
+void print_labirint(const Labirint& labirint, int& N, int& M, int& entry_labirint, int& exit_labirint) {
+    std::cout << std::endl;
+
+    std::cout << "+";
+    for (int c = 0; c < M; ++c) {
+        if (c == entry_labirint) {
+            std::cout << "   +";
+        }
+        else {
+            std::cout << "---+";
+        }
+    }
+    std::cout << std::endl;
+
+
+    for (int r = 0; r < N; ++r) {
+        std::cout << "|";
+
+        for (int c = 0; c < M; ++c) {
+            std::cout << "   "; // клетка
+            if (c < M - 1) { // вертикальная стена справа от клетки
+                if (!labirint.vertical_walls[r][c + 1]) {
+                    std::cout << " ";
+                }
+                else {
+                    std::cout << "|";
+                }
+            }
+            else { // последняя вертикальная стена
+                if (!labirint.vertical_walls[r][M]) {
+                    std::cout << " ";
+                }
+                else {
+                    std::cout << "|";
+                }
+            }
+        }
+        std::cout << std::endl;
+
+        if (r < N - 1) { // горизонтальные стены под текущим рядом
+            std::cout << "+";
+            for (int c = 0; c < M; ++c) {
+                if (!labirint.horizontal_walls[r + 1][c]) {
+                    std::cout << "   +";
+                }
+                else {
+                    std::cout << "---+";
+                }
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    
+    std::cout << "+";
+    for (int c = 0; c < M; ++c) {
+        if (c == exit_labirint) {
+            std::cout << "   +";
+        }
+        else {
+            std::cout << "---+";
+        }
+    }
+    std::cout << std::endl;
+}
+
+void labirint_application() {
+    srand(time(nullptr));
+    int N; // кол-во строк
+    int M; // кол-во столбцов
+    int entry_labirint; // вход в лабиринт
+    int exit_labirint; // выход из лабиринта
+    int& link_N = N;
+    int& link_M = M;
+    int& link_entry_labirint = entry_labirint;
+    int& link_exit_labirint = exit_labirint;
+    user_input_data(link_N, link_M, link_entry_labirint, link_exit_labirint);
+    Labirint labirint = generate(link_N, link_M, link_entry_labirint, link_exit_labirint);
+    Labirint& link_labirint = labirint;
+    print_labirint(link_labirint, link_N, link_M, link_entry_labirint, link_exit_labirint);
+}

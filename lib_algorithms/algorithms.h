@@ -352,4 +352,30 @@ int count_of_island(const Matrix<T>& grid) {
     }
     return unique_parents.size();
 }
+
+void user_input_data(int& N, int& M, int& entry_labirint, int& exit_labirint);
+struct Labirint {
+    Matrix<bool> horizontal_walls;
+    Matrix<bool> vertical_walls;
+
+    Labirint(int N, int M) {
+        horizontal_walls = Matrix<bool>(N + 1, M);
+        vertical_walls = Matrix<bool>(N, M + 1);
+
+        for (int i = 0; i < N + 1; ++i) {
+            for (int j = 0; j < M; ++j) {
+                horizontal_walls[i][j] = true;
+            }
+        }
+        for (int i = 0; i < N; ++i) {
+            for (int j = 0; j < M + 1; ++j) {
+                vertical_walls[i][j] = true;
+            }
+        }
+    }
+};
+Labirint generate(int& N, int& M, int& entry_labirint, int& exit_labirint);
+void print_labirint(const Labirint& labirint, int& N, int& M, int& entry_labirint, int& exit_labirint);
+void labirint_application();
+
 #endif //  LIB_ALGORITHMS_H
