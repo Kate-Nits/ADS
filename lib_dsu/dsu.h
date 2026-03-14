@@ -13,7 +13,7 @@ public:
 	DSU(size_t size) : _size(size) {
 		_parent = new int[size];
 		for (size_t i = 0; i < size; ++i) {
-			_parent[i] = i;
+			_parent[i] = static_cast<int>(i);
 		}
 	}
 	~DSU() {

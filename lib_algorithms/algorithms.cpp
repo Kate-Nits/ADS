@@ -586,6 +586,20 @@ double my_tg(double x) {
     }
     return my_sin(x) / value_cos;
 }
+double my_pow(double number, int power) {
+    if (number == 0.0) {
+        if (power == 0) { return 1.0; }
+        if (power > 0) { return 0.0; }
+        throw std::logic_error("Can't division by zero");
+    }
+    if (power == 0) { return 1.0; }
+    if (power < 0) { return 1.0 / my_pow(number, -power); }
+    double result = 1.0;
+    for (int i = 0; i < power; ++i) {
+        result *= number;
+    }
+    return result;
+}
 
 void print_menu_arithmetic_calculator() {
     std::cout << std::endl;
@@ -911,25 +925,26 @@ void user_input_data(int& N, int& M, int& entry_labirint, int& exit_labirint) {
 
 }
 /*struct Labirint {
-    Matrix<bool> horizontal_walls;
-    Matrix<bool> vertical_walls;
+    Matrix<int> horizontal_walls;
+    Matrix<int> vertical_walls;
 
     Labirint(int N, int M) {
-        horizontal_walls = Matrix<bool>(N + 1, M);
-        vertical_walls = Matrix<bool>(N, M + 1);
+        horizontal_walls = Matrix<int>(N + 1, M);
+        vertical_walls = Matrix<int>(N, M + 1);
 
         for (int i = 0; i < N + 1; ++i) {
             for (int j = 0; j < M; ++j) {
-                horizontal_walls[i][j] = true;
+                horizontal_walls[i][j] = TRUE;
             }
         }
         for (int i = 0; i < N; ++i) {
             for (int j = 0; j < M + 1; ++j) {
-                vertical_walls[i][j] = true;
+                vertical_walls[i][j] = TRUE;
             }
         }
     }
 };*/
+
 Labirint generate(int& N, int& M, int& entry_labirint, int& exit_labirint) {
     Labirint labirint(N, M);
     DSU dsu(N * M);
@@ -949,7 +964,7 @@ Labirint generate(int& N, int& M, int& entry_labirint, int& exit_labirint) {
                 Wall wall;
                 wall.cell_now = id_cell;
                 wall.cell_near = id_cell + 1;
-                wall.is_horizontal = false;
+                wall.is_horizontal = FALSE;
                 wall.row = r;
                 wall.col = c + 1;
                 walls.push_back(wall);
@@ -958,7 +973,7 @@ Labirint generate(int& N, int& M, int& entry_labirint, int& exit_labirint) {
                 Wall wall;
                 wall.cell_now = id_cell;
                 wall.cell_near = id_cell + M;
-                wall.is_horizontal = true;
+                wall.is_horizontal = TRUE;
                 wall.row = r + 1;
                 wall.col = c;
                 walls.push_back(wall);
@@ -976,17 +991,17 @@ Labirint generate(int& N, int& M, int& entry_labirint, int& exit_labirint) {
         if (dsu.find(wall.cell_now) != dsu.find(wall.cell_near)) {
             dsu.my_union(wall.cell_now, wall.cell_near);
             if (wall.is_horizontal) {
-                labirint.horizontal_walls[wall.row][wall.col] = false;
+                labirint.horizontal_walls[wall.row][wall.col] = FALSE;
             }
             else {
-                labirint.vertical_walls[wall.row][wall.col] = false;
+                labirint.vertical_walls[wall.row][wall.col] = FALSE;
             }
             walls_deleted++;
         }
     }
 
-    labirint.horizontal_walls[0][entry_labirint] = false;
-    labirint.horizontal_walls[N][exit_labirint] = false;
+    labirint.horizontal_walls[0][entry_labirint] = FALSE;
+    labirint.horizontal_walls[N][exit_labirint] = FALSE;
 
     int root = dsu.find(0);
     for (int i = 1; i < total_cells; ++i) {

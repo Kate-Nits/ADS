@@ -6,12 +6,14 @@
 #include <initializer_list> // нужно для конструктора от {}
 
 #include "../lib_tvector/tvector.h"
-#include "../lib_algorithms/algorithms.h"
+//#include "../lib_algorithms/algorithms.h"
 
 template <class T>
 class MathVector : public TVector<T> {
 public:
     using TVector<T>::TVector; //наследую все конструкторы от TVector
+    using TVector<T>::operator[];
+    using TVector<T>::operator=;
     MathVector() : TVector<T>() {}
     MathVector(const MathVector<T>& other) : TVector<T>(other) {}
     MathVector(const std::initializer_list<T> list) {

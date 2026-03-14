@@ -20,6 +20,9 @@
 #include "../lib_expression/expression.h"
 #include "../lib_dsu/dsu.h"
 
+#define TRUE 1
+#define FALSE 0
+
 #define START_MENU_MATRIX_SIZE 3
 #define REALISED_Matrix
 
@@ -27,9 +30,6 @@
 #define NUMBER2 2
 #define NUMBER3 3
 #define NUMBER4 4
-
-template <class T> class Matrix;
-template <class T> class TriangleMatrix;
 
 enum Location { intersecting, do_not_intersecting, tangent, inside, coinside };
 //tangent - касающиеся, intersecting - пересекающиеся, inside - один в другом, coinside - совпадают
@@ -297,6 +297,7 @@ double my_abs(double x);
 double my_sin(double x);
 double my_cos(double x);
 double my_tg(double x);
+double my_pow(double number, int power);
 
 void print_menu_arithmetic_calculator();
 void print_expression_table(TVector<Expression*> expressions);
@@ -355,21 +356,21 @@ int count_of_island(const Matrix<T>& grid) {
 
 void user_input_data(int& N, int& M, int& entry_labirint, int& exit_labirint);
 struct Labirint {
-    Matrix<bool> horizontal_walls;
-    Matrix<bool> vertical_walls;
+    Matrix<int> horizontal_walls;
+    Matrix<int> vertical_walls;
 
     Labirint(int N, int M) {
-        horizontal_walls = Matrix<bool>(N + 1, M);
-        vertical_walls = Matrix<bool>(N, M + 1);
+        horizontal_walls = Matrix<int>(N + 1, M);
+        vertical_walls = Matrix<int>(N, M + 1);
 
         for (int i = 0; i < N + 1; ++i) {
             for (int j = 0; j < M; ++j) {
-                horizontal_walls[i][j] = true;
+                horizontal_walls[i][j] = TRUE;
             }
         }
         for (int i = 0; i < N; ++i) {
             for (int j = 0; j < M + 1; ++j) {
-                vertical_walls[i][j] = true;
+                vertical_walls[i][j] = TRUE;
             }
         }
     }

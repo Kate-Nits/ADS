@@ -1,12 +1,16 @@
 // Copyright 2025 Ekaterina Ushnitskaya
 
+template <class T> class Matrix;
+template <class T> class TriangleMatrix;
 #include <gtest/gtest.h>
 #include "../lib_tvector/tvector.h"
 #include "../lib_mathvector/MathVector.h"
 #include "../lib_matrix/matrix.h"
+#include "../lib_triangle_matrix/triangle_matrix.h"
+#include "../lib_algorithms/algorithms.h"
 #include "../lib_node/node.h"
 #include "../lib_list/list.h"
-#include "../lib_algorithms/algorithms.h"
+
 
 #define EPSILON 0.000001
 #define TRUE 1

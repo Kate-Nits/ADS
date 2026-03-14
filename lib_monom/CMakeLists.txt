@@ -1,0 +1,2 @@
+create_project_lib(Monom)
+add_depend(Monom Algorithms lib_algorithms)
