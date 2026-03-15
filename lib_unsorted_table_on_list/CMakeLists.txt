@@ -1,0 +1,3 @@
+create_project_lib(UnsortedTableOnList)
+add_depend(UnsortedTableOnList Table lib_table)
+add_depend(UnsortedTableOnList List lib_list)

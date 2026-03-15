@@ -1,0 +1,3 @@
+create_project_lib(SortedTableOnArray)
+add_depend(SortedTableOnArray Table lib_table)
+add_depend(SortedTableOnArray TVector lib_tvector)
