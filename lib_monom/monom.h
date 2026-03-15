@@ -27,9 +27,13 @@ public:
 		_pz = other._pz;
 	}
 	double coef() { return _coef; }
+	double coef() const { return _coef; }
 	int px() { return _px; }
+	int px() const { return _px; }
 	int py() { return _py; }
+	int py() const { return _py; }
 	int pz() { return _pz; }
+	int pz() const { return _pz; }
 	Monom& operator=(const Monom& other);
 	bool operator==(const Monom& other) const;
 	bool operator!=(const Monom& other) const;

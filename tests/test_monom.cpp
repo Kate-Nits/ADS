@@ -1,4 +1,4 @@
-// Copy()right 2026 Ekaterina Ushnitskaya
+// Copyright 2026 Ekaterina Ushnitskaya
 
 #include <gtest/gtest.h>
 #include "../lib_monom/monom.h"
