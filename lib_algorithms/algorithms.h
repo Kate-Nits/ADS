@@ -19,6 +19,7 @@
 #include "../lib_parser/parser.h"
 #include "../lib_expression/expression.h"
 #include "../lib_dsu/dsu.h"
+#include "../lib_heap/heap.h"
 
 #define TRUE 1
 #define FALSE 0

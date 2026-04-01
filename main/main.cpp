@@ -23,7 +23,10 @@
 //#define ARITHMETIC_CALCULATOR
 
 // Приложение для лабиринта из DSU и Matrix
-#define LABIRINT_APPLICATION
+//#define LABIRINT_APPLICATION
+
+// Проверка работы Кучи
+#define TRY_HEAP_SORT
 
 #ifdef EASY_EXAMPLE
 
@@ -219,6 +222,15 @@ int main() {
 #ifdef LABIRINT_APPLICATION
     labirint_application();
 #endif // LABIRINT_APPLICATION
+#ifdef TRY_HEAP_SORT
+    int mass[] = { 7, 3, 11, 1, 8, 2, 6 };
+    size_t size_mass = 7;
+    heap_sort(mass, size_mass);
+    for (size_t i = 0; i < size_mass; ++i) {
+        std::cout << mass[i] << " ";
+    }
+    std::cout << std::endl;
+#endif // TRY_HEAP_SORT
     return 0;
 }
 

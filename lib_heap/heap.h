@@ -140,7 +140,7 @@ private:
 
 template <class T>
 void heap_sort(T* mass, size_t size) {
-	if (mass == mullptr && size > 0) { throw std::invalid_argument("Mass can't be nullptr"); }
+	if (mass == nullptr && size > 0) { throw std::invalid_argument("Mass can't be nullptr"); }
 	Heap<T> heap(size);
 	for (size_t i = 0; i < size; ++i) { heap.insert(mass[i]); }
 	for (size_t i = 0; i < size; ++i) {
