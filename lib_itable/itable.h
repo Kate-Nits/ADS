@@ -26,19 +26,6 @@ struct Pair {
     }
 };
 
-template <class TKey, class TValue>
-class ITable {
-public:
-    virtual ~ITable() = default;
-
-    virtual void insert(const TKey&, const TValue&) = 0;
-    virtual void erase(const TKey&) = 0;
-    virtual const TValue* found(const TKey&) const noexcept = 0;
-
-    virtual bool is_empty() const noexcept = 0;
-    virtual void print(std::ostream& os = std::cout) const noexcept = 0;
-};
-
 template <class TFirst, class TSecond>
 Pair<TFirst, TSecond>::Pair() {
     first = TFirst();
@@ -69,5 +56,18 @@ template <class TFirst, class TSecond>
 bool Pair<TFirst, TSecond>::operator>(const Pair<TFirst, TSecond>& other) const {
     return first > other.first;
 }
+
+template <class TKey, class TValue>
+class ITable {
+public:
+    virtual ~ITable() = default;
+
+    virtual void insert(const TKey&, const TValue&) = 0;
+    virtual void erase(const TKey&) = 0;
+    virtual const TValue* found(const TKey&) const noexcept = 0;
+
+    virtual bool is_empty() const noexcept = 0;
+    virtual void print(std::ostream& os = std::cout) const noexcept = 0;
+};
 
 #endif // LIB_ITABLE_ITABLE_H

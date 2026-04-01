@@ -21,8 +21,8 @@ Polynom::Polynom(const std::string& str) {
 		}
 		size_t start = i;
 		bool has_digit = false;
-		while (i < s.size() && (Parser::is_digit(s[i]) || s[i] == '.')) {
-			has_digit = true;
+		while (i < s.size() && (Parser::is_digit(s[i]) || s[i] == '.')) {  // проверить не поднимался ли flag иначе ..
+			has_digit = true; 
 			i++;
 		}
 		if (has_digit) {
@@ -92,7 +92,7 @@ Polynom Polynom::operator*(const Polynom& other) const {
 	}
 	return result;
 }
-Polynom Polynom::operator/(const Polynom& divisor) const {
+Polynom Polynom::operator/(const Polynom& divisor) const { // 
 	if (divisor.is_zero()) { throw std::logic_error("Can't, because division by zero"); }
 	Polynom remainder(*this); // остаток
 	Polynom result;

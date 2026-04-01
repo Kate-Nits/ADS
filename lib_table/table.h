@@ -16,6 +16,9 @@
 
 template <class TKey, class TValue>
 class Table : public ITable<TKey, TValue> {
+protected:
+    size_t _size;
+
 public:
     virtual ~Table() = default;
 
@@ -23,7 +26,7 @@ public:
     virtual void erase(const TKey&) override = 0;
     virtual const TValue* found(const TKey&) const noexcept override = 0;
     virtual bool is_empty() const noexcept override {
-        return size() == 0;
+        return _size == 0;
     }
     virtual void print(std::ostream& os = std::cout) const noexcept override {
         print_line(os);
@@ -46,6 +49,8 @@ public:
 protected:
     virtual size_t size() const noexcept = 0;
     virtual const Pair<TKey, TValue>& get_row(size_t index) const = 0;
+
+
     template<typename Func>
     void for_each(Func func) const {
         for (size_t i = 0; i < size(); i++) {

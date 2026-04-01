@@ -1030,7 +1030,7 @@ void print_labirint(const Labirint& labirint, int& N, int& M, int& entry_labirin
         std::cout << "|";
 
         for (int c = 0; c < M; ++c) {
-            std::cout << "   "; // клетка
+            std::cout << "   ";
             if (c < M - 1) { // вертикальная стена справа от клетки
                 if (!labirint.vertical_walls[r][c + 1]) {
                     std::cout << " ";
@@ -1081,8 +1081,8 @@ void labirint_application() {
     srand(time(nullptr));
     int N; // кол-во строк
     int M; // кол-во столбцов
-    int entry_labirint; // вход в лабиринт
-    int exit_labirint; // выход из лабиринта
+    int entry_labirint;
+    int exit_labirint;
     int& link_N = N;
     int& link_M = M;
     int& link_entry_labirint = entry_labirint;

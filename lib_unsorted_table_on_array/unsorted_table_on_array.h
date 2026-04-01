@@ -37,6 +37,7 @@ int UnsortedTableOnArray<TKey, TValue>::find_index(const TKey& key) const noexce
     return -1;
 }
 
+/*
 template <class TKey, class TValue>
 size_t UnsortedTableOnArray<TKey, TValue>::size() const noexcept {
     return _rows.size();
@@ -45,6 +46,22 @@ size_t UnsortedTableOnArray<TKey, TValue>::size() const noexcept {
 template <class TKey, class TValue>
 const Pair<TKey, TValue>& UnsortedTableOnArray<TKey, TValue>::get_row(size_t index) const {
     return _rows[index];
+}
+*/
+template <class TKey, class TValue>
+size_t UnsortedTableOnArray<TKey, TValue>::size() const noexcept {
+    size_t count = 0;
+    for (size_t i = 0; i < _rows.size(); i++) {
+        if (_rows.state(i) == State::busy) {
+            count++;
+        }
+    }
+    return count;
+}
+
+template <class TKey, class TValue>
+const Pair<TKey, TValue>& UnsortedTableOnArray<TKey, TValue>::get_row(size_t index) const {
+    return _rows.at(index);
 }
 
 template <class TKey, class TValue>

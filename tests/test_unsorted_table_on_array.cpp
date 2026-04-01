@@ -44,6 +44,9 @@ TEST(TestUnsortedTableOnArray, insert_one_element_and_find) {
 
     // Assert
     EXPECT_NE(result, nullptr);
+    std::ostringstream oss;
+    oss << *result;
+    EXPECT_EQ("2x", oss.str());
 }
 
 TEST(TestUnsortedTableOnArray, find_non_existing_key_returns_nullptr) {
