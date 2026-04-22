@@ -5,6 +5,7 @@
 
 #include "../lib_table/table.h"
 #include "../lib_list/list.h"
+#include "../lib_node/node.h"
 
 template <class TKey, class TValue>
 class UnsortedTableOnList : public Table<TKey, TValue> {
@@ -12,29 +13,28 @@ class UnsortedTableOnList : public Table<TKey, TValue> {
     List<Pair<TKey, TValue>> _rows;
 
 public:
-
     UnsortedTableOnList() = default;
     ~UnsortedTableOnList() = default;
 
     void insert(const TKey&, const TValue&) override;
     void erase(const TKey&) override;
     const TValue* found(const TKey&) const noexcept override;
-
-// protected: из-за тестов
-    size_t size() const noexcept override;
-    const Pair<TKey, TValue>& get_row(size_t) const override;
+    bool is_empty() const noexcept override;
+    void print(std::ostream& os = std::cout) const noexcept override;
 
 private:
     const Node<Pair<TKey, TValue>>* find_node_const(const TKey&) const noexcept;
     Node<Pair<TKey, TValue>>* find_node(const TKey&) noexcept;
+    Node<Pair<TKey, TValue>>* find_prev(const TKey&) noexcept;
 };
 
 template<class TKey, class TValue>
 const Node<Pair<TKey, TValue>>* UnsortedTableOnList<TKey, TValue>::find_node_const(const TKey& key) const noexcept {
     const Node<Pair<TKey, TValue>>* cur = _rows.head();
     while (cur != nullptr) {
-        if (cur->value.first == key)
+        if (cur->value.first == key) {
             return cur;
+        }
         cur = cur->next;
     }
     return nullptr;
@@ -44,8 +44,24 @@ template<class TKey, class TValue>
 Node<Pair<TKey, TValue>>* UnsortedTableOnList<TKey, TValue>::find_node(const TKey& key) noexcept {
     Node<Pair<TKey, TValue>>* cur = _rows.head();
     while (cur != nullptr) {
-        if (cur->value.first == key)
+        if (cur->value.first == key) {
             return cur;
+        }
+        cur = cur->next;
+    }
+    return nullptr;
+}
+
+template<class TKey, class TValue>
+Node<Pair<TKey, TValue>>* UnsortedTableOnList<TKey, TValue>::find_prev(const TKey& key) noexcept {
+    Node<Pair<TKey, TValue>>* cur = _rows.head();
+    if (cur == nullptr || cur->value.first == key) {
+        return nullptr;
+    }
+    while (cur->next != nullptr) {
+        if (cur->next->value.first == key) {
+            return cur;
+        }
         cur = cur->next;
     }
     return nullptr;
@@ -58,7 +74,7 @@ void UnsortedTableOnList<TKey, TValue>::insert(const TKey& key, const TValue& va
 }
 
 template<class TKey, class TValue>
-void UnsortedTableOnList<TKey, TValue>::erase(const TKey& key) {
+void UnsortedTableOnList<TKey, TValue>::erase(const TKey& key) { // точно ли правильно работает???
     Node<Pair<TKey, TValue>>* node = find_node(key);
     if (node == nullptr) { throw std::invalid_argument("Key not found"); }
     _rows.erase(node);
@@ -72,26 +88,25 @@ const TValue* UnsortedTableOnList<TKey, TValue>::found(const TKey& key) const no
 }
 
 template<class TKey, class TValue>
-size_t UnsortedTableOnList<TKey, TValue>::size() const noexcept {
-    size_t count = 0;
-    const Node<Pair<TKey, TValue>>* cur = _rows.head();
-    while (cur != nullptr) {
-        count++;
-        cur = cur->next;
-    }
-    return count;
+bool UnsortedTableOnList<TKey, TValue>::is_empty() const noexcept {
+    return _rows.is_empty();
 }
 
 template<class TKey, class TValue>
-const Pair<TKey, TValue>& UnsortedTableOnList<TKey, TValue>::get_row(size_t index) const {
+void UnsortedTableOnList<TKey, TValue>::print(std::ostream& os) const noexcept {
+    this->print_line(os);
+    this->print_title(os);
+    this->print_line(os);
+
     const Node<Pair<TKey, TValue>>* cur = _rows.head();
-    size_t i = 0;
     while (cur != nullptr) {
-        if (i == index) { return cur->value; }
+        os << "|";
+        this->print_key(os, cur->value.first, WIDTH_KEY);
+        this->print_value(os, cur->value.second, WIDTH_VALUE);
+        os << "\n";
         cur = cur->next;
-        i++;
     }
-    throw std::out_of_range("Index out of range");
+    this->print_line(os);
 }
 
 #endif // LIB_UNSORTEDTABLEONLIST_UNSORTEDTABLEONLIST_H

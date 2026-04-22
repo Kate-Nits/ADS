@@ -16,10 +16,9 @@ public:
     void insert(const TKey& key, const TValue& value) override;
     void erase(const TKey& key) override;
     const TValue* found(const TKey& key) const noexcept override;
+    bool is_empty() const noexcept override;
+    void print(std::ostream& os = std::cout) const noexcept override;
 
-// protected:из-за тестов
-    size_t size() const noexcept override;
-    const Pair<TKey, TValue>& get_row(size_t index) const override;
 private:
     int binary_search(const TKey& key) const noexcept;
     int find_insert_pos(const TKey& key) const noexcept;
@@ -42,23 +41,26 @@ int SortedTableOnArray<TKey, TValue>::binary_search(const TKey& key) const noexc
 
 template <class TKey, class TValue>
 int SortedTableOnArray<TKey, TValue>::find_insert_pos(const TKey& key) const noexcept { // лучше бинарным
-    int pos = 0;
-    while (pos < (int)_rows.size() && _rows[pos].first < key) {
-        pos++;
+    int left = 0;
+    int right = (int)_rows.size();
+    while (left < right) {
+        int mid = (left + right) / 2;
+
+        if (_rows[mid].first < key) { 
+            left = mid + 1; 
+        }
+        else {
+            right = mid;
+        }
     }
-    return pos;
+    return left;
 }
 
 template <class TKey, class TValue>
 void SortedTableOnArray<TKey, TValue>::insert(const TKey& key, const TValue& value) {
-
-    if (binary_search(key) != -1)
-        throw std::invalid_argument("Key already exists");
-
+    if (binary_search(key) != -1) { throw std::invalid_argument("Key already exists"); }
     int pos = find_insert_pos(key);
-
     _rows.push_back(Pair<TKey, TValue>(key, value));
-
     for (int i = _rows.size() - 1; i > pos; --i) {
         std::swap(_rows[i], _rows[i - 1]);
     }
@@ -80,14 +82,23 @@ const TValue* SortedTableOnArray<TKey, TValue>::found(const TKey& key) const noe
 }
 
 template <class TKey, class TValue>
-size_t SortedTableOnArray<TKey, TValue>::size() const noexcept {
-    return _rows.size();
+bool SortedTableOnArray<TKey, TValue>::is_empty() const noexcept {
+    return _rows.is_empty();
 }
 
 template <class TKey, class TValue>
-const Pair<TKey, TValue>& SortedTableOnArray<TKey, TValue>::get_row(size_t index) const {
-    if (index >= _rows.size()) { throw std::out_of_range("Index out of range"); }
-    return _rows[index];
+void SortedTableOnArray<TKey, TValue>::print(std::ostream& os) const noexcept {
+    this->print_line(os);
+    this->print_title(os);
+    this->print_line(os);
+
+    for (size_t i = 0; i < _rows.size(); i++) {
+        os << "|";
+        this->print_key(os, _rows[i].first, WIDTH_KEY);
+        this->print_value(os, _rows[i].second, WIDTH_VALUE);
+        os << "\n";
+    }
+    this->print_line(os);
 }
 
 #endif // LIB_SORTEDTABLEONARRAY_SORTEDTABLEONARRAY_H

@@ -16,10 +16,8 @@ public:
     void insert(const TKey& key, const TValue& value) override;
     void erase(const TKey& key) override;
     const TValue* found(const TKey& key) const noexcept override;
-    
-protected:
-    size_t size() const noexcept override;
-    const Pair<TKey, TValue>& get_row(size_t index) const override;
+    bool is_empty() const noexcept override;
+    void print(std::ostream& os = std::cout) const noexcept override;
 private:
     int find_index(const TKey& key) const noexcept;
 };
@@ -37,33 +35,6 @@ int UnsortedTableOnArray<TKey, TValue>::find_index(const TKey& key) const noexce
     return -1;
 }
 
-/*
-template <class TKey, class TValue>
-size_t UnsortedTableOnArray<TKey, TValue>::size() const noexcept {
-    return _rows.size();
-}
-
-template <class TKey, class TValue>
-const Pair<TKey, TValue>& UnsortedTableOnArray<TKey, TValue>::get_row(size_t index) const {
-    return _rows[index];
-}
-*/
-template <class TKey, class TValue>
-size_t UnsortedTableOnArray<TKey, TValue>::size() const noexcept {
-    size_t count = 0;
-    for (size_t i = 0; i < _rows.size(); i++) {
-        if (_rows.state(i) == State::busy) {
-            count++;
-        }
-    }
-    return count;
-}
-
-template <class TKey, class TValue>
-const Pair<TKey, TValue>& UnsortedTableOnArray<TKey, TValue>::get_row(size_t index) const {
-    return _rows.at(index);
-}
-
 template <class TKey, class TValue>
 void UnsortedTableOnArray<TKey, TValue>::insert(const TKey& key, const TValue& value) {
     if (find_index(key) != -1) { throw std::invalid_argument("Key already exists"); }
@@ -75,6 +46,7 @@ void UnsortedTableOnArray<TKey, TValue>::erase(const TKey& key) {
     int index = find_index(key);
     if (index == -1) { throw std::invalid_argument("Key not found"); }
     _rows.erase(index);
+    _rows.shrink_to_fit();
 }
 
 template <class TKey, class TValue>
@@ -82,6 +54,26 @@ const TValue* UnsortedTableOnArray<TKey, TValue>::found(const TKey& key) const n
     int index = find_index(key);
     if (index == -1) { return nullptr; }
     return &_rows[index].second;
+}
+
+template <class TKey, class TValue>
+bool UnsortedTableOnArray<TKey, TValue>::is_empty() const noexcept {
+    return _rows.is_empty();
+}
+
+template <class TKey, class TValue>
+void UnsortedTableOnArray<TKey, TValue>::print(std::ostream& os) const noexcept {
+    this->print_line(os);
+    this->print_title(os);
+    this->print_line(os);
+
+    for (size_t i = 0; i < _rows.size(); i++) {
+        os << "|";
+        this->print_key(os, _rows[i].first, WIDTH_KEY);
+        this->print_value(os, _rows[i].second, WIDTH_VALUE);
+        os << "\n";
+    }
+    this->print_line(os);
 }
 
 #endif // LIB_UNSORTEDTABLEONARRAY_UNSORTEDTABLEONARRAY_H

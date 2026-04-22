@@ -7,6 +7,10 @@
 
 #include "../lib_algorithms/algorithms.h"
 
+#include "../lib_sorted_table_on_array/sorted_table_on_array.h"
+#include "../lib_unsorted_table_on_array/unsorted_table_on_array.h"
+#include "../lib_unsorted_table_on_list/unsorted_table_on_list.h"
+
 //Пример работы приложения:
 //#define EASY_EXAMPLE
 
@@ -29,7 +33,10 @@
 //#define TRY_HEAP_SORT
 
 // Поиск с помощью PriorityQueue поиск k "самых важных" элементов в массиве
-#define TRY_K_IMPORTANT_PRIORITY_QUEUE
+//#define TRY_K_IMPORTANT_PRIORITY_QUEUE
+
+//Проверка работы таблиц
+#define TRY_TABLES
 
 #ifdef EASY_EXAMPLE
 
@@ -237,6 +244,36 @@ int main() {
 #ifdef TRY_K_IMPORTANT_PRIORITY_QUEUE
     //PriorityQueueNode<int> 
 #endif // TRY_K_IMPORTANT_PRIORITY_QUEUE
+
+#ifdef TRY_TABLES
+    // Неупорядоченная таблица (массив)
+    UnsortedTableOnArray<std::string, int> tableArr;
+    tableArr.insert("x", 10);
+    tableArr.insert("y", 20);
+    tableArr.insert("z", 30);
+    std::cout << "Unsorted Table (Array):\n";
+    tableArr.print();
+    std::cout << "\n";
+
+    // Неупорядоченная таблица (список)
+    UnsortedTableOnList<std::string, int> tableList;
+    tableList.insert("a", 1);
+    tableList.insert("b", 2);
+    tableList.insert("c", 3);
+    std::cout << "Unsorted Table (List):\n";
+    tableList.print();
+    std::cout << "\n";
+
+    // Упорядоченная таблица (массив)
+    SortedTableOnArray<std::string, int> tableSorted;
+    tableSorted.insert("m", 100);
+    tableSorted.insert("a", 50);
+    tableSorted.insert("k", 75);
+    std::cout << "Sorted Table (Array):\n";
+    tableSorted.print();
+    std::cout << "\n";
+#endif // TRY_TABLES
+
     return 0;
 }
 

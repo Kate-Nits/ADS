@@ -9,49 +9,48 @@
 #define TRUE 1
 #define FALSE 0
 
-
-TEST(TestUnsortedTableOnArray, table_is_empty_after_creat) {
-    // Arrange
-    UnsortedTableOnArray<std::string, Polynom> table;
-
-    // Act
-    bool result = table.is_empty();
-
-    // Assert
-    EXPECT_TRUE(result);
+static std::string polynom_to_string(const Polynom& p) {
+    std::ostringstream out;
+    out << p;
+    return out.str();
 }
 
-TEST(TestUnsortedTableOnArray, table_not_empty_after_insert) {
+TEST(TestUnsortedTableOnArray, table_is_empty_after_create) {
     // Arrange
     UnsortedTableOnArray<std::string, Polynom> table;
-    Polynom p("x");
+
+    // Act & Assert
+    EXPECT_TRUE(table.is_empty());
+}
+
+TEST(TestUnsortedTableOnArray, table_is_not_empty_after_insert) {
+    // Arrange
+    UnsortedTableOnArray<std::string, Polynom> table;
 
     // Act
-    table.insert("A", p);
+    table.insert("A", Polynom("x"));
 
     // Assert
     EXPECT_FALSE(table.is_empty());
 }
 
-TEST(TestUnsortedTableOnArray, insert_one_element_and_find) {
+TEST(TestUnsortedTableOnArray, insert_one_element_and_find_it) {
     // Arrange
     UnsortedTableOnArray<std::string, Polynom> table;
-    Polynom p("2x");
 
     // Act
-    table.insert("A", p);
+    table.insert("A", Polynom("2x"));
     const Polynom* result = table.found("A");
 
     // Assert
-    EXPECT_NE(result, nullptr);
-    std::ostringstream oss;
-    oss << *result;
-    EXPECT_EQ("2x", oss.str());
+    ASSERT_NE(nullptr, result);
+    EXPECT_EQ("2x", polynom_to_string(*result));
 }
 
 TEST(TestUnsortedTableOnArray, find_non_existing_key_returns_nullptr) {
     // Arrange
     UnsortedTableOnArray<std::string, Polynom> table;
+    table.insert("A", Polynom("x"));
 
     // Act
     const Polynom* result = table.found("X");
@@ -60,7 +59,7 @@ TEST(TestUnsortedTableOnArray, find_non_existing_key_returns_nullptr) {
     EXPECT_EQ(nullptr, result);
 }
 
-TEST(TestUnsortedTableOnArray, insert_some_elements) {
+TEST(TestUnsortedTableOnArray, insert_several_elements_and_find_all) {
     // Arrange
     UnsortedTableOnArray<std::string, Polynom> table;
 
@@ -69,43 +68,39 @@ TEST(TestUnsortedTableOnArray, insert_some_elements) {
     table.insert("B", Polynom("y"));
     table.insert("C", Polynom("z"));
 
-    const Polynom* a = table.found("A");
-    const Polynom* b = table.found("B");
-    const Polynom* c = table.found("C");
-
     // Assert
-    EXPECT_NE(a, nullptr);
-    EXPECT_NE(b, nullptr);
-    EXPECT_NE(c, nullptr);
+    ASSERT_NE(nullptr, table.found("A"));
+    ASSERT_NE(nullptr, table.found("B"));
+    ASSERT_NE(nullptr, table.found("C"));
+
+    EXPECT_EQ("x", polynom_to_string(*table.found("A")));
+    EXPECT_EQ("y", polynom_to_string(*table.found("B")));
+    EXPECT_EQ("z", polynom_to_string(*table.found("C")));
 }
 
 TEST(TestUnsortedTableOnArray, insert_duplicate_key_should_throw) {
-
     // Arrange
     UnsortedTableOnArray<std::string, Polynom> table;
-    Polynom p("x");
-
-    table.insert("A", p);
+    table.insert("A", Polynom("x"));
 
     // Act & Assert
-    EXPECT_ANY_THROW(table.insert("A", p));
+    EXPECT_ANY_THROW(table.insert("A", Polynom("2x")));
 }
 
-TEST(TestUnsortedTableOnArray, erase_element) {
+TEST(TestUnsortedTableOnArray, erase_existing_element) {
     // Arrange
     UnsortedTableOnArray<std::string, Polynom> table;
-    Polynom p("x");
-    table.insert("A", p);
+    table.insert("A", Polynom("x"));
 
     // Act
     table.erase("A");
-    const Polynom* result = table.found("A");
 
     // Assert
-    EXPECT_EQ(nullptr, result);
+    EXPECT_EQ(nullptr, table.found("A"));
+    EXPECT_TRUE(table.is_empty());
 }
 
-TEST(TestUnsortedTableOnArray, erase_should_throw) {
+TEST(TestUnsortedTableOnArray, erase_non_existing_key_should_throw) {
     // Arrange
     UnsortedTableOnArray<std::string, Polynom> table;
 
@@ -113,31 +108,38 @@ TEST(TestUnsortedTableOnArray, erase_should_throw) {
     EXPECT_ANY_THROW(table.erase("X"));
 }
 
-TEST(TestUnsortedTableOnArray, table_empty_after_removing_last_element) {
+TEST(TestUnsortedTableOnArray, after_erasing_one_element_other_elements_are_saved) {
     // Arrange
     UnsortedTableOnArray<std::string, Polynom> table;
-
     table.insert("A", Polynom("x"));
+    table.insert("B", Polynom("2x"));
+    table.insert("C", Polynom("3x"));
 
     // Act
-    table.erase("A");
+    table.erase("B");
 
     // Assert
-    EXPECT_TRUE(table.is_empty());
+    ASSERT_NE(nullptr, table.found("A"));
+    ASSERT_EQ(nullptr, table.found("B"));
+    ASSERT_NE(nullptr, table.found("C"));
+
+    EXPECT_EQ("x", polynom_to_string(*table.found("A")));
+    EXPECT_EQ("3x", polynom_to_string(*table.found("C")));
 }
 
-TEST(TestUnsortedTableOnArray, find_after_some_inserts) {
+TEST(TestUnsortedTableOnArray, can_insert_again_after_erase) {
     // Arrange
     UnsortedTableOnArray<std::string, Polynom> table;
-    table.insert("P1", Polynom("x"));
-    table.insert("P2", Polynom("2x"));
-    table.insert("P3", Polynom("3x"));
+    table.insert("A", Polynom("x"));
+    table.erase("A");
 
     // Act
-    const Polynom* result = table.found("P2");
+    table.insert("A", Polynom("5x"));
+    const Polynom* result = table.found("A");
 
     // Assert
-    EXPECT_NE(nullptr, result);
+    ASSERT_NE(nullptr, result);
+    EXPECT_EQ("5x", polynom_to_string(*result));
 }
 
 TEST(TestUnsortedTableOnArray, mixed_operations) {
@@ -148,15 +150,16 @@ TEST(TestUnsortedTableOnArray, mixed_operations) {
     table.insert("A", Polynom("x"));
     table.insert("B", Polynom("2x"));
     table.insert("C", Polynom("3x"));
-
     table.erase("B");
-
-    const Polynom* a = table.found("A");
-    const Polynom* b = table.found("B");
-    const Polynom* c = table.found("C");
+    table.insert("D", Polynom("4x"));
 
     // Assert
-    EXPECT_NE(a, nullptr);
-    EXPECT_EQ(b, nullptr);
-    EXPECT_NE(c, nullptr);
+    ASSERT_NE(nullptr, table.found("A"));
+    ASSERT_EQ(nullptr, table.found("B"));
+    ASSERT_NE(nullptr, table.found("C"));
+    ASSERT_NE(nullptr, table.found("D"));
+
+    EXPECT_EQ("x", polynom_to_string(*table.found("A")));
+    EXPECT_EQ("3x", polynom_to_string(*table.found("C")));
+    EXPECT_EQ("4x", polynom_to_string(*table.found("D")));
 }

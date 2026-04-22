@@ -16,30 +16,14 @@
 
 template <class TKey, class TValue>
 class Table : public ITable<TKey, TValue> {
-protected:
-    size_t _size;
-
 public:
     virtual ~Table() = default;
 
     virtual void insert(const TKey&, const TValue&) override = 0;
     virtual void erase(const TKey&) override = 0;
     virtual const TValue* found(const TKey&) const noexcept override = 0;
-    virtual bool is_empty() const noexcept override {
-        return _size == 0;
-    }
-    virtual void print(std::ostream& os = std::cout) const noexcept override {
-        print_line(os);
-        print_title(os);
-        print_line(os);
-        for_each([&](const Pair<TKey, TValue>& row) {
-            os << "|";
-            print_key(os, row.first, WIDTH_KEY);
-            print_value(os, row.second, WIDTH_VALUE);
-            os << "\n";
-        });
-        print_line(os);
-    }
+    virtual bool is_empty() const noexcept override = 0;
+    virtual void print(std::ostream& os = std::cout) const noexcept override = 0;
 
     friend std::ostream& operator<<(std::ostream& os, const Table<TKey, TValue>& table) {
         table.print(os);
@@ -47,21 +31,10 @@ public:
     }
 
 protected:
-    virtual size_t size() const noexcept = 0;
-    virtual const Pair<TKey, TValue>& get_row(size_t index) const = 0;
-
-
-    template<typename Func>
-    void for_each(Func func) const {
-        for (size_t i = 0; i < size(); i++) {
-            func(get_row(i));
-        }
-    }
-
     void print_title(std::ostream& os) const noexcept;
     void print_line(std::ostream& os) const noexcept;
-    void print_key(std::ostream& os, TKey key, int width) const noexcept;
-    void print_value(std::ostream& os, TValue val, int width) const noexcept;
+    void print_key(std::ostream& os, const TKey& key, int width) const noexcept;
+    void print_value(std::ostream& os, const TValue& val, int width) const noexcept;
 };
 
 template <class TKey, class TValue>
@@ -87,7 +60,7 @@ void Table<TKey, TValue>::print_line(std::ostream& os) const noexcept {
     os << "+\n";
 }
 template <class TKey, class TValue>
-void Table<TKey, TValue>::print_key(std::ostream& os, TKey key, int width) const noexcept {
+void Table<TKey, TValue>::print_key(std::ostream& os, const TKey& key, int width) const noexcept {
     std::ostringstream out;
     out << key;
     std::string str = out.str();
@@ -98,7 +71,7 @@ void Table<TKey, TValue>::print_key(std::ostream& os, TKey key, int width) const
     os << "|";
 }
 template <class TKey, class TValue>
-void Table<TKey, TValue>::print_value(std::ostream& os, TValue val, int width) const noexcept {
+void Table<TKey, TValue>::print_value(std::ostream& os, const TValue& val, int width) const noexcept {
     std::ostringstream out;
     out << val;
     std::string str = out.str();
