@@ -119,9 +119,13 @@ private:
 	void sift_up(size_t index) {
 		while (index > 0) {
 			size_t parent_index = parent(index);
-			if (_data[parent_index] <= _data[index]) { break; }
-			swap(_data[parent_index], _data[index]);
-			index = parent_index;
+			if (_data[parent_index] > _data[index]) {
+				swap(_data[parent_index], _data[index]);
+				index = parent_index;
+			}
+			else {
+				break;
+			}
 		}
 	}
 	void sift_down(size_t index) {
@@ -129,8 +133,8 @@ private:
 			size_t left_index = left(index);
 			size_t right_index = right(index);
 			size_t smallest = index;
-			if (left_index < _size && _data[left_index] < _data[smallest]) { smallest = left_index; }
-			if (right_index < _size && _data[right_index] < _data[smallest]) { smallest = right_index; }
+			if (left_index < _size &&  _data[smallest] > _data[left_index]) { smallest = left_index; }
+			if (right_index < _size && _data[smallest] > _data[right_index] ) { smallest = right_index; }
 			if (smallest == index) { break; }
 			swap(_data[index], _data[smallest]);
 			index = smallest;
@@ -140,7 +144,7 @@ private:
 
 template <class T>
 void heap_sort(T* mass, size_t size) {
-	if (mass == nullptr && size > 0) { throw std::invalid_argument("Mass can't be nullptr"); }
+	if (mass == nullptr) { throw std::invalid_argument("Mass can't be nullptr"); }
 	Heap<T> heap(size);
 	for (size_t i = 0; i < size; ++i) { heap.insert(mass[i]); }
 	for (size_t i = 0; i < size; ++i) {

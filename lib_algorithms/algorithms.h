@@ -20,6 +20,7 @@
 #include "../lib_expression/expression.h"
 #include "../lib_dsu/dsu.h"
 #include "../lib_heap/heap.h"
+#include "../lib_priority_queue/priority_queue.h"
 
 #define TRUE 1
 #define FALSE 0

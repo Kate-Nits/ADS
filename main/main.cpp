@@ -26,7 +26,10 @@
 //#define LABIRINT_APPLICATION
 
 // Проверка работы Кучи
-#define TRY_HEAP_SORT
+//#define TRY_HEAP_SORT
+
+// Поиск с помощью PriorityQueue поиск k "самых важных" элементов в массиве
+#define TRY_K_IMPORTANT_PRIORITY_QUEUE
 
 #ifdef EASY_EXAMPLE
 
@@ -231,6 +234,9 @@ int main() {
     }
     std::cout << std::endl;
 #endif // TRY_HEAP_SORT
+#ifdef TRY_K_IMPORTANT_PRIORITY_QUEUE
+    //PriorityQueueNode<int> 
+#endif // TRY_K_IMPORTANT_PRIORITY_QUEUE
     return 0;
 }
 
