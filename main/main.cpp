@@ -7,6 +7,8 @@
 
 #include "../lib_algorithms/algorithms.h"
 
+#include "../lib_skip_list/skip_list.h"
+
 #include "../lib_sorted_table_on_array/sorted_table_on_array.h"
 #include "../lib_unsorted_table_on_array/unsorted_table_on_array.h"
 #include "../lib_unsorted_table_on_list/unsorted_table_on_list.h"
@@ -29,6 +31,9 @@
 // Приложение для лабиринта из DSU и Matrix
 //#define LABIRINT_APPLICATION
 
+// Проверка SkipList
+#define TRY_SKIP_LIST
+
 // Проверка работы Кучи
 //#define TRY_HEAP_SORT
 
@@ -36,7 +41,7 @@
 //#define TRY_K_IMPORTANT_PRIORITY_QUEUE
 
 //Проверка работы таблиц
-#define TRY_TABLES
+//#define TRY_TABLES
 
 #ifdef EASY_EXAMPLE
 
@@ -246,7 +251,6 @@ int main() {
 #endif // TRY_K_IMPORTANT_PRIORITY_QUEUE
 
 #ifdef TRY_TABLES
-    // Неупорядоченная таблица (массив)
     UnsortedTableOnArray<std::string, int> tableArr;
     tableArr.insert("x", 10);
     tableArr.insert("y", 20);
@@ -255,7 +259,6 @@ int main() {
     tableArr.print();
     std::cout << "\n";
 
-    // Неупорядоченная таблица (список)
     UnsortedTableOnList<std::string, int> tableList;
     tableList.insert("a", 1);
     tableList.insert("b", 2);
@@ -264,7 +267,6 @@ int main() {
     tableList.print();
     std::cout << "\n";
 
-    // Упорядоченная таблица (массив)
     SortedTableOnArray<std::string, int> tableSorted;
     tableSorted.insert("m", 100);
     tableSorted.insert("a", 50);
@@ -274,6 +276,17 @@ int main() {
     std::cout << "\n";
 #endif // TRY_TABLES
 
+#ifdef TRY_SKIP_LIST
+    SkipList<int, std::string> skip_list(4);
+    skip_list.insert(10, "ten");
+    skip_list.insert(7, "seven");
+    skip_list.insert(15, "fifteen");
+    skip_list.insert(5, "five");
+    skip_list.insert(30, "thirty");
+    skip_list.insert(44, "fourty-four");
+
+    skip_list.print();
+#endif // TRY_SKIP_LIST
     return 0;
 }
 
