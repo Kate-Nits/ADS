@@ -10,6 +10,7 @@
 #include "../lib_table/table.h"
 
 #define SIMPLE_NUMBER 31
+#define DEFAULT_SIZE 15
 
 template <class TValue>
 struct HashData {
@@ -53,7 +54,7 @@ class HashTableOA : public Table<std::string, TValue> {
 	size_t _size;
 	size_t _count;
 public:
-	HashTableOA(size_t value_size = 15);
+	HashTableOA(size_t value_size = DEFAULT_SIZE);
 	~HashTableOA() = default;
 
 	void insert(const std::string& key, const TValue& value) override;
@@ -174,7 +175,7 @@ template <class TValue>
 size_t HashTableOA<TValue>::h(const std::string& key) const noexcept {
 	size_t hash = 0;
 	for (size_t i = 0; i < key.length(); ++i) {
-		hash += (size_t)key[i];
+		hash += key[i];
 	}
 	return hash % _size;
 }

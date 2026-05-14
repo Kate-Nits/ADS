@@ -84,6 +84,7 @@ public:
 	void pop_back();
 	void erase(size_t pos);
 	void erase(Node<T>* node);
+	const Node<T>* find(const T& value) const noexcept;
 	List<T>& operator=(const List<T>& other);
 	void clear();
 private:
@@ -253,6 +254,18 @@ void List<T>::erase(Node<T>* node) {
 	}
 	cur->next = node_to_delete->next;
 	delete node_to_delete;
+}
+
+template <class T>
+const Node<T>* List<T>::find(const T& value) const noexcept {
+	Node<T>* cur = _head;
+	while (cur != nullptr) {
+		if (cur->value == value) {
+			return cur;
+		}
+		cur = cur->next;
+	}
+	return nullptr;
 }
 
 template <class T>
