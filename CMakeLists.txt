@@ -45,6 +45,8 @@ add_subdirectory(lib_table)
 add_subdirectory(lib_unsorted_table_on_array)
 add_subdirectory(lib_sorted_table_on_array)
 add_subdirectory(lib_unsorted_table_on_list)
+add_subdirectory(lib_hash_table_oa)
+add_subdirectory(lib_hash_table_c)
 add_subdirectory(main)                # подключаем дополнительный CMakeLists.txt из подкаталога с именем main
 
 option(BTEST "build test?" ON)        # указываем подключаем ли google-тесты (ON или YES) или нет (OFF или NO)
