@@ -1,0 +1,4 @@
+create_project_lib(AdjacencyListGraph)
+add_depend(AdjacencyListGraph TVector lib_tvector)
+add_depend(AdjacencyListGraph List lib_list)
+add_depend(AdjacencyListGraph Pair lib_pair)
