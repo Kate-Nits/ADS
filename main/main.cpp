@@ -9,6 +9,8 @@
 
 #include "../lib_skip_list/skip_list.h"
 
+#include "../lib_tree/tree.h"
+
 #include "../lib_sorted_table_on_array/sorted_table_on_array.h"
 #include "../lib_unsorted_table_on_array/unsorted_table_on_array.h"
 #include "../lib_unsorted_table_on_list/unsorted_table_on_list.h"
@@ -32,7 +34,7 @@
 //#define LABIRINT_APPLICATION
 
 // Проверка SkipList
-#define TRY_SKIP_LIST
+//#define TRY_SKIP_LIST
 
 // Проверка работы Кучи
 //#define TRY_HEAP_SORT
@@ -42,6 +44,9 @@
 
 //Проверка работы таблиц
 //#define TRY_TABLES
+
+// Проверка Tree
+#define TRY_TREE
 
 #ifdef EASY_EXAMPLE
 
@@ -287,6 +292,35 @@ int main() {
 
     skip_list.print();
 #endif // TRY_SKIP_LIST
+
+#ifdef TRY_TREE
+    Tree<int, std::string> tree;
+    tree.insert(5, "five");
+    tree.insert(1, "one");
+    tree.insert(3, "three");
+    tree.insert(7, "seven");
+    tree.insert(2, "two");
+    tree.insert(4, "four");
+
+    std::cout << "------ print_w ------" << std::endl;
+    tree.print_w();
+    std::cout << std::endl << std::endl;
+
+    std::cout << "------ print_lcr ------" << std::endl;
+    tree.print_lcr();
+    std::cout << std::endl << std::endl;
+
+    std::cout << "------ print_lrc ------" << std::endl;
+    tree.print_lrc();
+    std::cout << std::endl << std::endl;
+
+    std::cout << "------ Обход CLR (print_clr) ------" << std::endl;
+    tree.print_clr();
+    std::cout << std::endl << std::endl;
+
+    std::cout << "------ print ------" << std::endl;
+    tree.print();
+#endif // TRY_TREE
     return 0;
 }
 
