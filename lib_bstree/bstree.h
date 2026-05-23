@@ -91,27 +91,27 @@ template <class TKey, class TValue, class TNode>
 TNode* BSTree<TKey, TValue, TNode>::erase(const TKey& key) {
 	if (!_root) { throw std::invalid_argument("BSTree is empty!"); }
 	TNode* parent = find_parent(key);
-	TNode* deleted_node = nullptr;
+	TNode* changed_parent = nullptr;
 	if (parent->data.first > key) {
 		if (!parent->left || parent->left->data.first != key) {
 			throw std::invalid_argument("The element was not found!");
 		}
-		deleted_node = erase_node(parent->left, parent);
+		changed_parent = erase_node(parent->left, parent);
 	}
 	else if (parent->data.first < key) {
 		if (!parent->right || parent->right->data.first != key) {
 			throw std::invalid_argument("The element was not found!");
 		}
-		deleted_node = erase_node(parent->right, parent);
+		changed_parent = erase_node(parent->right, parent);
 	}
 	else {
 		TNode* prev_root = _root;
-		deleted_node = erase_node(_root, nullptr);
+		changed_parent = erase_node(_root, nullptr);
 		if (_root != prev_root) {
 			return _root;
 		}
 	}
-	return deleted_node;
+	return changed_parent;
 }
 
 template <class TKey, class TValue, class TNode>
