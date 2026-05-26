@@ -330,11 +330,11 @@ TEST(TestSortedTableOnBSTree, big_table_erase_many_different) {
         table.insert(keys[i], keys[i]);
     }
     // Act
-    table.erase(1);   // лист
-    table.erase(5);   // node с одним правым потомком
-    table.erase(90);  // node с двумя потомками
-    table.erase(25);  // node с двумя потомками
-    table.erase(50);  // корень с двумя потомками
+    table.erase(1);
+    table.erase(5);
+    table.erase(90);
+    table.erase(25);
+    table.erase(50);
 
     // Assert
     EXPECT_EQ(nullptr, table.found(1));

@@ -488,11 +488,11 @@ TEST(TestBSTree, big_tree_erase_many_different_cases) {
     }
 
     // Act
-    tree.erase(1);   // лист
-    tree.erase(5);   // node с одним правым потомком
-    tree.erase(90);  // node с двумя потомками
-    tree.erase(25);  // node с двумя потомками
-    tree.erase(50);  // корень с двумя потомками
+    tree.erase(1);
+    tree.erase(5);
+    tree.erase(90);
+    tree.erase(25);
+    tree.erase(50);
 
     // Assert
     EXPECT_EQ(nullptr, tree.find(1));
