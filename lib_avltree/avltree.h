@@ -284,7 +284,6 @@ void AVLTree<TKey, TValue>::insert(const TKey& key, const TValue& value) {
 		parent->right = new_node;
 	}
 	recover_balance_from(parent);
-	return;
 }
 
 template <class TKey, class TValue>
@@ -338,7 +337,6 @@ void AVLTree<TKey, TValue>::erase(const TKey& key) {
 		start_balance = erase_node(deleted_node);
 	}
 	recover_balance_from(start_balance);
-	return;
 }
 
 template <class TKey, class TValue>
