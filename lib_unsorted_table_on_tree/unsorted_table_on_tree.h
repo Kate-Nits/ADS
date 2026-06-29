@@ -55,7 +55,10 @@ void UnsortedTableOnTree<TKey, TValue>::print(std::ostream& os) const noexcept {
 	this->print_line(os);
 	this->print_title(os);
 	this->print_line(os);
-
+	if (is_empty()) {
+		this->print_line(os);
+		return;
+	}
 	Queue<TreeNode<TKey, TValue>*> q;
 	TreeNode<TKey, TValue>* cur = nullptr;
 	q.push(_rows.root());

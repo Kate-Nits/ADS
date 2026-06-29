@@ -495,3 +495,85 @@ TEST(TestSortedTableOnRBTree, big_table_erase_many_different_cases) {
 	EXPECT_NE(nullptr, table.found(75));
 	EXPECT_NE(nullptr, table.found(97));
 }
+
+TEST(TestSortedTableOnRBTree, print_empty_table) {
+	// Arrange
+	SortedTableOnRBTree<int, int> table;
+	std::ostringstream out;
+
+	// Act & Assert
+	EXPECT_NO_THROW(table.print(out));
+}
+
+TEST(TestSortedTableOnRBTree, print_not_empty_table) {
+	// Arrange
+	SortedTableOnRBTree<int, int> table;
+	std::ostringstream out;
+
+	table.insert(5, 50);
+	table.insert(3, 30);
+	table.insert(7, 70);
+
+	// Act
+	table.print(out);
+
+	// Assert
+	EXPECT_FALSE(out.str().empty());
+	EXPECT_NE(std::string::npos, out.str().find("5"));
+	EXPECT_NE(std::string::npos, out.str().find("50"));
+	EXPECT_NE(std::string::npos, out.str().find("3"));
+	EXPECT_NE(std::string::npos, out.str().find("30"));
+	EXPECT_NE(std::string::npos, out.str().find("7"));
+	EXPECT_NE(std::string::npos, out.str().find("70"));
+}
+
+TEST(TestSortedTableOnRBTree, print_after_erase) {
+	// Arrange
+	SortedTableOnRBTree<int, int> table;
+	std::ostringstream out;
+	table.insert(5, 50);
+	table.insert(3, 30);
+	table.insert(7, 70);
+	table.erase(3);
+
+	// Act
+	table.print(out);
+
+	// Assert
+	EXPECT_FALSE(out.str().empty());
+	EXPECT_NE(std::string::npos, out.str().find("5"));
+	EXPECT_NE(std::string::npos, out.str().find("50"));
+	EXPECT_NE(std::string::npos, out.str().find("7"));
+	EXPECT_NE(std::string::npos, out.str().find("70"));
+	EXPECT_EQ(std::string::npos, out.str().find("30"));
+}
+
+TEST(TestSortedTableOnRBTree, check_print_table) {
+	// Arrange
+	SortedTableOnRBTree<int, int> table;
+	std::stringstream out;
+	std::string line;
+	table.insert(5, 50);
+	table.insert(3, 30);
+	table.insert(7, 70);
+
+	// Act
+	table.print(out);
+
+	// Assert
+	ASSERT_TRUE(static_cast<bool>(std::getline(out, line)));
+	EXPECT_EQ("+---------------------------------------------------+", line);
+	ASSERT_TRUE(static_cast<bool>(std::getline(out, line)));
+	EXPECT_EQ("| KEY      | VALUE                                  |", line);
+	ASSERT_TRUE(static_cast<bool>(std::getline(out, line)));
+	EXPECT_EQ("+---------------------------------------------------+", line);
+	ASSERT_TRUE(static_cast<bool>(std::getline(out, line)));
+	EXPECT_EQ("| 3        | 30                                     |", line);
+	ASSERT_TRUE(static_cast<bool>(std::getline(out, line)));
+	EXPECT_EQ("| 5        | 50                                     |", line);
+	ASSERT_TRUE(static_cast<bool>(std::getline(out, line)));
+	EXPECT_EQ("| 7        | 70                                     |", line);
+	ASSERT_TRUE(static_cast<bool>(std::getline(out, line)));
+	EXPECT_EQ("+---------------------------------------------------+", line);
+	EXPECT_FALSE(static_cast<bool>(std::getline(out, line)));
+}

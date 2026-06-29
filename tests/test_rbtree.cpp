@@ -708,3 +708,115 @@ TEST(TestRBTree, big_tree_clear) {
 		EXPECT_EQ(nullptr, tree.find(i));
 	}
 }
+
+TEST(TestRBTree, double_rotations_erase_10_and_root_becomes_60) {
+	// Arrange
+	RBTree<int, int> tree;
+	int keys[7] = { 10, 15, 115, 60, 30, 50, 45 };
+	for (int i = 0; i < 7; ++i) { tree.insert(keys[i], keys[i] * 10); }
+
+	// Act
+	tree.erase(10);
+
+	// Assert
+	EXPECT_EQ(nullptr, tree.find(10));
+	ASSERT_NE(nullptr, tree.root());
+	EXPECT_EQ(60, tree.root()->data.first);
+	EXPECT_EQ(black, tree.root()->color);
+	EXPECT_EQ(nullptr, tree.root()->parent);
+	ASSERT_NE(nullptr, tree.root()->left);
+	ASSERT_NE(nullptr, tree.root()->right);
+	EXPECT_EQ(45, tree.root()->left->data.first);
+	EXPECT_EQ(115, tree.root()->right->data.first);
+	EXPECT_EQ(red, tree.root()->left->color);
+	EXPECT_EQ(black, tree.root()->right->color);
+	EXPECT_NE(nullptr, tree.find(15));
+	EXPECT_NE(nullptr, tree.find(30));
+	EXPECT_NE(nullptr, tree.find(45));
+	EXPECT_NE(nullptr, tree.find(50));
+	EXPECT_NE(nullptr, tree.find(60));
+	EXPECT_NE(nullptr, tree.find(115));
+	EXPECT_EQ(150, *tree.find(15));
+	EXPECT_EQ(300, *tree.find(30));
+	EXPECT_EQ(450, *tree.find(45));
+	EXPECT_EQ(500, *tree.find(50));
+	EXPECT_EQ(600, *tree.find(60));
+	EXPECT_EQ(1150, *tree.find(115));
+	check_rb_tree(tree);
+}
+
+TEST(TestRBTree, delayed_rotation_after_insert_5_and_root_becomes_30) {
+	// Arrange
+	RBTree<int, int> tree;
+	int keys[11] = { 50, 30, 70, 20, 40, 60, 80, 10, 25, 35, 45 };
+	for (int i = 0; i < 11; ++i) { tree.insert(keys[i], keys[i] * 10); }
+
+	// Act
+	tree.insert(5, 50);
+
+	// Assert
+	ASSERT_NE(nullptr, tree.root());
+	EXPECT_EQ(30, tree.root()->data.first);
+	EXPECT_EQ(black, tree.root()->color);
+	EXPECT_EQ(nullptr, tree.root()->parent);
+	ASSERT_NE(nullptr, tree.root()->left);
+	ASSERT_NE(nullptr, tree.root()->right);
+	EXPECT_EQ(20, tree.root()->left->data.first);
+	EXPECT_EQ(50, tree.root()->right->data.first);
+	EXPECT_EQ(red, tree.root()->left->color);
+	EXPECT_EQ(red, tree.root()->right->color);
+	EXPECT_EQ(tree.root(), tree.root()->left->parent);
+	EXPECT_EQ(tree.root(), tree.root()->right->parent);
+	ASSERT_NE(nullptr, tree.root()->left->left);
+	ASSERT_NE(nullptr, tree.root()->left->right);
+	EXPECT_EQ(10, tree.root()->left->left->data.first);
+	EXPECT_EQ(25, tree.root()->left->right->data.first);
+	EXPECT_EQ(black, tree.root()->left->left->color);
+	EXPECT_EQ(black, tree.root()->left->right->color);
+	ASSERT_NE(nullptr, tree.root()->left->left->left);
+	EXPECT_EQ(5, tree.root()->left->left->left->data.first);
+	EXPECT_EQ(red, tree.root()->left->left->left->color);
+	ASSERT_NE(nullptr, tree.root()->right->left);
+	ASSERT_NE(nullptr, tree.root()->right->right);
+	EXPECT_EQ(40, tree.root()->right->left->data.first);
+	EXPECT_EQ(70, tree.root()->right->right->data.first);
+	EXPECT_EQ(black, tree.root()->right->left->color);
+	EXPECT_EQ(black, tree.root()->right->right->color);
+	ASSERT_NE(nullptr, tree.root()->right->left->left);
+	ASSERT_NE(nullptr, tree.root()->right->left->right);
+	EXPECT_EQ(35, tree.root()->right->left->left->data.first);
+	EXPECT_EQ(45, tree.root()->right->left->right->data.first);
+	EXPECT_EQ(red, tree.root()->right->left->left->color);
+	EXPECT_EQ(red, tree.root()->right->left->right->color);
+	ASSERT_NE(nullptr, tree.root()->right->right->left);
+	ASSERT_NE(nullptr, tree.root()->right->right->right);
+	EXPECT_EQ(60, tree.root()->right->right->left->data.first);
+	EXPECT_EQ(80, tree.root()->right->right->right->data.first);
+	EXPECT_EQ(red, tree.root()->right->right->left->color);
+	EXPECT_EQ(red, tree.root()->right->right->right->color);
+	EXPECT_NE(nullptr, tree.find(5));
+	EXPECT_NE(nullptr, tree.find(10));
+	EXPECT_NE(nullptr, tree.find(20));
+	EXPECT_NE(nullptr, tree.find(25));
+	EXPECT_NE(nullptr, tree.find(30));
+	EXPECT_NE(nullptr, tree.find(35));
+	EXPECT_NE(nullptr, tree.find(40));
+	EXPECT_NE(nullptr, tree.find(45));
+	EXPECT_NE(nullptr, tree.find(50));
+	EXPECT_NE(nullptr, tree.find(60));
+	EXPECT_NE(nullptr, tree.find(70));
+	EXPECT_NE(nullptr, tree.find(80));
+	EXPECT_EQ(50, *tree.find(5));
+	EXPECT_EQ(100, *tree.find(10));
+	EXPECT_EQ(200, *tree.find(20));
+	EXPECT_EQ(250, *tree.find(25));
+	EXPECT_EQ(300, *tree.find(30));
+	EXPECT_EQ(350, *tree.find(35));
+	EXPECT_EQ(400, *tree.find(40));
+	EXPECT_EQ(450, *tree.find(45));
+	EXPECT_EQ(500, *tree.find(50));
+	EXPECT_EQ(600, *tree.find(60));
+	EXPECT_EQ(700, *tree.find(70));
+	EXPECT_EQ(800, *tree.find(80));
+	check_rb_tree(tree);
+}

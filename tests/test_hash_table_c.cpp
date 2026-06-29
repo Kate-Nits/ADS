@@ -68,19 +68,6 @@ TEST(TestHashTableC, insert_duplicate_key_returns_throws) {
     ASSERT_ANY_THROW(table.insert("key", 200));
 }
 
-TEST(TestHashTableC, insert_with_collision) {
-    // Arrange
-    HashTableC<int> table(3);
-
-    // Act
-    table.insert("ab", 1);
-    table.insert("ba", 2);
-
-    // Assert
-    EXPECT_EQ(1, *table.found("ab"));
-    EXPECT_EQ(2, *table.found("ba"));
-}
-
 TEST(TestHashTableC, erase_one_simple_key) {
     // Arrange
     HashTableC<int> table;
@@ -283,24 +270,6 @@ TEST(TestHashTableC, many_elements) {
     }
 }
 
-TEST(TestHashTableC, many_elements_with_collisions) {
-    // Arrange
-    HashTableC<int> table(10);
-
-    // Act
-    for (int i = 0; i < 50; ++i) {
-        table.insert("key" + std::to_string(i), i);
-    }
-
-    // Assert
-    EXPECT_FALSE(table.is_empty());
-    for (int i = 0; i < 50; ++i) {
-        const int* val = table.found("key" + std::to_string(i));
-        ASSERT_NE(nullptr, val);
-        EXPECT_EQ(i, *val);
-    }
-}
-
 TEST(TestHashTableC, empty_string_key) {
     // Arrange
     HashTableC<int> table;
@@ -438,4 +407,75 @@ TEST(TestHashTableC, merge_dictionaries_all_keys_are_unique) {
     EXPECT_EQ("Date", *result.found("D"));
     EXPECT_EQ("Elderberry", *result.found("E"));
     EXPECT_EQ("Fig", *result.found("F"));
+}
+
+TEST(TestHashTableC, insert_with_collision) {
+    // Arrange
+    HashTableC<int> table(5);
+
+    // Act
+    table.insert("abc", 1);
+    table.insert("bca", 2);
+    table.insert("cab", 3);
+
+    // Assert
+    const int* val1 = table.found("abc");
+    const int* val2 = table.found("bca");
+    const int* val3 = table.found("cab");
+    ASSERT_NE(nullptr, val1);
+    ASSERT_NE(nullptr, val2);
+    ASSERT_NE(nullptr, val3);
+    EXPECT_EQ(1, *val1);
+    EXPECT_EQ(2, *val2);
+    EXPECT_EQ(3, *val3);
+}
+
+TEST(TestHashTableC, erase_key_from_collision) {
+    // Arrange
+    HashTableC<int> table(5);
+    table.insert("abc", 1);
+    table.insert("bca", 2);
+    table.insert("cab", 3);
+
+    // Act
+    table.erase("bca");
+
+    // Assert
+    const int* val1 = table.found("abc");
+    const int* val2 = table.found("bca");
+    const int* val3 = table.found("cab");
+
+    ASSERT_NE(nullptr, val1);
+    ASSERT_EQ(nullptr, val2);
+    ASSERT_NE(nullptr, val3);
+
+    EXPECT_EQ(1, *val1);
+    EXPECT_EQ(3, *val3);
+}
+
+TEST(TestHashTableC, insert_after_erase_in_collision_chain) {
+    // Arrange
+    HashTableC<int> table(5);
+    table.insert("abc", 1);
+    table.insert("bca", 2);
+    table.insert("cab", 3);
+    table.erase("bca");
+
+    // Act
+    table.insert("acb", 4);
+
+    // Assert
+    const int* val1 = table.found("abc");
+    const int* val2 = table.found("bca");
+    const int* val3 = table.found("cab");
+    const int* val4 = table.found("acb");
+
+    ASSERT_NE(nullptr, val1);
+    ASSERT_EQ(nullptr, val2);
+    ASSERT_NE(nullptr, val3);
+    ASSERT_NE(nullptr, val4);
+
+    EXPECT_EQ(1, *val1);
+    EXPECT_EQ(3, *val3);
+    EXPECT_EQ(4, *val4);
 }

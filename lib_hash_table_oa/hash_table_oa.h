@@ -9,7 +9,6 @@
 #include "../lib_tvector/tvector.h"
 #include "../lib_table/table.h"
 
-#define SIMPLE_NUMBER 31
 #define DEFAULT_SIZE 15
 
 template <class TValue>
@@ -45,14 +44,25 @@ bool HashData<TValue>::operator==(const HashData<TValue>& other) const noexcept 
 	return state == other.state && pair == other.pair;
 }
 
-bool is_mutually_simple(size_t first, size_t second) noexcept;
-size_t nod(size_t first, size_t second) noexcept;
+inline size_t nod(size_t first, size_t second) noexcept {
+	while (second != 0) {
+		size_t tmp = second;
+		second = first % second;
+		first = tmp;
+	}
+	return first;
+}
+
+inline bool is_mutually_simple(size_t first, size_t second) noexcept {
+	return nod(first, second) == 1;
+}
 
 template <class TValue>
 class HashTableOA : public Table<std::string, TValue> {
 	TVector<HashData<TValue>> _rows;
 	size_t _size;
 	size_t _count;
+	size_t _shift;
 public:
 	HashTableOA(size_t value_size = DEFAULT_SIZE);
 	~HashTableOA() = default;
@@ -65,14 +75,19 @@ public:
 	void print(std::ostream& os = std::cout) const noexcept override;
 private:
 	size_t h(const std::string& key) const noexcept;
-	size_t hh(const std::string& key) const noexcept;
-	size_t next(size_t hash, size_t step) const noexcept;
+	size_t hh(size_t hash) const noexcept;
 };
 
 template <class TValue>
 HashTableOA<TValue>::HashTableOA(size_t value_size) : _rows(value_size), _size(value_size), _count(0) {
 	if (value_size < 2) {
 		throw std::invalid_argument("Size for HashTable must be more than 1");
+	}
+	for (size_t i = 1; i < _size; ++i) {
+		if (is_mutually_simple(i, _size)) {
+			_shift = i;
+			return;
+		}
 	}
 }
 
@@ -82,7 +97,6 @@ void HashTableOA<TValue>::insert(const std::string& key, const TValue& value) {
 		throw std::invalid_argument("Hash table is full");
 	}
 	size_t hash = h(key);
-	size_t step = hh(key);
 	size_t first_deleted = _size;
 	for (size_t i = 0; i < _size; ++i) {
 		if (_rows[hash].state == busy) {
@@ -105,7 +119,7 @@ void HashTableOA<TValue>::insert(const std::string& key, const TValue& value) {
 			_count++;
 			return;
 		}
-		hash = next(hash, step);
+		hash = hh(hash);
 	}
 	if (first_deleted != _size) {
 		_rows[first_deleted] = HashData<TValue>(key, value, busy);
@@ -118,7 +132,6 @@ void HashTableOA<TValue>::insert(const std::string& key, const TValue& value) {
 template <class TValue>
 void HashTableOA<TValue>::erase(const std::string& key) {
 	size_t hash = h(key);
-	size_t step = hh(key);
 	for (size_t i = 0; i < _size; ++i) {
 		if (_rows[hash].state == empty) { break; }
 		if (_rows[hash].state == busy && _rows[hash].pair.first == key) {
@@ -126,7 +139,7 @@ void HashTableOA<TValue>::erase(const std::string& key) {
 			_count--;
 			return;
 		}
-		hash = next(hash, step);
+		hash = hh(hash);
 	}
 	throw std::invalid_argument("Key not found");
 }
@@ -134,13 +147,12 @@ void HashTableOA<TValue>::erase(const std::string& key) {
 template <class TValue>
 const TValue* HashTableOA<TValue>::found(const std::string& key) const noexcept {
 	size_t hash = h(key);
-	size_t step = hh(key);
 	for (size_t i = 0; i < _size; ++i) {
 		if (_rows[hash].state == empty) { return nullptr; }
 		if (_rows[hash].state == busy && _rows[hash].pair.first == key) {
 			return &_rows[hash].pair.second;
 		}
-		hash = next(hash, step);
+		hash = hh(hash);
 	}
 	return nullptr;
 }
@@ -181,24 +193,8 @@ size_t HashTableOA<TValue>::h(const std::string& key) const noexcept {
 }
 
 template <class TValue>
-size_t HashTableOA<TValue>::hh(const std::string& key) const noexcept {
-	size_t hash = 0;
-	for (size_t i = 0; i < key.length(); ++i) {
-		hash = hash * SIMPLE_NUMBER + (size_t)key[i];
-	}
-	size_t step = 1 + hash % (_size - 1);
-	while (!is_mutually_simple(step, _size)) {
-		++step;
-		if (step == _size) {
-			step = 1;
-		}
-	}
-	return step;
-}
-
-template <class TValue>
-size_t HashTableOA<TValue>::next(size_t hash, size_t step) const noexcept {
-	return (hash + step) % _size;
+size_t HashTableOA<TValue>::hh(size_t hash) const noexcept {
+	return (hash + _shift) % _size;
 }
 
 #endif // LIB_HASH_TABLE_OA_HASH_TABLE_OA_H

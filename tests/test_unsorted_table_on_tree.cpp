@@ -3,6 +3,9 @@
 #include <gtest/gtest.h>
 #include "../lib_unsorted_table_on_tree/unsorted_table_on_tree.h"
 
+#include <sstream>
+#include <string>
+
 #define EPSILON 0.000001
 #define TRUE 1
 #define FALSE 0
@@ -76,4 +79,56 @@ TEST(TestUnsortedTableOnTree, chech_print) {
 
     // Act & Assert
     EXPECT_NO_THROW(table.print());
+}
+
+TEST(TestUnsortedTableOnTree, print_not_empty_table) {
+    // Arrange
+    UnsortedTableOnTree<int, std::string> table;
+    std::ostringstream out;
+
+    table.insert(5, "five");
+    table.insert(3, "three");
+    table.insert(7, "seven");
+
+    // Act
+    table.print(out);
+
+    // Assert
+    EXPECT_FALSE(out.str().empty());
+    EXPECT_NE(std::string::npos, out.str().find("5"));
+    EXPECT_NE(std::string::npos, out.str().find("five"));
+    EXPECT_NE(std::string::npos, out.str().find("3"));
+    EXPECT_NE(std::string::npos, out.str().find("three"));
+    EXPECT_NE(std::string::npos, out.str().find("7"));
+    EXPECT_NE(std::string::npos, out.str().find("seven"));
+}
+
+TEST(TestUnsortedTableOnTree, check_print_table) {
+    // Arrange
+    UnsortedTableOnTree<int, std::string> table;
+    std::stringstream out;
+    std::string line;
+    table.insert(5, "five");
+    table.insert(3, "three");
+    table.insert(7, "seven");
+
+    // Act
+    table.print(out);
+
+    // Assert
+    ASSERT_TRUE(static_cast<bool>(std::getline(out, line)));
+    EXPECT_EQ("+---------------------------------------------------+", line);
+    ASSERT_TRUE(static_cast<bool>(std::getline(out, line)));
+    EXPECT_EQ("| KEY      | VALUE                                  |", line);
+    ASSERT_TRUE(static_cast<bool>(std::getline(out, line)));
+    EXPECT_EQ("+---------------------------------------------------+", line);
+    ASSERT_TRUE(static_cast<bool>(std::getline(out, line)));
+    EXPECT_EQ("| 5        | five                                   |", line);
+    ASSERT_TRUE(static_cast<bool>(std::getline(out, line)));
+    EXPECT_EQ("| 3        | three                                  |", line);
+    ASSERT_TRUE(static_cast<bool>(std::getline(out, line)));
+    EXPECT_EQ("| 7        | seven                                  |", line);
+    ASSERT_TRUE(static_cast<bool>(std::getline(out, line)));
+    EXPECT_EQ("+---------------------------------------------------+", line);
+    EXPECT_FALSE(static_cast<bool>(std::getline(out, line)));
 }

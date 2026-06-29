@@ -65,7 +65,7 @@ SkipList<TKey, TValue>::SkipList(size_t value_max_level) : _head(nullptr), _max_
 }
 
 template <class TKey, class TValue>
-SkipList<TKey, TValue>::~SkipList() { // Спроси правильно ли поняла: все же элементы есть на 0 уровне, поэтому удалять узлы достаточно на 0 уровне
+SkipList<TKey, TValue>::~SkipList() { 
 	SNode<TKey, TValue>* cur = _head->next[0];
 	while (cur != nullptr) {
 		SNode<TKey, TValue>* node_to_delete = cur;

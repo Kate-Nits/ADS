@@ -221,39 +221,66 @@ TEST(TestHashTableOA, is_not_full_after_erase) {
     EXPECT_FALSE(table.is_full());
 }
 
-TEST(TestHashTableOA, try_collisions) {
+TEST(TestHashTableOA, insert_with_collision) {
     // Arrange
     HashTableOA<int> table(5);
 
     // Act
-    table.insert("a", 1);
-    table.insert("b", 2);
-    table.insert("c", 3);
-    table.insert("d", 4);
-    table.insert("e", 5);
+    table.insert("abc", 1);
+    table.insert("bca", 2);
+    table.insert("cab", 3);
 
     // Assert
-    EXPECT_NE(nullptr, table.found("a"));
-    EXPECT_NE(nullptr, table.found("b"));
-    EXPECT_NE(nullptr, table.found("c"));
-    EXPECT_NE(nullptr, table.found("d"));
-    EXPECT_NE(nullptr, table.found("e"));
+    const int* val1 = table.found("abc");
+    const int* val2 = table.found("bca");
+    const int* val3 = table.found("cab");
+    ASSERT_NE(nullptr, val1);
+    ASSERT_NE(nullptr, val2);
+    ASSERT_NE(nullptr, val3);
+    EXPECT_EQ(1, *val1);
+    EXPECT_EQ(2, *val2);
+    EXPECT_EQ(3, *val3);
 }
 
-TEST(TestHashTableOA, collision_insert_after_deleted) {
+TEST(TestHashTableOA, erase_key_from_collision) {
     // Arrange
     HashTableOA<int> table(5);
-    table.insert("k1", 1);
-    table.insert("k2", 2);
-    table.insert("k3", 3);
-    table.erase("k2");
+    table.insert("abc", 1);
+    table.insert("bca", 2);
+    table.insert("cab", 3);
 
     // Act
-    table.insert("k4", 4);
+    table.erase("bca");
 
     // Assert
-    EXPECT_NE(nullptr, table.found("k1"));
-    EXPECT_EQ(nullptr, table.found("k2"));
-    EXPECT_NE(nullptr, table.found("k3"));
-    EXPECT_NE(nullptr, table.found("k4"));
+    EXPECT_NE(nullptr, table.found("abc"));
+    EXPECT_EQ(nullptr, table.found("bca"));
+    EXPECT_NE(nullptr, table.found("cab"));
+    EXPECT_EQ(1, *table.found("abc"));
+    EXPECT_EQ(3, *table.found("cab"));
+}
+
+TEST(TestHashTableOA, insert_after_deleted_in_collision) {
+    // Arrange
+    HashTableOA<int> table(5);
+    table.insert("abc", 1);
+    table.insert("bca", 2);
+    table.insert("cab", 3);
+    table.erase("bca");
+
+    // Act
+    table.insert("acb", 4);
+
+    // Assert
+    const int* val1 = table.found("abc");
+    const int* val2 = table.found("bca");
+    const int* val3 = table.found("cab");
+    const int* val4 = table.found("acb");
+    ASSERT_NE(nullptr, val1);
+    ASSERT_EQ(nullptr, val2);
+    ASSERT_NE(nullptr, val3);
+    ASSERT_NE(nullptr, val4);
+    EXPECT_EQ(1, *val1);
+    EXPECT_EQ(3, *val3);
+    EXPECT_EQ(4, *val4);
 }

@@ -51,7 +51,7 @@ int AdjacencyListGraph<T>::find_index(const T& vertex) const noexcept {
 	for (size_t i = 0; i < _graph.size(); ++i) {
 		if (_graph.state(i) != State::busy) { continue; }
 		if (_graph[i].head() != nullptr && _graph[i].head()->value.first == vertex) {
-			return i;
+			return (int)i;
 		}
 	}
 	return -1;

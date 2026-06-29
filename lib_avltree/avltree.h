@@ -33,14 +33,19 @@ AVLNode<TKey, TValue>::AVLNode(const TKey& key, const TValue& value, AVLNode<TKe
 	: data(key, value), left(l), right(r), parent(p), height(h) {}
 
 template <class TKey, class TValue>
-class AVLTree : public BSTree<TKey, TValue, AVLNode<TKey, TValue>> {
+class AVLTree {
+	AVLNode<TKey, TValue>* _root;
 public:
 	AVLTree();
 	~AVLTree();
 
+	AVLNode<TKey, TValue>* root() const noexcept;
+
 	void insert(const TKey& key, const TValue& value);
 	TValue* find(const TKey& key) const noexcept;
 	void erase(const TKey& key);
+	void clear() noexcept;
+	bool is_empty() const noexcept;
 
 	void print_lcr() const noexcept;
 	void print() const noexcept;
@@ -64,17 +69,41 @@ private:
 	void recover_balance_from(AVLNode<TKey, TValue>* node) noexcept;
 
 	AVLNode<TKey, TValue>* erase_node(AVLNode<TKey, TValue>* node) noexcept;
-
+	void clear_rec(AVLNode<TKey, TValue>* node) noexcept;
 	void print_lcr_rec(AVLNode<TKey, TValue>* node) const noexcept;
 	int get_height_for_print(AVLNode<TKey, TValue>* node) const noexcept;
 	void matrix_for_print(AVLNode<TKey, TValue>* node, TVector<TVector<std::string>>& matrix, int level, int left, int right) const noexcept;
 };
 
 template <class TKey, class TValue>
-AVLTree<TKey, TValue>::AVLTree() : BSTree<TKey, TValue, AVLNode<TKey, TValue>>() {}
+AVLTree<TKey, TValue>::AVLTree() : _root(nullptr) {}
 
 template <class TKey, class TValue>
 AVLTree<TKey, TValue>::~AVLTree() {}
+
+template <class TKey, class TValue>
+AVLNode<TKey, TValue>* AVLTree<TKey, TValue>::root() const noexcept {
+	return _root;
+}
+
+template <class TKey, class TValue>
+void  AVLTree<TKey, TValue>::clear_rec(AVLNode<TKey, TValue>* node) noexcept {
+	if (!node) { return; }
+	clear_rec(node->left);
+	clear_rec(node->right);
+	delete node;
+}
+
+template <class TKey, class TValue>
+void AVLTree<TKey, TValue>::clear() noexcept {
+	clear_rec(_root);
+	_root = nullptr;
+}
+
+template <class TKey, class TValue>
+bool AVLTree<TKey, TValue>::is_empty() const noexcept {
+	return _root == nullptr;
+}
 
 template <class TKey, class TValue>
 int AVLTree<TKey, TValue>::get_height(AVLNode<TKey, TValue>* node) const noexcept {

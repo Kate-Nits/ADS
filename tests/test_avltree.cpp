@@ -744,3 +744,128 @@ TEST(TestAVLTree, big_tree_clear) {
         EXPECT_EQ(nullptr, tree.find(i));
     }
 }
+
+TEST(TestAVLTree, double_rotation_erase_40_and_root_becomes_80) {
+    // Arrange
+    AVLTree<int, int> tree;
+    int keys[13] = { 50, 30, 80, 20, 40, 60, 100, 10, 55, 70, 90, 110, 120 };
+    for (int i = 0; i < 13; ++i) { tree.insert(keys[i], keys[i] * 10); }
+
+    // Act
+    tree.erase(40);
+
+    // Assert
+    EXPECT_EQ(nullptr, tree.find(40));
+    ASSERT_NE(nullptr, tree.root());
+    EXPECT_EQ(80, tree.root()->data.first);
+    EXPECT_EQ(nullptr, tree.root()->parent);
+    ASSERT_NE(nullptr, tree.root()->left);
+    ASSERT_NE(nullptr, tree.root()->right);
+    EXPECT_EQ(50, tree.root()->left->data.first);
+    EXPECT_EQ(100, tree.root()->right->data.first);
+    ASSERT_NE(nullptr, tree.root()->left->left);
+    ASSERT_NE(nullptr, tree.root()->left->right);
+    EXPECT_EQ(20, tree.root()->left->left->data.first);
+    EXPECT_EQ(60, tree.root()->left->right->data.first);
+    ASSERT_NE(nullptr, tree.root()->left->left->left);
+    ASSERT_NE(nullptr, tree.root()->left->left->right);
+    EXPECT_EQ(10, tree.root()->left->left->left->data.first);
+    EXPECT_EQ(30, tree.root()->left->left->right->data.first);
+    ASSERT_NE(nullptr, tree.root()->left->right->left);
+    ASSERT_NE(nullptr, tree.root()->left->right->right);
+    EXPECT_EQ(55, tree.root()->left->right->left->data.first);
+    EXPECT_EQ(70, tree.root()->left->right->right->data.first);
+    ASSERT_NE(nullptr, tree.root()->right->left);
+    ASSERT_NE(nullptr, tree.root()->right->right);
+    EXPECT_EQ(90, tree.root()->right->left->data.first);
+    EXPECT_EQ(110, tree.root()->right->right->data.first);
+    ASSERT_NE(nullptr, tree.root()->right->right->right);
+    EXPECT_EQ(120, tree.root()->right->right->right->data.first);
+    EXPECT_NE(nullptr, tree.find(10));
+    EXPECT_NE(nullptr, tree.find(20));
+    EXPECT_NE(nullptr, tree.find(30));
+    EXPECT_NE(nullptr, tree.find(50));
+    EXPECT_NE(nullptr, tree.find(55));
+    EXPECT_NE(nullptr, tree.find(60));
+    EXPECT_NE(nullptr, tree.find(70));
+    EXPECT_NE(nullptr, tree.find(80));
+    EXPECT_NE(nullptr, tree.find(90));
+    EXPECT_NE(nullptr, tree.find(100));
+    EXPECT_NE(nullptr, tree.find(110));
+    EXPECT_NE(nullptr, tree.find(120));
+    EXPECT_EQ(100, *tree.find(10));
+    EXPECT_EQ(200, *tree.find(20));
+    EXPECT_EQ(300, *tree.find(30));
+    EXPECT_EQ(500, *tree.find(50));
+    EXPECT_EQ(550, *tree.find(55));
+    EXPECT_EQ(600, *tree.find(60));
+    EXPECT_EQ(700, *tree.find(70));
+    EXPECT_EQ(800, *tree.find(80));
+    EXPECT_EQ(900, *tree.find(90));
+    EXPECT_EQ(1000, *tree.find(100));
+    EXPECT_EQ(1100, *tree.find(110));
+    EXPECT_EQ(1200, *tree.find(120));
+    check_avl_tree(tree);
+}
+
+TEST(TestAVLTree, delayed_rotation_after_insert_5) {
+    // Arrange
+    AVLTree<int, int> tree;
+    int keys[11] = { 50, 30, 70, 20, 40, 60, 80, 10, 25, 35, 45 };
+    for (int i = 0; i < 11; ++i) { tree.insert(keys[i], keys[i] * 10); }
+
+    // Act
+    tree.insert(5, 50);
+
+    // Assert
+    ASSERT_NE(nullptr, tree.root());
+    EXPECT_EQ(30, tree.root()->data.first);
+    EXPECT_EQ(nullptr, tree.root()->parent);
+    ASSERT_NE(nullptr, tree.root()->left);
+    ASSERT_NE(nullptr, tree.root()->right);
+    EXPECT_EQ(20, tree.root()->left->data.first);
+    EXPECT_EQ(50, tree.root()->right->data.first);
+    ASSERT_NE(nullptr, tree.root()->left->left);
+    ASSERT_NE(nullptr, tree.root()->left->right);
+    EXPECT_EQ(10, tree.root()->left->left->data.first);
+    EXPECT_EQ(25, tree.root()->left->right->data.first);
+    ASSERT_NE(nullptr, tree.root()->left->left->left);
+    EXPECT_EQ(5, tree.root()->left->left->left->data.first);
+    ASSERT_NE(nullptr, tree.root()->right->left);
+    ASSERT_NE(nullptr, tree.root()->right->right);
+    EXPECT_EQ(40, tree.root()->right->left->data.first);
+    EXPECT_EQ(70, tree.root()->right->right->data.first);
+    ASSERT_NE(nullptr, tree.root()->right->left->left);
+    ASSERT_NE(nullptr, tree.root()->right->left->right);
+    EXPECT_EQ(35, tree.root()->right->left->left->data.first);
+    EXPECT_EQ(45, tree.root()->right->left->right->data.first);
+    ASSERT_NE(nullptr, tree.root()->right->right->left);
+    ASSERT_NE(nullptr, tree.root()->right->right->right);
+    EXPECT_EQ(60, tree.root()->right->right->left->data.first);
+    EXPECT_EQ(80, tree.root()->right->right->right->data.first);
+    EXPECT_NE(nullptr, tree.find(5));
+    EXPECT_NE(nullptr, tree.find(10));
+    EXPECT_NE(nullptr, tree.find(20));
+    EXPECT_NE(nullptr, tree.find(25));
+    EXPECT_NE(nullptr, tree.find(30));
+    EXPECT_NE(nullptr, tree.find(35));
+    EXPECT_NE(nullptr, tree.find(40));
+    EXPECT_NE(nullptr, tree.find(45));
+    EXPECT_NE(nullptr, tree.find(50));
+    EXPECT_NE(nullptr, tree.find(60));
+    EXPECT_NE(nullptr, tree.find(70));
+    EXPECT_NE(nullptr, tree.find(80));
+    EXPECT_EQ(50, *tree.find(5));
+    EXPECT_EQ(100, *tree.find(10));
+    EXPECT_EQ(200, *tree.find(20));
+    EXPECT_EQ(250, *tree.find(25));
+    EXPECT_EQ(300, *tree.find(30));
+    EXPECT_EQ(350, *tree.find(35));
+    EXPECT_EQ(400, *tree.find(40));
+    EXPECT_EQ(450, *tree.find(45));
+    EXPECT_EQ(500, *tree.find(50));
+    EXPECT_EQ(600, *tree.find(60));
+    EXPECT_EQ(700, *tree.find(70));
+    EXPECT_EQ(800, *tree.find(80));
+    check_avl_tree(tree);
+}

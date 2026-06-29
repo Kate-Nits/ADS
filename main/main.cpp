@@ -10,10 +10,14 @@
 #include "../lib_skip_list/skip_list.h"
 
 #include "../lib_tree/tree.h"
+#include "../lib_rbtree/rbtree.h"
 
 #include "../lib_sorted_table_on_array/sorted_table_on_array.h"
 #include "../lib_unsorted_table_on_array/unsorted_table_on_array.h"
 #include "../lib_unsorted_table_on_list/unsorted_table_on_list.h"
+
+#include "../lib_adjacency_list_graph/adjacency_list_graph.h"
+#include "../lib_edges_list_graph/edges_list_graph.h"
 
 //Пример работы приложения:
 //#define EASY_EXAMPLE
@@ -46,7 +50,13 @@
 //#define TRY_TABLES
 
 // Проверка Tree
-#define TRY_TREE
+//#define TRY_TREE
+
+// Проверка Графов (список смежности и список ребер
+//#define TRY_GRAPHS
+
+// Проверка печати RB-дерева
+#define TRY_RBTREE
 
 #ifdef EASY_EXAMPLE
 
@@ -321,6 +331,54 @@ int main() {
     std::cout << "------ print ------" << std::endl;
     tree.print();
 #endif // TRY_TREE
+
+#ifdef TRY_GRAPHS
+    std::cout << "ADJACENCY LIST GRAPH (undirected, unweighted)" << std::endl;
+    AdjacencyListGraph<std::string> graph1(false, false);
+    graph1.add_edge("A", "B");
+    graph1.add_edge("A", "C");
+    graph1.add_edge("B", "D");
+    graph1.add_edge("C", "D");
+
+    std::cout << "Graph vertices count: " << graph1.count_vertex() << std::endl;
+    graph1.print();
+    std::cout << std::endl;
+    std::cout << "After delete edge AC:" << std::endl;
+    graph1.delete_edge("A", "C");
+    graph1.print();
+    std::cout << std::endl;
+    std::cout << "After delete vertex D:" << std::endl;
+    graph1.delete_vertex("D");
+    graph1.print();
+    std::cout << std::endl;
+    std::cout << "=======================================" << std::endl;
+    std::cout << std::endl;
+    std::cout << "EDGES LIST GRAPH (directed, weighted)" << std::endl;
+    EdgesListGraph<std::string> graph2(true, true);
+    graph2.add_edge("A", "B", 5);
+    graph2.add_edge("A", "C", 3);
+    graph2.add_edge("B", "D", 2);
+    graph2.add_edge("C", "D", 7);
+    graph2.print();
+    std::cout << std::endl;
+    std::cout << "After delete edge AB:" << std::endl;
+    graph2.delete_edge("A", "B");
+    graph2.print();
+    std::cout << std::endl;
+    std::cout << "After delete vertex C:" << std::endl;
+    graph2.delete_vertex("C");
+    graph2.print();
+#endif // TRY_GRAPHS
+
+#ifdef TRY_RBTREE
+    RBTree<int, int> tree;
+    int keys[11] = { 50, 30, 70, 20, 40, 60, 80, 10, 25, 35, 45 };
+    for (int i = 0; i < 11; ++i) { tree.insert(keys[i], keys[i] * 10); }
+    tree.insert(5, 50);
+    tree.print();
+
+#endif // TRY_RBTREE
+
     return 0;
 }
 
